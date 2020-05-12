@@ -15,8 +15,17 @@ class ErrorController : DefaultErrorController {
 
     @RequestMapping("/error")
     fun handleError(request: HttpServletRequest, model: Model): String {
-        model["statusCode"] = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE)
+        val statusCode = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE)
+        model["statusCode"] = statusCode
 
+        when (statusCode) {
+            404 -> {
+                model["errorMsg"] = "Our apologies, this page went out to visit the family."
+            }
+            else -> {
+                model["errorMsg"] = "Oops, something went wrong. Please try again"
+            }
+        }
         return "error"
     }
 

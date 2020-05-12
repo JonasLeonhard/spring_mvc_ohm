@@ -1,15 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Error [[${statusCode}]] </title>
+    <title>Error [[${statusCode}]]</title>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+    <link th:href="@{/styles/root.css}" rel="stylesheet"/>
+    <link th:href="@{/styles/error.css}" rel="stylesheet"/>
 </head>
 <body>
-<h1>
-    Our apologies, this page went out to visit the family.
-</h1>
-<span>
-        [[${statusCode}]]
-    </span>
+<div class="errorWrapper">
+    [[${statusCode}]]: [[${errorMsg}]]
+</div>
 </body>
 </html>
