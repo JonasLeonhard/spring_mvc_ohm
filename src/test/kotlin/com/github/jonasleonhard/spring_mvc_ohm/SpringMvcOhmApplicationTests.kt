@@ -9,5 +9,4 @@ class SpringMvcOhmApplicationTests {
     @Test
     fun contextLoads() {
     }
-
 }
