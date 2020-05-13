@@ -1,14 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Error [[${statusCode}]]</title>
-    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
-    <link th:href="@{/styles/root.css}" rel="stylesheet"/>
-    <link th:href="@{/styles/error.css}" rel="stylesheet"/>
-</head>
+<head th:replace="fragments/header :: header(title = ${pageTitle}, includeHeaderFragment = ${'err-header'})"></head>
+
 <body>
 <div class="errorWrapper">
-    [[${statusCode}]]: [[${errorMsg}]]
+    [[${errorMsg}]]
 </div>
 </body>
 </html>

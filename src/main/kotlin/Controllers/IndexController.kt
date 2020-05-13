@@ -11,6 +11,7 @@ class IndexController {
     @GetMapping("/")
     fun index(model: Model): String {
         model["data"] = "ITWORKS:::"
+        model["pageTitle"] = "TEST"
         return "index"
     }
 }

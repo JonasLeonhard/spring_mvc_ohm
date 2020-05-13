@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title></title>
+    <!--/*@thymesVar id="includeHeaderFragment" type=""*/-->
+    <th:block th:fragment="header(title)">
+        <title th:text="${title}">Title</title>
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+        <link th:href="@{/styles/root.css}" rel="stylesheet"/>
+        <th:block th:if="${includeHeaderFragment}">
+            <link th:replace="fragments/header :: ${includeHeaderFragment}">
+        </th:block>
+
+    </th:block>
+
+    <!-- Following Fragments can be included as eg: header(title = ${pageTitle}, includeHeaderFragment = ${'err-header'}) -->
+    <link th:fragment="err-header" th:href="@{/styles/error.css}" rel="stylesheet"/>
+
+</head>
+</html>
