@@ -31,6 +31,7 @@ dependencies {
     }
 
     // Db JPA HibernateORM, Postgres
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.hibernate:hibernate-core")
     implementation("org.hibernate:hibernate-entitymanager")
     implementation("org.postgresql:postgresql")
