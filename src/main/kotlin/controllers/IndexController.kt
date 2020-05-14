@@ -12,8 +12,8 @@ import repositories.ProfileRepository
 class IndexController(private val profileRepository: ProfileRepository) {
     @GetMapping("/")
     fun index(model: Model): String {
-        val user = Profile(1, "test")
-        profileRepository.save(user)
+        val profile = Profile(1, "test")
+        profileRepository.save(profile)
         println("a new user was saved!")
 
         model["data"] = "ITWORKS:::"
