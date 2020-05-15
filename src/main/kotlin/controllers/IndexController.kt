@@ -1,19 +1,21 @@
 package controllers
 
-import models.Profile
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set
 import org.springframework.web.bind.annotation.GetMapping
-import repositories.ProfileRepository
+import org.springframework.web.bind.annotation.RequestMapping
+import repositories.UserRepository
 
 
 @Controller
-class IndexController(private val profileRepository: ProfileRepository) {
-    @GetMapping("/")
+@RequestMapping("/")
+class IndexController(private val userRepository: UserRepository) {
+
+    @GetMapping
     fun index(model: Model): String {
-        val profile = Profile(1, "test")
-        profileRepository.save(profile)
+        //val user = User(1, "test")
+        //userRepository.save(user)
         println("a new user was saved!")
 
         model["data"] = "ITWORKS:::"

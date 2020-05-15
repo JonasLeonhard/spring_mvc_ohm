@@ -1,0 +1,62 @@
+package configurations
+
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
+import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher
+
+
+@Configuration
+@EnableWebSecurity
+class SecurityConfiguration(val userDetailsService: UserDetailsService) : WebSecurityConfigurerAdapter() {
+
+    @Throws(Exception::class)
+    override fun configure(http: HttpSecurity) {
+        http
+                .authorizeRequests()
+                .antMatchers(
+                        "/registration",
+                        "/js/**",
+                        "/css/**",
+                        "/img/**",
+                        "/webjars/**").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .formLogin()
+                .loginPage("/login")
+                .permitAll()
+                .and()
+                .logout()
+                .invalidateHttpSession(true)
+                .clearAuthentication(true)
+                .logoutRequestMatcher(AntPathRequestMatcher("/logout"))
+                .logoutSuccessUrl("/login?logout")
+                .permitAll();
+    }
+
+    @Autowired
+    @Throws(java.lang.Exception::class)
+    fun configureGlobal(auth: AuthenticationManagerBuilder) {
+        auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder())
+    }
+
+    @Bean
+    @Throws(java.lang.Exception::class)
+    fun customAuthenticationManager(): AuthenticationManager? {
+        return authenticationManager()
+    }
+
+    @Bean
+    fun bCryptPasswordEncoder(): BCryptPasswordEncoder? {
+        return BCryptPasswordEncoder()
+    }
+
+
+}

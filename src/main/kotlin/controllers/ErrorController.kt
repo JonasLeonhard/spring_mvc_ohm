@@ -10,10 +10,10 @@ import org.springframework.boot.web.servlet.error.ErrorController as DefaultErro
 
 
 @Controller
+@RequestMapping("/error")
 class ErrorController : DefaultErrorController {
-    val path = "/error"
 
-    @RequestMapping("/error")
+    @RequestMapping
     fun handleError(request: HttpServletRequest, model: Model): String {
         val statusCode = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE)
         model["pageTitle"] = "Error, ${statusCode}"
@@ -30,6 +30,6 @@ class ErrorController : DefaultErrorController {
     }
 
     override fun getErrorPath(): String {
-        return path
+        return "/error"
     }
 }

@@ -5,7 +5,13 @@ import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.boot.runApplication
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 
-@SpringBootApplication(scanBasePackages = ["com.github.jonasleonhard.spring_mvc_ohm", "controllers", "models", "repositories", "daos"])
+@SpringBootApplication(scanBasePackages = [
+    "com.github.jonasleonhard.spring_mvc_ohm",
+    "controllers",
+    "models",
+    "repositories",
+    "services",
+    "configurations"])
 @EntityScan("models")
 @EnableJpaRepositories(basePackages = ["repositories"])
 class SpringMvcOhmApplication

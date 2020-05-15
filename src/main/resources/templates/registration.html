@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header(title = ${pageTitle})"></head>
+
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+
+            <div th:if="${param.success}">
+                <div class="alert alert-info">
+                    You've successfully registered to our awesome app!
+                </div>
+            </div>
+
+            <h1>Registration</h1>
+            <form th:action="@{/registration}" th:object="${user}" method="post">
+                <label for="id" class="control-label">id</label>
+                <input id="id"
+                       class="form-control"/>
+
+                <label for="username" class="control-label">username</label>
+                <input id="username"
+                       class="form-control"/>
+
+                <label for="name" class="control-label">name</label>
+                <input id="name"
+                       class="form-control"/>
+
+                <label for="password" class="control-label">Password</label>
+                <input id="password"
+                       class="form-control"
+                       type="password"/>
+
+
+                <label for="confirmPassword" class="control-label">Confirm password</label>
+                <input id="confirmPassword"
+                       class="form-control"
+                       type="password"/>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success">Register</button>
+                    <span>Already registered? <a href="/" th:href="@{/login}">Login here</a></span>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

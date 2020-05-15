@@ -7,22 +7,29 @@ import java.util.*
 import javax.persistence.*
 
 @Entity
-@Table(name = "profile")
-data class Profile(
+@Table(name = "user_profile")
+data class User(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        val id: Int,
+        val id: Long,
 
-        @Column(nullable = false)
-        val name: String,
+        var username: String,
+
+        val password: String,
+
+        @Transient
+        val passwordConfirm: String,
+
+        val name: String = "defaultName",
+
+        @ManyToMany
+        val roles: Set<Role>,
 
         @CreationTimestamp
         @Temporal(TemporalType.TIMESTAMP)
-        @Column
         private val createdAt: Date = Date.from(Instant.now()),
 
         @UpdateTimestamp
         @Temporal(TemporalType.TIMESTAMP)
-        @Column
         private val updatedAt: Date = Date.from(Instant.now())
 )

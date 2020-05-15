@@ -33,6 +33,9 @@ dependencies {
     // Db JPA HibernateORM, Postgres
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.postgresql:postgresql")
+
+    // Login Spring security
+    implementation("org.springframework.boot:spring-boot-starter-security")
 }
 
 tasks.withType<Test> {
