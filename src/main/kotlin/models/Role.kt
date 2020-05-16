@@ -6,11 +6,12 @@ import javax.persistence.*
 @Table(name = "role")
 data class Role(
         @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        val id: Long,
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        var id: Long = -1,
 
-        val name: String,
+        @Column(unique = true)
+        var name: String = "",
 
         @ManyToMany(mappedBy = "roles")
-        val users: Set<User>
+        val users: Set<User> = setOf<User>()
 )

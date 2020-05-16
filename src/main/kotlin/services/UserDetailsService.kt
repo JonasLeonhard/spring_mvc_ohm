@@ -1,7 +1,6 @@
 package services
 
 import models.User
-import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UsernameNotFoundException
@@ -19,11 +18,13 @@ class UserDetailsService(private val userRepository: UserRepository) : IUserDeta
     @Transactional(readOnly = true)
     override fun loadUserByUsername(username: String): UserDetails {
         val user: User = userRepository.findByUsername(username) ?: throw UsernameNotFoundException(username)
-        val grantedAuthorities: MutableSet<GrantedAuthority> = HashSet()
 
-        user.roles.forEach { role ->
-            grantedAuthorities.add(SimpleGrantedAuthority(role.name))
-        }
+        println("loggin in... ----------------->")
+        // println("size:: ${user.roles.size}") // <---- TODO() this cause infinite loop?
+        val grantedAuthorities: MutableSet<SimpleGrantedAuthority> = HashSet<SimpleGrantedAuthority>()
+//        user.roles.forEach {role ->
+//            grantedAuthorities.add(SimpleGrantedAuthority(role.name))
+//        }
 
         return SecurityUser(user.username, user.password, grantedAuthorities)
     }

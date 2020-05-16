@@ -15,6 +15,7 @@ class SecurityService(val authenticationManager: AuthenticationManager, val user
     }
 
     fun autoLogin(username: String, password: String) {
+        println("autologin called!")
         val userDetails = userDetailsService.loadUserByUsername(username)
         val usernamePasswordAuthenticationToken = UsernamePasswordAuthenticationToken(userDetails, password)
 

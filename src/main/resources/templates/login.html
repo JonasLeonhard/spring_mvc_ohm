@@ -1,1 +1,38 @@
-login...
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header(title = ${pageTitle})"></head>
+
+<body>
+<div class="container">
+    <h1>Login</h1>
+    <form th:action="@{/login}" th:object="${user}" method="post">
+        <div th:if="${param.error}">
+                <span>
+                    Login Error, try something new!
+                </span>
+        </div>
+        <div th:if="${param.logout}">
+            You are succesfully logged out
+        </div>
+        <div th:if="${param.hasRegistered}">
+            You have succesfully registered, you can now login as
+        </div>
+
+        <label for="username" class="control-label">username</label>
+        <input id="username" name="username"
+               class="form-control"/>
+
+        <label for="password" class="control-label">password</label>
+        <input id="password" type="password" name="password"
+               class="form-control"/>
+
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-success">Login</button>
+            <a href="/" th:href="@{/registration}">Register here</a>
+        </div>
+
+    </form>
+</div>
+</body>
+</html>

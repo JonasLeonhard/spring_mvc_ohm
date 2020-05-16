@@ -14,21 +14,20 @@ import services.SecurityService
 class AuthenticationController(val securityService: SecurityService, val userRepository: UserRepository) {
 
     @GetMapping("/login")
-    fun login(): String {
-        // TODO()
-//        val roles: Set<Role> = setOf<Role>(Role(1, "test", setOf()))
-//        val user = User(1, "test", "123", "123", "defaultName")
-//        userRepository.save(user)
+    fun login(model: Model): String {
+        model["user"] = User()
+        model["pageTitle"] = "registration"
+
         println("--- /login: return login page ---")
         return "login"
     }
 
     @GetMapping("/registration")
     fun registration(model: Model): String {
-        model["user"] = "User() here!"
-        // TODO()
-        println("--- called /registration: send registration page ---")
+        model["user"] = User()
         model["pageTitle"] = "registration"
+
+        println("--- called /registration: send registration page ---")
         return "registration"
     }
 
@@ -39,7 +38,7 @@ class AuthenticationController(val securityService: SecurityService, val userRep
         // check if already exists
         userRepository.save(userForm)
         println("--- REDIRECT POST, got $userForm : /registration to / ---")
-        securityService.autoLogin("test", "test");
-        return "redirect:/"
+        securityService.autoLogin(userForm.username, userForm.password)
+        return "redirect:/login?hasRegistered=true&username=${userForm.username}"
     }
 }

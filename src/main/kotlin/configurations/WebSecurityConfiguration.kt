@@ -15,7 +15,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfiguration(val userDetailsService: UserDetailsService) : WebSecurityConfigurerAdapter() {
+class WebSecurityConfiguration(val userDetailsService: UserDetailsService) : WebSecurityConfigurerAdapter() {
 
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
