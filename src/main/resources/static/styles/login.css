@@ -1,0 +1,26 @@
+.page-content {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #10002b;
+}
+
+.login-container {
+    background: #e0aaff;
+    width: 15em;
+    height: 10em;
+    padding: 2em;
+    border-radius: 3px;
+    margin-bottom: 3em;
+}
+
+label {
+    display: block;
+}
+
+input {
+    width: calc(100% - 2em);
+}
+

@@ -24,7 +24,7 @@ class WebSecurityConfiguration(val userDetailsService: UserDetailsService) : Web
                 .antMatchers(
                         "/registration",
                         "/js/**",
-                        "/css/**",
+                        "/styles/**",
                         "/img/**",
                         "/webjars/**").permitAll()
                 .anyRequest().authenticated()
