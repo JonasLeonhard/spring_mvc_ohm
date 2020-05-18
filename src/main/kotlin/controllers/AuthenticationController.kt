@@ -7,11 +7,11 @@ import org.springframework.ui.set
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PostMapping
-import repositories.UserRepository
 import services.SecurityService
+import services.UserService
 
 @Controller
-class AuthenticationController(val securityService: SecurityService, val userRepository: UserRepository) {
+class AuthenticationController(val securityService: SecurityService, val userService: UserService) {
 
     @GetMapping("/login")
     fun login(model: Model): String {
@@ -36,7 +36,11 @@ class AuthenticationController(val securityService: SecurityService, val userRep
         // TODO()
         // check for validity
         // check if already exists
-        userRepository.save(userForm)
+        try {
+            userService.save(userForm)
+        } catch (err: Error) {
+            return "redirect:/registration?error=true"
+        }
         println("--- REDIRECT POST, got $userForm : /registration to / ---")
         securityService.autoLogin(userForm.username, userForm.password)
         return "redirect:/login?hasRegistered=true&username=${userForm.username}"

@@ -22,6 +22,7 @@ class SecurityService(val authenticationManager: AuthenticationManager, val user
         authenticationManager.authenticate(usernamePasswordAuthenticationToken);
 
         if (usernamePasswordAuthenticationToken.isAuthenticated) {
+            SecurityContextHolder.getContext().authentication = usernamePasswordAuthenticationToken;
             println("Auto login of $username successfully!")
         }
     }

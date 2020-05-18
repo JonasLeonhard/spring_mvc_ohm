@@ -9,9 +9,6 @@ data class Role(
         @GeneratedValue(strategy = GenerationType.AUTO)
         var id: Long = -1,
 
-        @Column(unique = true)
-        var name: String = "",
-
-        @ManyToMany(mappedBy = "roles")
-        val users: Set<User> = setOf<User>()
+        @Column(length = 50, unique = true)
+        var name: String = "USER"
 )

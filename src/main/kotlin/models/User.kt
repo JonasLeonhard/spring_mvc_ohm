@@ -23,8 +23,8 @@ data class User(
 
         var name: String = "",
 
-        @ManyToMany
-        var roles: Set<Role> = setOf<Role>(),
+        @ManyToMany(targetEntity = Role::class, fetch = FetchType.EAGER)
+        var roles: MutableSet<Role> = mutableSetOf(),
 
         @CreationTimestamp
         @Temporal(TemporalType.TIMESTAMP)

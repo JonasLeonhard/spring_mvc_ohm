@@ -13,6 +13,9 @@
                 </div>
             </div>
 
+            <span th:if="${param.error}">
+                There was an error registering your account, please try again.
+            </span>
             <h1>Registration</h1>
             <form th:action="@{/registration}" th:object="${user}" method="post">
                 <label for="username" class="control-label">username</label>

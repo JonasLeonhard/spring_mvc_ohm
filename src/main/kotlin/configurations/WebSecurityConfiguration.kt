@@ -37,7 +37,7 @@ class WebSecurityConfiguration(val userDetailsService: UserDetailsService) : Web
                 .invalidateHttpSession(true)
                 .clearAuthentication(true)
                 .logoutRequestMatcher(AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/login?logout")
+                .logoutSuccessUrl("/login?logout=true")
                 .permitAll();
     }
 
