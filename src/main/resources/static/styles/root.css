@@ -2,11 +2,14 @@
 
 :root {
     --main-bg-color: #e9e9e9;
-    --primary: #10002b;
-    --secondary: #240046;
-    --third: #3c096c;
+    --primary: #efb450;
+    --secondary: #37ad48;
+    --third: #e78f00;
     --fourth: #5a189a;
     --fifth: #7b2cbf;
+    --success: #1b861b;
+    --warning: #f6c213;
+    --error: #ff4e4e;
 }
 
 * {
@@ -17,14 +20,6 @@
 
 body {
     background: var(--main-bg-color);
-}
-
-input {
-    width: 100%;
-    padding: 5px 15px;
-    background: white;
-    border: 0 none;
-    border-radius: 5px;
 }
 
 button {
@@ -39,3 +34,74 @@ button {
 button:hover {
     background: var(--primary);
 }
+
+.warning {
+    color: var(--warning);
+}
+
+.success {
+    color: var(--success);
+}
+
+.error {
+    color: var(--error);
+}
+
+/* INPUT */
+.input-wrapper {
+    border-bottom: 1px dashed var(--third);
+    padding-top: 1.5em;
+    position: relative;
+    overflow: hidden;
+}
+
+.input-wrapper input {
+    width: 100%;
+    padding: 5px 15px;
+    background: transparent;
+    border: 0 none;
+    position: relative;
+    z-index: 2;
+    font-size: 1em;
+    outline: none;
+}
+
+.input-wrapper label {
+    display: block;
+    position: absolute;
+    transform: translateY(-1.45em);
+    transform-origin: 0;
+    transition: transform 400ms;
+    z-index: 1;
+    color: grey;
+}
+
+.input-wrapper:focus-within {
+    border-color: transparent;
+}
+
+.input-wrapper:focus-within label, .input-wrapper input:not(:placeholder-shown) + label {
+    transform: scale(0.8) translateY(-3.5em);
+}
+
+.input-wrapper::after {
+    content: "";
+    display: block;
+    height: 4px;
+    margin-top: -3px;
+    width: 100%;
+    background: var(--primary);
+    transform: scaleX(0);
+    transform-origin: 0;
+    transition: transform 500ms ease;
+    position: relative;
+}
+
+.input-wrapper:focus-within::after {
+    transform: scaleX(1);
+    height: 3px;
+    position: relative;
+}
+
+
+

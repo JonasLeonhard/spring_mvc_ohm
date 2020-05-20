@@ -36,6 +36,9 @@ dependencies {
 
     // Login Spring security
     implementation("org.springframework.boot:spring-boot-starter-security")
+
+    // Form Validation
+    implementation("org.springframework.boot:spring-boot-starter-validation")
 }
 
 tasks.withType<Test> {

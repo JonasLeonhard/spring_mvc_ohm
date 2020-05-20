@@ -7,7 +7,7 @@
     background: #efb450
 }
 
-.login-header {
+.registration-header {
     background: #e78f00;
     color: white;
     display: flex;
@@ -17,7 +17,7 @@
     border-radius: 3px 3px 0px 0px;
 }
 
-.login-container {
+.registration-container {
     background: #fafafa;
     width: 25em;
     border-radius: 3px;
@@ -32,18 +32,11 @@
     margin-top: 2em;
 }
 
-label {
-    display: block;
-}
-
 input {
     width: calc(100% - 2em);
 }
 
-.top-message {
-    margin-top: 1em;
-}
-
-.register-link {
+.login-link {
     float: right;
 }
+

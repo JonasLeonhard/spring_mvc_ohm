@@ -5,33 +5,42 @@
 <body>
 <div class="page-content">
     <div class="login-container">
-        <h1>Login</h1>
-        <form th:action="@{/login}" th:object="${user}" method="post">
-            <div th:if="${param.error}">
-                        <span>
-                            Login Error, try something new!
-                        </span>
-            </div>
-            <div th:if="${param.logout}">
-                You are succesfully logged out
-            </div>
-            <div th:if="${param.hasRegistered}">
-                You have succesfully registered, you can now login as
-            </div>
+        <div class="login-header">
+            Login
+        </div>
+        <div class="inner-container">
+            <form th:action="@{/login}" th:object="${user}" method="post">
+                <div th:if="${param.logout}" class="warning top-message">
+                    You are succesfully logged out
+                </div>
+                <div th:if="${param.hasRegistered}" class="success top-message">
+                    You have succesfully registered, you can now login as
+                </div>
 
-            <label for="username" class="control-label">username</label>
-            <input id="username" name="username"
-                   class="form-control"/>
+                <div class="input-wrapper">
+                    <input th:field="*{username}"
+                           placeholder=" "/>
+                    <label th:for="*{username}" class="control-label">Username</label>
+                </div>
+                <span th:errors="*{username}" class="error"></span>
 
-            <label for="password" class="control-label">password</label>
-            <input id="password" type="password" name="password"
-                   class="form-control"/>
+                <div class="input-wrapper">
+                    <input th:field="*{password}"
+                           type="password" placeholder=" "/>
+                    <label th:for="*{password}" class="control-label">Password</label>
+                </div>
+                <span th:errors="*{password}" class="error"></span>
 
-            <div>
-                <button type="submit" class="btn btn-success">Login</button>
-                <a href="/" th:href="@{/registration}">Register here</a>
-            </div>
-        </form>
+                <span th:if="${param.error}" class="error">
+                    Login Error, try something new!
+                </span>
+
+                <div class="submit-footer">
+                    <button type="submit" class="btn btn-success">Login</button>
+                    <a href="/" th:href="@{/registration}" class="register-link">Register here</a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 </body>

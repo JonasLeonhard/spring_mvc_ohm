@@ -4,19 +4,22 @@ import models.User
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set
+import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PostMapping
 import services.SecurityService
 import services.UserService
+import validators.UserValidator
+import javax.validation.Valid
 
 @Controller
-class AuthenticationController(val securityService: SecurityService, val userService: UserService) {
+class AuthenticationController(val securityService: SecurityService, val userService: UserService, val userValidator: UserValidator) {
 
     @GetMapping("/login")
     fun login(model: Model): String {
         model["user"] = User()
-        model["pageTitle"] = "registration"
+        model["pageTitle"] = "Login"
 
         println("--- /login: return login page ---")
         return "login"
@@ -25,23 +28,25 @@ class AuthenticationController(val securityService: SecurityService, val userSer
     @GetMapping("/registration")
     fun registration(model: Model): String {
         model["user"] = User()
-        model["pageTitle"] = "registration"
+        model["pageTitle"] = "Registration"
 
         println("--- called /registration: send registration page ---")
         return "registration"
     }
 
     @PostMapping("/registration")
-    fun registration(@ModelAttribute("userForm") userForm: User): String {
-        // TODO()
-        // check for validity
-        // check if already exists
+    fun registration(@Valid @ModelAttribute userForm: User, bindingResult: BindingResult, model: Model): String {
+        userValidator.validate(userForm, bindingResult)
+        if (bindingResult.hasErrors()) {
+            model["errors"] = bindingResult
+            return "registration"
+        }
         try {
             userService.save(userForm)
         } catch (err: Error) {
             return "redirect:/registration?error=true"
         }
-        println("--- REDIRECT POST, got $userForm : /registration to / ---")
+        println("--- REDIRECT POST, got $userForm : /registration to / ... autoLogin ...---")
         securityService.autoLogin(userForm.username, userForm.password)
         return "redirect:/login?hasRegistered=true&username=${userForm.username}"
     }

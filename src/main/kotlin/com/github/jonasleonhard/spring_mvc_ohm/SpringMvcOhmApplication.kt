@@ -11,7 +11,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
     "models",
     "repositories",
     "services",
-    "configurations"])
+    "configurations",
+    "validators"])
 @EntityScan("models")
 @EnableJpaRepositories(basePackages = ["repositories"])
 class SpringMvcOhmApplication

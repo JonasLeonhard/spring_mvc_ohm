@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header(title = ${pageTitle})"></head>
+<head th:replace="fragments/header :: header(title = ${pageTitle}, includeHeaderFragment = ${'registration-header'})"></head>
 
 <body>
-<div class="container">
-    <div class="row">
-        <div class="col-md-6 col-md-offset-3">
-
+<div class="page-content">
+    <div class="registration-container">
+        <div class="registration-header">
+            Registration
+        </div>
+        <div class="inner-container">
             <div th:if="${param.success}">
                 <div class="alert alert-info">
                     You've successfully registered to our awesome app!
@@ -16,36 +18,38 @@
             <span th:if="${param.error}">
                 There was an error registering your account, please try again.
             </span>
-            <h1>Registration</h1>
+
             <form th:action="@{/registration}" th:object="${user}" method="post">
-                <label for="username" class="control-label">username</label>
-                <input id="username"
-                       name="username"
-                       class="form-control"/>
-
-                <label for="name" class="control-label">name</label>
-                <input id="name"
-                       name="name"
-                       class="form-control"/>
-
-                <label for="password" class="control-label">Password</label>
-                <input id="password"
-                       name="password"
-                       class="form-control"
-                       type="password"/>
-
-
-                <label for="confirmPassword" class="control-label">Confirm password</label>
-                <input id="confirmPassword"
-                       name="confirmPassword"
-                       class="form-control"
-                       type="password"/>
-
-                <div class="form-group">
-                    <button type="submit" class="btn btn-success">Register</button>
-                    <span>Already registered? <a href="/" th:href="@{/login}">Login here</a></span>
+                <div class="input-wrapper">
+                    <input th:field="*{username}" placeholder=" "/>
+                    <label th:for="*{username}" class="control-label">username</label>
                 </div>
+                <span th:errors="*{username}" class="error"></span>
 
+                <div class="input-wrapper">
+                    <input th:field="*{name}" placeholder=" "/>
+                    <label th:for="*{name}" class="control-label">name</label>
+                </div>
+                <span th:errors="*{name}" class="error"></span>
+
+                <div class="input-wrapper">
+                    <input th:field="*{password}"
+                           type="password" placeholder=" "/>
+                    <label th:for="*{password}" class="control-label">Password</label>
+                </div>
+                <span th:errors="*{password}" class="error"></span>
+
+                <div class="input-wrapper">
+                    <input th:field="*{passwordConfirm}"
+                           type="password" placeholder=" "/>
+                    <label th:for="*{passwordConfirm}" class="control-label">Confirm password</label>
+                </div>
+                <span th:errors="*{passwordConfirm}" class="error"></span>
+
+                <div class="submit-footer">
+                    <button type="submit" class="btn btn-success">Register</button>
+                    <span class="login-link">Already registered? <a href="/" th:href="@{/login}">Login here</a></span>
+                </div>
             </form>
         </div>
     </div>
