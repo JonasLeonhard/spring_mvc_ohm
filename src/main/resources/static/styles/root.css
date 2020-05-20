@@ -103,5 +103,16 @@ button:hover {
     position: relative;
 }
 
+/* NAVIGATION */
 
+nav {
+    background-color: #222;
+    border: 1px solid grey;
+    z-index: 1;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, .5);
+}
+
+nav ul, nav li {
+    list-style-type: none;
+}
 
