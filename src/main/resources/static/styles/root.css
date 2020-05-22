@@ -2,6 +2,7 @@
 
 :root {
     --main-bg-color: #e9e9e9;
+    --main-bg-color-bright: #f8f8f8;
     --primary: #efb450;
     --secondary: #37ad48;
     --third: #e78f00;
@@ -20,6 +21,10 @@
 
 body {
     background: var(--main-bg-color);
+}
+
+a {
+    text-decoration: none;
 }
 
 button {
@@ -104,15 +109,119 @@ button:hover {
 }
 
 /* NAVIGATION */
-
 nav {
-    background-color: #222;
-    border: 1px solid grey;
-    z-index: 1;
-    box-shadow: 1px 1px 5px rgba(0, 0, 0, .5);
+    background-color: white;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .1), 0 1px 2px 0 rgba(0, 0, 0, .06);
+    height: 2.5em;
+    padding: 0.5em 1em;
+    display: flex;
+    justify-content: space-between;
 }
 
-nav ul, nav li {
+nav .nav-items {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+nav .nav-items .nav-item {
+    cursor: pointer;
+    width: 1.25em;
+    height: 1.25em;
+    padding: 0.5em;
+    margin-left: 0.5em;
+    border-radius: 20px;
+}
+
+nav .nav-items .nav-item:hover {
+    background: var(--main-bg-color);
+}
+
+nav .nav-search-container {
+    display: flex;
+    background: var(--main-bg-color);
+    padding: 0.5em 1em;
+    margin-left: 1em;
+    border: 1px solid #b4b4b4;
+    border-radius: 9999px;
+    transition: 0.25s background linear;
+}
+
+nav .nav-search-container .search-icon {
+    height: 1em;
+    margin-right: 0.25em;
+    transform: translateX(-0.1em);
+}
+
+nav .nav-search-container #search {
+    border: none;
+    border-radius: 9999px;
+    background: transparent;
+}
+
+nav .nav-search-container:focus-within {
+    background: white;
+}
+
+nav .profile-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    margin-left: 2em;
+    position: relative;
+}
+
+nav .profile-container .nav-profile-image {
+    height: 2em;
+    width: 2em;
+    border-radius: 100%;
+    border: 1px solid #b4b4b4;
+}
+
+nav .profile-container .user-name {
+    margin: 0 0.5em;
+}
+
+nav .profile-container .open-profile {
+    width: 1em;
+    height: 1em;
+    transform: translateY(1px);
+}
+
+nav .profile-container ul.open-profile-dropdown {
+    display: none;
+    position: absolute;
+    width: 100%;
+    top: 1.8em;
+    padding-top: 1em;
     list-style-type: none;
+    border-radius: 3px;
+    overflow: hidden;
 }
 
+ul.open-profile-dropdown li {
+    width: 100%;
+    background: var(--secondary);
+    cursor: pointer;
+}
+
+ul.open-profile-dropdown li a {
+    width: 100%;
+    height: 100%;
+    color: white;
+    display: block;
+    padding: 0.5em;
+}
+
+ul.open-profile-dropdown li:hover {
+    background: var(--third);
+}
+
+nav .profile-container:hover > ul.open-profile-dropdown {
+    display: block;
+}
+
+nav .profile-container:hover > .user-name, nav .profile-container:hover > img.open-profile {
+    opacity: 0.75;
+}

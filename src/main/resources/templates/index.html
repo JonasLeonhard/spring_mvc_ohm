@@ -3,7 +3,9 @@
 <head th:replace="fragments/header :: header(title = ${pageTitle})"></head>
 
 <body>
+<nav th:replace="fragments/navigation :: navigation"></nav>
+
 <h1>Rendered from Controller:</h1>
-<span> [[${data}]] </span>
+Logged in as <span th:if="${user}">[[${user.username}]]</span>
 </body>
 </html>

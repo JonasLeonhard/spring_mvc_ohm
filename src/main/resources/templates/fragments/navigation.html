@@ -1,31 +1,37 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
+<!--/*@thymesVar id="user" type=""*/-->
+<header>
     <title></title>
     <nav th:fragment="navigation">
-        <ul>
-            <li><a href="#0">Home</a></li>
-            <li><a href="#0">About</a></li>
-            <li class="dropdown">
-                <a href="#0" class="dropdown-toggle" data-toggle="dropdown" data-target="dropdown" role="button"
-                   aria-haspopup="true" aria-expanded="false">Clients<span class="caret"></span></a>
-                <ul class="dropdown-menu" id="dropdown-menu">
-                    <li><a href="#0">Burger King</a></li>
-                    <li><a href="#0">Southwest Airlines</a></li>
-                    <li><a href="#0">Levi Strauss</a></li>
+        <div class="nav-items">
+            <button>|||</button>
+            <div class="nav-search-container">
+                <svg class="search-icon" viewBox="0 0 512 512">
+                    <path d="M225.474 0C101.151 0 0 101.151 0 225.474c0 124.33 101.151 225.474 225.474 225.474 124.33 0 225.474-101.144 225.474-225.474C450.948 101.151 349.804 0 225.474 0zm0 409.323c-101.373 0-183.848-82.475-183.848-183.848S124.101 41.626 225.474 41.626s183.848 82.475 183.848 183.848-82.475 183.849-183.848 183.849z"/>
+                    <path d="M505.902 476.472L386.574 357.144c-8.131-8.131-21.299-8.131-29.43 0-8.131 8.124-8.131 21.306 0 29.43l119.328 119.328A20.74 20.74 0 00491.187 512a20.754 20.754 0 0014.715-6.098c8.131-8.124 8.131-21.306 0-29.43z"/>
+                </svg>
+                <input id="search" type="text" placeholder="Search" title="Search">
+            </div>
+        </div>
+        <div class="nav-items">
+            <img class="nav-item" th:src="@{unsecured_files/notification.svg}" alt="Calender" title="Calender"/>
+            <img class="nav-item" th:src="@{unsecured_files/notification.svg}" alt="Notifications"
+                 title="Notifications"/>
+            <div class="profile-container" title="#username's Profile">
+                <img class="nav-profile-image" alt="profile picture"
+                     src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=100&h=100&q=80"/>
+                <span th:if="${user}" class="user-name">[[${user.username}]]</span>
+                <img class="open-profile" th:src="@{/unsecured_files/down-arrow.svg}" alt="Open Profile"
+                     title="Open Profile"/>
+
+                <ul class="open-profile-dropdown">
+                    <li><a href="/stuff">Stuff</a></li>
+                    <li><a href="/things">Things</a></li>
+                    <li><a href="/more">Other Stuff</a></li>
                 </ul>
-            </li>
-            <li class="dropdown">
-                <a href="#0" class="dropdown-toggle" data-toggle="dropdown" data-target="dropdown" role="button"
-                   aria-haspopup="true" aria-expanded="false">Services<span class="caret"></span></a>
-                <ul class="dropdown-menu" id="dropdown-menu">
-                    <li><a href="#0">Print Design</a></li>
-                    <li><a href="#0">Web Design</a></li>
-                    <li><a href="#0">Mobile App Development</a></li>
-                </ul>
-            </li>
-            <li><a href="#0">Contact</a></li>
-        </ul>
+            </div>
+        </div>
     </nav>
-</head>
+</header>
 </html>

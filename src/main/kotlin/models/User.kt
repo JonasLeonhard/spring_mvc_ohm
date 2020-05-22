@@ -11,6 +11,7 @@ import javax.validation.constraints.Size
 @Entity
 @Table(name = "user_profile")
 data class User(
+
         @Id
         @GeneratedValue(strategy = GenerationType.AUTO)
         var id: Long = -1,
@@ -28,6 +29,11 @@ data class User(
         var passwordConfirm: String = "",
 
         var name: String = "",
+
+        var enabled: Boolean = true,
+        var accountNonExpired: Boolean = true,
+        var accountNonLocked: Boolean = true,
+        var credentialsNonExpired: Boolean = true,
 
         @ManyToMany(targetEntity = Role::class, fetch = FetchType.EAGER)
         var roles: MutableSet<Role> = mutableSetOf(),

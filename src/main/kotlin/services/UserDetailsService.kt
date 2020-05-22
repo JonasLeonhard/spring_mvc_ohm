@@ -23,7 +23,6 @@ class UserDetailsService(private val userRepository: UserRepository) : IUserDeta
 //        user.roles.forEach {role ->
 //            grantedAuthorities.add(SimpleGrantedAuthority(role.name))
 //        }
-
         return SecurityUser(user.username, user.password, grantedAuthorities)
     }
 }
