@@ -16,7 +16,7 @@ class IndexController(val userDetailsService: UserDetailsService) {
     @GetMapping
     fun index(model: Model, principal: Principal): String {
         model["pageTitle"] = "INDEXPAGETITLE"
-        model["user"] = userDetailsService.loadUserByUsername(principal.name)
+        model["authenticated"] = userDetailsService.loadUserByUsername(principal.name)
         return "index"
     }
 }

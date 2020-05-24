@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header(title = ${pageTitle}, includeHeaderFragment = ${'profile-header'})"></head>
+
+<body>
+<nav th:replace="fragments/navigation :: navigation"></nav>
+
+<div class="page-content">
+    <th:block th:if="${profile}">
+        THIS IS THE PROFILE OF [[${profile.username}]]
+    </th:block>
+    <th:block th:unless="${profile}">
+      <span>
+         This Profile
+         <span th:if="${userNotFound}">([[${userNotFound}]])</span>
+         could not be found
+      </span>
+    </th:block>
+</div>
+</body>
+</html>

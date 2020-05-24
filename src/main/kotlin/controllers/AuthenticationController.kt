@@ -20,8 +20,6 @@ class AuthenticationController(val securityService: SecurityService, val userSer
     fun login(model: Model): String {
         model["user"] = User()
         model["pageTitle"] = "Login"
-
-        println("--- /login: return login page ---")
         return "login"
     }
 

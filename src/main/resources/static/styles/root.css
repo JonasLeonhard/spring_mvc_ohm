@@ -118,6 +118,10 @@ nav {
     justify-content: space-between;
 }
 
+nav .nav-logo {
+    height: 2em;
+}
+
 nav .nav-items {
     display: flex;
     justify-content: center;
