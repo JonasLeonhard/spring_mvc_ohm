@@ -16,13 +16,10 @@ class UserDetailsService(private val userRepository: UserRepository) : IUserDeta
     @Transactional(readOnly = true)
     override fun loadUserByUsername(username: String): UserDetails {
         val user: User = userRepository.findByUsername(username) ?: throw UsernameNotFoundException(username)
-
-        println("UserDetailsSerive -> loggin in... ----------------->")
-        // println("size:: ${user.roles.size}") // <---- TODO() this cause infinite loop?
         val grantedAuthorities: MutableSet<SimpleGrantedAuthority> = mutableSetOf()
-//        user.roles.forEach {role ->
-//            grantedAuthorities.add(SimpleGrantedAuthority(role.name))
-//        }
+        user.roles.forEach { role ->
+            grantedAuthorities.add(SimpleGrantedAuthority(role.name))
+        }
         return SecurityUser(user.username, user.password, grantedAuthorities)
     }
 }

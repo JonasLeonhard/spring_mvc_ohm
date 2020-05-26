@@ -1,5 +1,6 @@
 package models
 
+import com.sun.istack.Nullable
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.Instant
@@ -34,6 +35,10 @@ data class User(
         var accountNonExpired: Boolean = true,
         var accountNonLocked: Boolean = true,
         var credentialsNonExpired: Boolean = true,
+
+        @OneToOne(targetEntity = File::class)
+        @field:Nullable
+        var profilePicture: File? = null,
 
         @ManyToMany(targetEntity = Role::class, fetch = FetchType.EAGER)
         var roles: MutableSet<Role> = mutableSetOf(),

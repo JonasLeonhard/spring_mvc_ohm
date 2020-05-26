@@ -8,7 +8,11 @@
 <div class="page-content">
     <th:block th:if="${profile}">
         THIS IS THE PROFILE OF [[${profile.username}]]
+        <div th:if="${authenticated != null && authenticated.username == profile.username}">
+            [[${authenticated.username}]] --> your-profiletest
+        </div>
     </th:block>
+
     <th:block th:unless="${profile}">
       <span>
          This Profile

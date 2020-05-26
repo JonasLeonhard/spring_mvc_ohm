@@ -5,6 +5,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import repositories.RoleRepository
 import repositories.UserRepository
+import javax.management.relation.RoleNotFoundException
 
 @Service
 class UserService(val userRepository: UserRepository, val roleRepository: RoleRepository, val bCryptPasswordEncoder: BCryptPasswordEncoder) {
@@ -12,12 +13,13 @@ class UserService(val userRepository: UserRepository, val roleRepository: RoleRe
         return userRepository.findByUsername(username)
     }
 
-    fun save(user: User) {
+    fun registerNewUser(user: User) {
         user.password = bCryptPasswordEncoder.encode(user.password)
 
-        // TODO() <- this should be a query by name = "USER"
-        user.roles.add(roleRepository.getOne(2)) // id = 2 := "USER" Role
+        val role = roleRepository.findByName("User")
+                ?: throw RoleNotFoundException("UserService.save: 'User' role is undefined")
 
+        user.roles.add(role)
         userRepository.save(user)
     }
 }

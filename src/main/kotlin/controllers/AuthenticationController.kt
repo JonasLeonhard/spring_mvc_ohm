@@ -40,7 +40,7 @@ class AuthenticationController(val securityService: SecurityService, val userSer
             return "registration"
         }
         try {
-            userService.save(userForm)
+            userService.registerNewUser(userForm)
         } catch (err: Error) {
             return "redirect:/registration?error=true"
         }
