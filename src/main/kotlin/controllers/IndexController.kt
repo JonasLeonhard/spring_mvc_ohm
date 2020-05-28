@@ -5,18 +5,19 @@ import org.springframework.ui.Model
 import org.springframework.ui.set
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
-import services.UserDetailsService
+import services.SecurityService
 import java.security.Principal
 
 
 @Controller
 @RequestMapping("/")
-class IndexController(val userDetailsService: UserDetailsService) {
+class IndexController(val securityService: SecurityService) {
 
     @GetMapping
     fun index(model: Model, principal: Principal): String {
         model["pageTitle"] = "INDEXPAGETITLE"
-        model["authenticated"] = userDetailsService.loadUserByUsername(principal.name)
+        model["authenticated"] = securityService.getAuthenticatedUser(principal)
+        println("securityService.getAuthenticatedUser() ${securityService.getAuthenticatedUser(principal)}")
         return "index"
     }
 }

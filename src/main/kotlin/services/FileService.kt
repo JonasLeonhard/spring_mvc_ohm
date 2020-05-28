@@ -9,14 +9,17 @@ import java.util.*
 @Service
 class FileService(val fileRepository: FileRepository) {
 
-    fun saveFile(file: MultipartFile): File? {
-        val fileName = file.originalFilename ?: "undefined_name"
-        val mimeType = file.contentType ?: return null
-        try {
-            val saveFile = File(fileName = fileName, mimeType = mimeType, byte = file.bytes)
-            return fileRepository.save(saveFile)
-        } catch (exc: Exception) {
-            exc.printStackTrace()
+    fun trySaveMultipartFile(file: MultipartFile?): File? {
+        if (file != null && !(file!!.isEmpty)) {
+            val fileName = file!!.originalFilename ?: "undefined"
+            val mimeType = file!!.contentType ?: "undefined"
+            val bytes = file!!.bytes
+            try {
+                val saveFile = File(fileName = fileName, mimeType = mimeType, bytes = bytes)
+                return fileRepository.save(saveFile)
+            } catch (exc: Exception) {
+                throw FileSaveException("Could not store file ${fileName}:${exc.message}")
+            }
         }
         return null
     }
@@ -25,3 +28,5 @@ class FileService(val fileRepository: FileRepository) {
         return fileRepository.findById(id)
     }
 }
+
+class FileSaveException(override val message: String?) : Exception(message)

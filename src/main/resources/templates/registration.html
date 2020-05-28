@@ -21,7 +21,7 @@
                 There was an error registering your account, please try again.
             </span>
 
-            <form th:action="@{/registration}" th:object="${user}" method="post">
+            <form th:action="@{/registration}" th:object="${user}" method="post" enctype="multipart/form-data">
                 <div class="input-wrapper">
                     <input th:field="*{username}" placeholder=" "/>
                     <label th:for="*{username}" class="control-label">username</label>
@@ -33,6 +33,14 @@
                     <label th:for="*{name}" class="control-label">name</label>
                 </div>
                 <span th:errors="*{name}" class="error"></span>
+
+                <div class="input-wrapper">
+                    <input th:field="*{file}" type="file" accept="image/jpeg, image/jpg, image/png">
+                    <label th:for="*{file}" class="control-label">picture</label>
+                </div>
+                <div th:if="${fileUploadException}" class="error">[[${fileUploadException}]]</div>
+                <div th:if="${fileLimitExceedException}" class="error">[[${fileLimitExceedException}]]</div>
+                <span th:errors="*{file}" class="error"></span>
 
                 <div class="input-wrapper">
                     <input th:field="*{password}"

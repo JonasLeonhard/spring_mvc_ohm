@@ -1,30 +1,17 @@
 package services
 
-import org.springframework.security.authentication.AuthenticationManager
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.core.userdetails.UserDetails
+import models.User
 import org.springframework.stereotype.Service
+import java.security.Principal
 
 @Service
-class SecurityService(val authenticationManager: AuthenticationManager, val userDetailsService: UserDetailsService) {
+class SecurityService(val userService: UserService) {
 
-    fun findLoggedInUsername(): String? {
-        val userDetails: Any? = SecurityContextHolder.getContext().authentication.details
-        return if (userDetails is UserDetails) userDetails.username else null
-    }
-
-    fun autoLogin(username: String, password: String) {
-        println("TODO() - utologin called!")
-        val userDetails = userDetailsService.loadUserByUsername(username)
-        val usernamePasswordAuthenticationToken = UsernamePasswordAuthenticationToken(userDetails, password)
-
-        authenticationManager.authenticate(usernamePasswordAuthenticationToken);
-
-        if (usernamePasswordAuthenticationToken.isAuthenticated) {
-            SecurityContextHolder.getContext().authentication = usernamePasswordAuthenticationToken;
-            println("Auto login of $username successfully!")
-        }
+    fun getAuthenticatedUser(principal: Principal): User {
+        return userService.findByUsername(principal.name)
+                ?: throw SecurityServiceException("User could not be found from principal")
     }
 }
+
+class SecurityServiceException(message: String) : Exception(message) {}
 

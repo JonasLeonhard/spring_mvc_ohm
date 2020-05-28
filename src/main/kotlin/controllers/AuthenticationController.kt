@@ -8,13 +8,13 @@ import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PostMapping
-import services.SecurityService
 import services.UserService
 import validators.UserValidator
+import javax.persistence.EntityManager
 import javax.validation.Valid
 
 @Controller
-class AuthenticationController(val securityService: SecurityService, val userService: UserService, val userValidator: UserValidator) {
+class AuthenticationController(val entityManager: EntityManager, val userService: UserService, val userValidator: UserValidator) {
 
     @GetMapping("/login")
     fun login(model: Model): String {
@@ -32,20 +32,21 @@ class AuthenticationController(val securityService: SecurityService, val userSer
         return "registration"
     }
 
-    @PostMapping("/registration")
+    @PostMapping("/registration", consumes = ["multipart/form-data"])
     fun registration(@Valid @ModelAttribute userForm: User, bindingResult: BindingResult, model: Model): String {
         userValidator.validate(userForm, bindingResult)
+        println("hasValidated...")
         if (bindingResult.hasErrors()) {
             model["errors"] = bindingResult
             return "registration"
         }
         try {
+            println("MULTIPARTFILE:::::=${userForm.file}")
             userService.registerNewUser(userForm)
-        } catch (err: Error) {
+        } catch (err: Exception) {
             return "redirect:/registration?error=true"
         }
         println("--- REDIRECT POST, got $userForm : /registration to / ... autoLogin ...---")
-        securityService.autoLogin(userForm.username, userForm.password)
-        return "redirect:/login?hasRegistered=true&username=${userForm.username}"
+        return "redirect:/login?hasRegistered=true"
     }
 }

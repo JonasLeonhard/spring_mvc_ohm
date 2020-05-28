@@ -22,4 +22,6 @@ class UserDetailsService(private val userRepository: UserRepository) : IUserDeta
         }
         return SecurityUser(user.username, user.password, grantedAuthorities)
     }
+
+
 }

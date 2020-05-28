@@ -12,6 +12,7 @@ class UserValidator(val userService: UserService) : Validator {
         val user = target as User
         usernameExists(errors, user)
         passwordNotMatching(errors, user)
+        fileMimeTypeValid(errors, user)
     }
 
     override fun supports(aClass: Class<*>): Boolean {
@@ -20,7 +21,7 @@ class UserValidator(val userService: UserService) : Validator {
 
     fun usernameExists(errors: Errors, user: User) {
         println("validate username: ${user.username} ----------")
-        if (userService.findByUserName(user.username) != null) {
+        if (userService.findByUsername(user.username) != null) {
             errors.rejectValue("username", "UsernameExists", "this Username already exists")
         }
     }
@@ -29,6 +30,18 @@ class UserValidator(val userService: UserService) : Validator {
         println("validate password: ${user.passwordConfirm} -> ${user.password} ----------")
         if (user.passwordConfirm != user.password) {
             errors.rejectValue("password", "PasswordNotMatching", "password is not matching the confirm password")
+        }
+    }
+
+    fun fileMimeTypeValid(errors: Errors, user: User) {
+        val file = user.file
+        if (
+                file != null &&
+                !file.isEmpty &&
+                !(file.contentType?.toLowerCase().equals("image/jpg")
+                        || file.contentType?.toLowerCase().equals("image/jpeg")
+                        || file.contentType?.toLowerCase().equals("image/png"))) {
+            errors.rejectValue("file", "InvalidMimeTypeException", "jpg, jpeg & png file types are only supported");
         }
     }
 }

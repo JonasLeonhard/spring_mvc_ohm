@@ -26,7 +26,10 @@ class WebSecurityConfiguration(val userDetailsService: UserDetailsService) : Web
                         "/js/**",
                         "/styles/**",
                         "/unsecured_files/**",
-                        "/user/profile/**").permitAll()
+                        "/user/profile/**",
+                        "/error/**",
+                        "/login**",
+                        "/resource/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

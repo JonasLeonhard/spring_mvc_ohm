@@ -3,6 +3,7 @@ package models
 import com.sun.istack.Nullable
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
+import org.springframework.web.multipart.MultipartFile
 import java.time.Instant
 import java.util.*
 import javax.persistence.*
@@ -36,9 +37,13 @@ data class User(
         var accountNonLocked: Boolean = true,
         var credentialsNonExpired: Boolean = true,
 
-        @OneToOne(targetEntity = File::class)
+        @Transient
+        @Nullable
+        var file: MultipartFile? = null,
+
+        @OneToOne(targetEntity = File::class, cascade = [CascadeType.ALL])
         @field:Nullable
-        var profilePicture: File? = null,
+        var picture: File? = null,
 
         @ManyToMany(targetEntity = Role::class, fetch = FetchType.EAGER)
         var roles: MutableSet<Role> = mutableSetOf(),
