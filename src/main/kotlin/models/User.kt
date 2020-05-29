@@ -48,6 +48,11 @@ data class User(
         @ManyToMany(targetEntity = Role::class, fetch = FetchType.EAGER)
         var roles: MutableSet<Role> = mutableSetOf(),
 
+        @field:Nullable
+        @OneToMany(targetEntity = Recipe::class, fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+        @JoinColumn(name = "user_id")
+        var recipes: MutableSet<Recipe> = mutableSetOf(),
+
         @CreationTimestamp
         @Temporal(TemporalType.TIMESTAMP)
         private var createdAt: Date = Date.from(Instant.now()),

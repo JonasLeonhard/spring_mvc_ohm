@@ -8,13 +8,14 @@ import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PostMapping
+import repositories.RecipeRepository
+import repositories.UserRepository
 import services.UserService
 import validators.UserValidator
-import javax.persistence.EntityManager
 import javax.validation.Valid
 
 @Controller
-class AuthenticationController(val entityManager: EntityManager, val userService: UserService, val userValidator: UserValidator) {
+class AuthenticationController(val userService: UserService, val userValidator: UserValidator, val recipeRepo: RecipeRepository, val userRepository: UserRepository) {
 
     @GetMapping("/login")
     fun login(model: Model): String {
