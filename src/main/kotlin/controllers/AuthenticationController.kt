@@ -41,7 +41,6 @@ class AuthenticationController(val entityManager: EntityManager, val userService
             return "registration"
         }
         try {
-            println("MULTIPARTFILE:::::=${userForm.file}")
             userService.registerNewUser(userForm)
         } catch (err: Exception) {
             return "redirect:/registration?error=true"

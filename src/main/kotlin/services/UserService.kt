@@ -3,23 +3,23 @@ package services
 import models.User
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import repositories.RoleRepository
 import repositories.UserRepository
 import javax.management.relation.RoleNotFoundException
-import javax.persistence.EntityManager
 
 @Service
-class UserService(val entityManager: EntityManager,
-                  val userRepository: UserRepository,
-                  val roleRepository: RoleRepository,
-                  val bCryptPasswordEncoder: BCryptPasswordEncoder,
-                  val fileService: FileService) {
+class UserService(
+        val userRepository: UserRepository,
+        val roleRepository: RoleRepository,
+        val bCryptPasswordEncoder: BCryptPasswordEncoder,
+        val fileService: FileService) {
     fun findByUsername(username: String): User? {
         return userRepository.findByUsername(username)
     }
 
+    @Transactional
     fun registerNewUser(user: User): User {
-        // entitymanager.transaction.begin()
         user.password = bCryptPasswordEncoder.encode(user.password)
 
         val role = roleRepository.findByName("User")
@@ -30,6 +30,5 @@ class UserService(val entityManager: EntityManager,
         user.picture = savedFile
 
         return userRepository.save(user)
-        // entitrymanager.transaction.commit()
     }
 }
