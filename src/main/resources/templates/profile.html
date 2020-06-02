@@ -6,14 +6,74 @@
 <nav th:replace="fragments/navigation :: navigation"></nav>
 
 <div class="page-content">
-    <th:block th:if="${profile}">
-        THIS IS THE PROFILE OF [[${profile.username}]]
-        <div th:if="${authenticated != null && authenticated.username == profile.username}">
-            [[${authenticated.username}]] --> your-profiletest
+    <th:block th:if="${profile != null}">
+        <div class="profile-info-wrapper">
+            <div class="sidebar-left">
+                <img class="profile-image"
+                     alt="profile picture"
+                     th:title="${profile.username} + '\'s Profilepicture'"
+                     th:src="${profile.picture != null ? '/resource/' + profile.picture.id : '/unsecured_files/placeholder_profile_image.png'}"/>
+
+                <div class="profile-info">
+                    <div class="p-info-wrapper">
+                        <div>
+                            <span>Username:</span>
+                            <span>[[${profile.username}]]</span>
+                        </div>
+                        <div>
+                            <span>Registered since:</span>
+                            <span>[[${profile.createdAt}]]</span>
+                        </div>
+                        <div>
+                            <span>Updated at:</span>
+                            <span>[[${profile.updatedAt}]]</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar-content-right">
+                <form class="update-profile-form" th:action="@{/login}" th:object="${userForm}" method="post"
+                      th:if="${authenticated != null && authenticated.username == profile.username}">
+                    <div class="input-wrapper">
+                        <input th:field="*{username}"
+                               placeholder=" "/>
+                        <label th:for="*{username}" class="control-label">New Username</label>
+                    </div>
+
+                    <div class="input-wrapper">
+                        <input th:field="*{password}"
+                               placeholder=" "
+                               type="password"/>
+                        <label th:for="*{username}" class="control-label">New Password</label>
+                    </div>
+
+                    <div class="input-wrapper">
+                        <input th:field="*{passwordConfirm}"
+                               placeholder=" "
+                               type="password"/>
+                        <label th:for="*{passwordConfirm}" class="control-label">Commit Password</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-success">Update Profile</button>
+                </form>
+                THIS IS THE PROFILE OF
+                <br>
+                authenticated:[[${authenticated != null}]] <span
+                    th:if="${authenticated}">[[${authenticated.username}]]</span>
+                <div th:if="${authenticated != null && authenticated.username == profile.username}">
+                    [[${authenticated.username}]] --> your-profiletest
+                </div>
+
+                <br>
+                <div>
+                    Friendrequest has been made:: [[${friendship != null ? friendship.accepted :
+                    'friendshipDoesNotExists' }]]
+                </div>
+            </div>
         </div>
     </th:block>
 
-    <th:block th:unless="${profile}">
+    <th:block th:unless="${profile != null}">
       <span>
          This Profile
          <span th:if="${userNotFound}">([[${userNotFound}]])</span>

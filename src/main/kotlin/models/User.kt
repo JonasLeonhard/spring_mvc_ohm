@@ -53,11 +53,17 @@ data class User(
         @JoinColumn(name = "user_id")
         var recipes: MutableSet<Recipe> = mutableSetOf(),
 
+        @OneToMany(targetEntity = Friendship::class, mappedBy = "requested_by")
+        var friendshipsFromUsers: MutableSet<Friendship> = mutableSetOf(),
+
+        @OneToMany(targetEntity = Friendship::class, mappedBy = "request_to")
+        var friendshipsToUsers: MutableSet<Friendship> = mutableSetOf(),
+
         @CreationTimestamp
         @Temporal(TemporalType.TIMESTAMP)
-        private var createdAt: Date = Date.from(Instant.now()),
+        var createdAt: Date = Date.from(Instant.now()),
 
         @UpdateTimestamp
         @Temporal(TemporalType.TIMESTAMP)
-        private var updatedAt: Date = Date.from(Instant.now())
+        var updatedAt: Date = Date.from(Instant.now())
 )

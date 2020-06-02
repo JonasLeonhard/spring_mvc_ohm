@@ -1,9 +1,12 @@
 package services
 
+import models.Friendship
 import models.User
+import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import repositories.FriendshipRepository
 import repositories.RoleRepository
 import repositories.UserRepository
 import javax.management.relation.RoleNotFoundException
@@ -12,13 +15,17 @@ import javax.management.relation.RoleNotFoundException
 class UserService(
         val userRepository: UserRepository,
         val roleRepository: RoleRepository,
+        val friendshipRepository: FriendshipRepository,
         val bCryptPasswordEncoder: BCryptPasswordEncoder,
         val fileService: FileService) {
-    fun findByUsername(username: String): User? {
-        return userRepository.findByUsername(username)
+
+    @Throws(UsernameNotFoundException::class)
+    fun findByUsername(username: String): User {
+        return userRepository.findByUsername(username) ?: throw UsernameNotFoundException(username)
     }
 
     @Transactional
+    @Throws(RoleNotFoundException::class, IllegalArgumentException::class)
     fun registerNewUser(user: User): User {
         user.password = bCryptPasswordEncoder.encode(user.password)
 
@@ -26,9 +33,24 @@ class UserService(
                 ?: throw RoleNotFoundException("UserService.save: 'User' role is undefined")
 
         user.roles.add(role)
-        val savedFile = fileService.trySaveMultipartFile(user.file)
-        user.picture = savedFile
+        user.picture = fileService.trySaveMultipartFile(user.file)
 
         return userRepository.save(user)
+    }
+
+    @Transactional
+    fun friendRequest(from: User, to: User): Friendship {
+        val friendship = Friendship(requested_by = from, request_to = to)
+        return friendshipRepository.save(friendship)
+    }
+
+    @Transactional
+    fun friendRequestAccept(friendship: Friendship): Friendship {
+        friendship.accepted = true
+        return friendship
+    }
+
+    fun findFriendshipBetween(from: User, to: User): Friendship? {
+        return friendshipRepository.findFriendshipBetween(from, to)
     }
 }

@@ -17,6 +17,7 @@ class ResourceController(val fileService: FileService) {
 
     @GetMapping("/{file_id}", produces = [MediaType.IMAGE_PNG_VALUE])
     fun getBlobImgFromDatabase(@PathVariable("file_id") fileId: Long): ResponseEntity<ByteArray> {
+
         val fileContent: ByteArray = fileService.getFile(fileId).get().bytes
         val responseHeader = HttpHeaders()
         responseHeader.contentType = MediaType.IMAGE_PNG

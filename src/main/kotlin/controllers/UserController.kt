@@ -1,26 +1,34 @@
 package controllers
 
+import models.User
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
-import services.UserDetailsService
+import services.UserService
 import java.security.Principal
 
 @Controller
 @RequestMapping("/user")
-class UserController(val userDetailsService: UserDetailsService) {
+class UserController(val userService: UserService) {
 
     @GetMapping("/profile/{username}")
     fun userProfile(principal: Principal?, model: Model, @PathVariable username: String): String {
-        if (principal != null) {
-            model["authenticated"] = userDetailsService.loadUserByUsername(principal.name)
-        }
-
+        model["userForm"] = User()
         try {
-            model["profile"] = userDetailsService.loadUserByUsername(username)
+            val profile = userService.findByUsername(username)
+            model["profile"] = profile
+
+            if (principal != null) {
+                val authenticated = userService.findByUsername(principal.name)
+                model["authenticated"] = authenticated
+
+                val friendship = userService.findFriendshipBetween(authenticated, profile)
+                if (friendship != null) model["friendship"] = friendship
+            }
+
         } catch (userNotFound: Exception) {
             model["userNotFound"] = username
         }
@@ -31,7 +39,7 @@ class UserController(val userDetailsService: UserDetailsService) {
 
     @GetMapping("/settings")
     fun userSettings(principal: Principal, model: Model): String {
-        model["authenticated"] = userDetailsService.loadUserByUsername(principal.name)
+        model["authenticated"] = userService.findByUsername(principal.name)
         model["pageTitle"] = "${principal.name}' Settings"
         return "settings"
     }

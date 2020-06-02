@@ -1,6 +1,7 @@
 package validators
 
 import models.User
+import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Component
 import org.springframework.validation.Errors
 import org.springframework.validation.Validator
@@ -20,9 +21,10 @@ class UserValidator(val userService: UserService) : Validator {
     }
 
     fun usernameExists(errors: Errors, user: User) {
-        println("validate username: ${user.username} ----------")
-        if (userService.findByUsername(user.username) != null) {
+        try {
+            userService.findByUsername(user.username)
             errors.rejectValue("username", "UsernameExists", "this Username already exists")
+        } catch (esc: UsernameNotFoundException) {
         }
     }
 
@@ -41,7 +43,7 @@ class UserValidator(val userService: UserService) : Validator {
                 !(file.contentType?.toLowerCase().equals("image/jpg")
                         || file.contentType?.toLowerCase().equals("image/jpeg")
                         || file.contentType?.toLowerCase().equals("image/png"))) {
-            errors.rejectValue("file", "InvalidMimeTypeException", "jpg, jpeg & png file types are only supported");
+            errors.rejectValue("file", "InvalidMimeTypeException", "jpg, jpeg & png file types are only supported")
         }
     }
 }

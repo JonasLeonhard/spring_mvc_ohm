@@ -4,8 +4,9 @@
 
 <body>
 <nav th:replace="fragments/navigation :: navigation"></nav>
-
-<h1>Rendered from Controller:</h1>
-Logged in as <span th:if="${authenticated}">[[${authenticated.username}]]</span>
+<div class="page-content">
+    <h1>Rendered from Controller:</h1>
+    Logged in as <span th:if="${authenticated}">[[${authenticated.username}]]</span>
+</div>
 </body>
 </html>

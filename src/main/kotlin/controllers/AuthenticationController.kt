@@ -8,14 +8,12 @@ import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PostMapping
-import repositories.RecipeRepository
-import repositories.UserRepository
 import services.UserService
 import validators.UserValidator
 import javax.validation.Valid
 
 @Controller
-class AuthenticationController(val userService: UserService, val userValidator: UserValidator, val recipeRepo: RecipeRepository, val userRepository: UserRepository) {
+class AuthenticationController(val userService: UserService, val userValidator: UserValidator) {
 
     @GetMapping("/login")
     fun login(model: Model): String {
@@ -42,7 +40,9 @@ class AuthenticationController(val userService: UserService, val userValidator: 
             return "registration"
         }
         try {
+            println("preregister")
             userService.registerNewUser(userForm)
+            println("postregister")
         } catch (err: Exception) {
             return "redirect:/registration?error=true"
         }
