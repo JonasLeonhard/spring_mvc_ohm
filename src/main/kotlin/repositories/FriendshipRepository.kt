@@ -14,6 +14,6 @@ interface FriendshipRepository : JpaRepository<Friendship, Long> {
     @Query("UPDATE Friendship friendship SET friendship.accepted = ?1 WHERE friendship.id = ?2")
     fun updateFriendshipAccepted(accepted: Boolean, userId: Long)
 
-    @Query("SELECT friendship FROM Friendship friendship where friendship.requested_by = ?1 and friendship.request_to = ?2")
+    @Query("SELECT friendship FROM Friendship friendship where (friendship.requested_by = ?1 and friendship.request_to = ?2) or (friendship.requested_by = ?2 and friendship.request_to = ?1)")
     fun findFriendshipBetween(from_user: User, to_user: User): Friendship?
 }

@@ -200,24 +200,38 @@ nav .profile-container .open-profile {
     transform: translateY(1px);
 }
 
-nav .profile-container ul.open-profile-dropdown {
+nav .profile-container ul.open-profile-dropdown, .notifications-container ul.open-notifications-dropdown {
     display: none;
     position: absolute;
-    width: 100%;
-    top: 1.8em;
     padding-top: 1em;
     list-style-type: none;
     border-radius: 3px;
     overflow: hidden;
 }
 
-ul.open-profile-dropdown li {
+.open-profile-dropdown {
+    top: 2em;
+    width: 100%;
+}
+
+.notifications-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+.open-notifications-dropdown {
+    top: 1.95em;
+    width: max-content;
+}
+
+ul.open-profile-dropdown li, ul.open-notifications-dropdown li {
     width: 100%;
     background: var(--secondary);
     cursor: pointer;
 }
 
-ul.open-profile-dropdown li a {
+ul.open-profile-dropdown li a, ul.open-notifications-dropdown li a {
     width: 100%;
     height: 100%;
     color: white;
@@ -225,11 +239,11 @@ ul.open-profile-dropdown li a {
     padding: 0.5em;
 }
 
-ul.open-profile-dropdown li:hover {
+ul.open-profile-dropdown li:hover, ul.open-notifications-dropdown li:hover {
     background: var(--third);
 }
 
-nav .profile-container:hover > ul.open-profile-dropdown {
+nav .profile-container:hover > ul.open-profile-dropdown, nav .notifications-container:hover > ul.open-notifications-dropdown {
     display: block;
 }
 

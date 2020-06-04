@@ -32,7 +32,8 @@
                 </div>
             </div>
             <div class="sidebar-content-right">
-                <form class="update-profile-form" th:action="@{/login}" th:object="${userForm}" method="post"
+                <form class="update-profile-form profile-card" th:action="@{/login}" th:object="${userForm}"
+                      method="post"
                       th:if="${authenticated != null && authenticated.username == profile.username}">
                     <div class="input-wrapper">
                         <input th:field="*{username}"
@@ -56,18 +57,39 @@
 
                     <button type="submit" class="btn btn-success">Update Profile</button>
                 </form>
-                THIS IS THE PROFILE OF
-                <br>
-                authenticated:[[${authenticated != null}]] <span
-                    th:if="${authenticated}">[[${authenticated.username}]]</span>
-                <div th:if="${authenticated != null && authenticated.username == profile.username}">
-                    [[${authenticated.username}]] --> your-profiletest
+
+                <div th:if="${authenticated != null && authenticated.username != profile.username}">
+                    <div th:if="${friendship != null}" class="profile-card">
+                        <th:block th:if="${friendship.accepted == true}">
+                            you are friends with this profile
+                        </th:block>
+                        <th:block th:if="${friendship.accepted == false}">
+                            <th:block th:if="${friendship.request_to.username == authenticated.username}">
+                                Do you want to accept the friendrequest of [[${friendship.requested_by.username}]]
+                            </th:block>
+                            <th:block th:if="${friendship.request_to.username != authenticated.username}">
+                                The friendrequest is still pending and has to be accepted by
+                                [[${friendship.request_to.username}]]
+                            </th:block>
+                        </th:block>
+                    </div>
+                    <span th:if="${friendship == null}">
+                         <form class="friend-request-form" th:action="@{/user/friendship}" method="post">
+                            <button type="submit" class="btn btn-success" id="userId" name="userId"
+                                    th:value="${profile.id}">Friend Request</button>
+                        </form>
+                    </span>
                 </div>
 
-                <br>
-                <div>
-                    Friendrequest has been made:: [[${friendship != null ? friendship.accepted :
-                    'friendshipDoesNotExists' }]]
+                <div th:if="${authenticated != null && #sets.size(authenticated.friendshipsFromThisUser) > 0 && authenticated.username == profile.username}"
+                     class="friendrequest-card profile-card">
+                    <ul>
+                        <th:block th:each="friendrequest : ${authenticated.friendshipsFromThisUser}">
+                            <li th:if="${friendrequest.accepted == false}">Pending FriendRequest to:
+                                [[${friendrequest.request_to.username}]]
+                            </li>
+                        </th:block>
+                    </ul>
                 </div>
             </div>
         </div>

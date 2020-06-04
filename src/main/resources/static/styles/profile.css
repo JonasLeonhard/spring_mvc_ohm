@@ -49,10 +49,13 @@ img.profile-image {
     text-align: right;
 }
 
-.update-profile-form {
-    display: block;
-    margin: 4em;
+.profile-card {
     background: white;
     padding: 0.5em 1.5em;
+    margin: 4em;
     border-radius: 3px;
+}
+
+.update-profile-form {
+    display: block;
 }

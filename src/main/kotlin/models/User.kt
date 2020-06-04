@@ -54,10 +54,13 @@ data class User(
         var recipes: MutableSet<Recipe> = mutableSetOf(),
 
         @OneToMany(targetEntity = Friendship::class, mappedBy = "requested_by")
-        var friendshipsFromUsers: MutableSet<Friendship> = mutableSetOf(),
+        var friendshipsFromThisUser: MutableSet<Friendship> = mutableSetOf(),
 
         @OneToMany(targetEntity = Friendship::class, mappedBy = "request_to")
-        var friendshipsToUsers: MutableSet<Friendship> = mutableSetOf(),
+        var friendshipsToThisUser: MutableSet<Friendship> = mutableSetOf(),
+
+        @OneToMany(targetEntity = Notification::class)
+        var notifications: MutableSet<Notification> = mutableSetOf(),
 
         @CreationTimestamp
         @Temporal(TemporalType.TIMESTAMP)

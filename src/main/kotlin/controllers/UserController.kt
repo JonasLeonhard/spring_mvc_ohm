@@ -4,9 +4,7 @@ import models.User
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.*
 import services.UserService
 import java.security.Principal
 
@@ -25,8 +23,12 @@ class UserController(val userService: UserService) {
                 val authenticated = userService.findByUsername(principal.name)
                 model["authenticated"] = authenticated
 
-                val friendship = userService.findFriendshipBetween(authenticated, profile)
-                if (friendship != null) model["friendship"] = friendship
+                if (authenticated != profile) {
+                    val friendship = userService.findFriendshipBetween(authenticated, profile)
+                    println(profile.friendshipsFromThisUser.size)
+                    println("------------found friendship: ${friendship?.id} ....")
+                    if (friendship != null) model["friendship"] = friendship
+                }
             }
 
         } catch (userNotFound: Exception) {
@@ -42,5 +44,17 @@ class UserController(val userService: UserService) {
         model["authenticated"] = userService.findByUsername(principal.name)
         model["pageTitle"] = "${principal.name}' Settings"
         return "settings"
+    }
+
+    @PostMapping("/friendship")
+    fun friendship(principal: Principal, @RequestParam(value = "userId", required = true) userId: Long, model: Model): String {
+        println("post to firendship ... create friendship between $principal and form id user with id $userId...")
+        val authenticated = userService.findByUsername(principal.name)
+        val toUser = userService.findById(userId)
+
+        model["authenticated"] = authenticated
+        model["pageTitle"] = "${principal.name}' Settings"
+        model["friendship"] = userService.friendRequest(authenticated, toUser)
+        return "profile"
     }
 }

@@ -19,9 +19,22 @@
                 <img th:if="${authenticated}" class="nav-item" th:src="@{/unsecured_files/notification.svg}"
                      alt="Calender"
                      title="Calender"/>
-                <img th:if="${authenticated}" class="nav-item" th:src="@{/unsecured_files/notification.svg}"
-                     alt="Notifications"
-                     title="Notifications"/>
+                <div th:if="${authenticated}"
+                     class="notifications-container">
+                    <img class="nav-item"
+                         alt="Notifications"
+                         title="Notifications"
+                         th:src="@{/unsecured_files/notification.svg}"/>
+                    <ul class="open-notifications-dropdown">
+                        <th:block th:each="friendrequest : ${authenticated.friendshipsToThisUser}">
+                            <li th:if="${friendrequest.accepted != true}">
+                                <a th:href="'/user/profile/' + ${friendrequest.requested_by.username}">
+                                    New Friendrequest to you: [[${friendrequest.requested_by.username}]]
+                                </a>
+                            </li>
+                        </th:block>
+                    </ul>
+                </div>
                 <div class="profile-container">
                     <th:block th:if="${authenticated}">
                         <a th:href="'/user/profile/' + ${authenticated.username}">
@@ -46,10 +59,7 @@
                         <a th:if="${#httpServletRequest.requestURI != '/registration'}"
                            href="/registration">Register</a>
                     </th:block>
-
-
                 </div>
-
             </div>
         </div>
     </nav>
