@@ -16,7 +16,7 @@ class SearchController(val userService: UserService) {
     fun searchBar(model: Model, @RequestParam(value = "q") q: String, @RequestParam(value = "type") type: String): String {
         model["q"] = q
         model["type"] = type
-
+        model["pageTitle"] = "Search '$q'"
         if (type == "everywhere" || type == "users") {
             val searchUsers = userService.searchAllByUsername(q)
             if (searchUsers.count() > 0) {
