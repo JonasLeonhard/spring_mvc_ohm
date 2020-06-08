@@ -27,6 +27,18 @@ class UserService(
         return userRepository.findByUsername(username) ?: throw UsernameNotFoundException(username)
     }
 
+    fun findAllByUsername(username: String): Set<User> {
+        return userRepository.findAllByUsername(username)
+    }
+
+    fun searchByUsername(username: String): User? {
+        return userRepository.findByUsername(username)
+    }
+
+    fun searchAllByUsername(username: String): Set<User> {
+        return userRepository.searchAllByUsername(username)
+    }
+
     @Throws(NoSuchElementException::class)
     fun findById(id: Long): User {
         return userRepository.findById(id).get()

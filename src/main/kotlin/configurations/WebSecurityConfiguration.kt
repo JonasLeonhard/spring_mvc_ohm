@@ -29,7 +29,8 @@ class WebSecurityConfiguration(val userDetailsService: UserDetailsService) : Web
                         "/user/profile/**",
                         "/error/**",
                         "/login**",
-                        "/resource/**").permitAll()
+                        "/resource/**",
+                        "/search/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -41,7 +42,7 @@ class WebSecurityConfiguration(val userDetailsService: UserDetailsService) : Web
                 .clearAuthentication(true)
                 .logoutRequestMatcher(AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/login?logout=true")
-                .permitAll();
+                .permitAll()
     }
 
     @Autowired
