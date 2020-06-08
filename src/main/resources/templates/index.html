@@ -6,7 +6,7 @@
 <nav th:replace="fragments/navigation :: navigation"></nav>
 <div class="page-content">
     <h1>Rendered from Controller:</h1>
-    Logged in as <span th:if="${authenticated}">[[${authenticated.username}]]</span>
+    <span th:if="${authenticated}">Logged in as [[${authenticated.username}]]</span>
 </div>
 </body>
 </html>

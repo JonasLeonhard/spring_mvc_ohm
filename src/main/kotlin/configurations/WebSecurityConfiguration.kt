@@ -22,6 +22,7 @@ class WebSecurityConfiguration(val userDetailsService: UserDetailsService) : Web
         http
                 .authorizeRequests()
                 .antMatchers(
+                        "/",
                         "/registration",
                         "/js/**",
                         "/styles/**",

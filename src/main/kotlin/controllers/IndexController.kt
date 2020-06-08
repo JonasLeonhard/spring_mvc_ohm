@@ -14,9 +14,11 @@ import java.security.Principal
 class IndexController(val userService: UserService) {
 
     @GetMapping
-    fun index(model: Model, principal: Principal): String {
+    fun index(model: Model, principal: Principal?): String {
         model["pageTitle"] = "INDEXPAGETITLE"
-        model["authenticated"] = userService.findByUsername(principal.name)
+        if (principal != null) {
+            model["authenticated"] = userService.findByUsername(principal.name)
+        }
         return "index"
     }
 }
