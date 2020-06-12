@@ -8,7 +8,7 @@ import javax.persistence.*
 data class File(
 
         @Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
         var id: Long = -1,
 
         var fileName: String,

@@ -40,7 +40,7 @@
                     </div>
                 </th:block>
 
-                <span th:if="${searchUsers != null && !(#sets.size(searchUsers) > 0)}">
+                <span th:if="${searchUsers == null || (searchUsers != null && (#sets.size(searchUsers) == 0))}">
                     No Profile with the Username ([[${q}]]) found
                 </span>
             </div>

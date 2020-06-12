@@ -6,7 +6,7 @@ import javax.persistence.*
 @Entity
 data class Notification(
         @Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
         var id: Long = -1,
 
         @field:NonNull

@@ -15,7 +15,7 @@ import javax.validation.constraints.Size
 data class User(
 
         @Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
         var id: Long = -1,
 
         @Column(unique = true)
