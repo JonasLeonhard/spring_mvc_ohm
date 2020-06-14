@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "properties.spoonacularApiKey",
+      "type": "java.lang.String",
+      "description": "Set spoonacular api key with the flag --properties.spoonacularApiKey='...'"
+    }
+  ]
+}

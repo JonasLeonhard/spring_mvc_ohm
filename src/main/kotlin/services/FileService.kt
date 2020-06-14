@@ -10,10 +10,10 @@ import java.util.*
 class FileService(val fileRepository: FileRepository) {
 
     fun trySaveMultipartFile(file: MultipartFile?): File? {
-        if (file != null && !(file!!.isEmpty)) {
-            val fileName = file!!.originalFilename ?: "undefined"
-            val mimeType = file!!.contentType ?: "undefined"
-            val bytes = file!!.bytes
+        if (file != null && !(file.isEmpty)) {
+            val fileName = file.originalFilename ?: "undefined"
+            val mimeType = file.contentType ?: "undefined"
+            val bytes = file.bytes
             try {
                 val saveFile = File(fileName = fileName, mimeType = mimeType, bytes = bytes)
                 return fileRepository.save(saveFile)

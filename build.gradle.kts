@@ -39,6 +39,9 @@ dependencies {
 
     // Form Validation
     implementation("org.springframework.boot:spring-boot-starter-validation")
+
+    // Async Flux Webclient
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
 }
 
 tasks.withType<Test> {
