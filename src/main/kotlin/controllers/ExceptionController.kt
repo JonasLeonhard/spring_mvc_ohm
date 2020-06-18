@@ -1,5 +1,6 @@
 package controllers
 
+import configurations.ApplicationPropertiesConfiguration
 import models.User
 import org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException
 import org.springframework.core.env.Environment
@@ -10,13 +11,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.multipart.MaxUploadSizeExceededException
 
 @ControllerAdvice
-class ExceptionController(val environment: Environment) {
-    val ANSI_RESET = "\u001B[0m"
-    val ANSI_RED = "\u001B[31m"
+class ExceptionController(val environment: Environment, val props: ApplicationPropertiesConfiguration) {
 
     @ExceptionHandler(value = [Exception::class])
     fun globalErrorHandling(exception: Exception, model: Model): String {
-        println("ExceptionController --- $ANSI_RED ${exception::class}: ${exception.message ?: "Undefined exception message"} $ANSI_RESET")
+        println("ExceptionController --- ${props.ANSI_RED} ${exception::class}: ${exception.message ?: "Undefined exception message"} ${props.ANSI_RESET}")
         model["errorMsg"] = "Oops, an error occurred while handling your request, please try again."
         return "error"
     }

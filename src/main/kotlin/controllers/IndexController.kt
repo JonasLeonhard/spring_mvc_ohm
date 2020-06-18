@@ -15,7 +15,6 @@ import java.security.Principal
 class IndexController(val userService: UserService, val prop: ApplicationPropertiesConfiguration) {
     @GetMapping
     fun index(model: Model, principal: Principal?): String {
-        println("called index: $prop")
         model["pageTitle"] = "INDEXPAGETITLE"
         if (principal != null) {
             model["authenticated"] = userService.findByUsername(principal.name)
