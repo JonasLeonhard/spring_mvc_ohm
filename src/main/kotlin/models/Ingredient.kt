@@ -9,7 +9,22 @@ data class Ingredient(
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         var id: Long = -1,
 
+        @OneToMany(targetEntity = Recipe_Ingredients::class, fetch = FetchType.EAGER, mappedBy = "ingredient")
+        var recipe_ingredients: MutableList<Recipe_Ingredients> = mutableListOf(),
+
+        var name: String,
+
+        var summary: String?,
+
+        var meta: String?,
+
+        var aisle: String?,
+
+        var consistency: String?,
+
+        var unit: String,
+
+        @OneToOne(targetEntity = File::class, cascade = [CascadeType.ALL])
         @field:Nullable
-        @ManyToOne(targetEntity = Recipe::class, fetch = FetchType.EAGER)
-        var recipe: Recipe? = null
+        var picture: File? = null
 )

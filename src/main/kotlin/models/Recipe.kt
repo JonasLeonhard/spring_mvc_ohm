@@ -16,12 +16,31 @@ class Recipe(
 
         var title: String,
 
-        var total_time: Int,
+        @OneToOne(targetEntity = File::class, cascade = [CascadeType.ALL])
+        @field:Nullable
+        var picture: File? = null,
 
-        var yields: Int,
+        var servings: Int,
 
-        @OneToMany(targetEntity = Ingredient::class, fetch = FetchType.EAGER)
-        @JoinColumn(name = "recipe_id")
-        var ingredients: MutableList<Ingredient>
+        var readyInMinutes: Int,
+
+        var likes: Int = 0,
+
+        var pricePerServing: Double = 0.0,
+
+        var glutenFree: Boolean = false,
+
+        var vegan: Boolean = false,
+
+        var vegetarian: Boolean = false,
+
+        // dish types array [Lunch, Dinner, main course, main dish] ?
+
+        var instructions: String,
+
+        var summary: String,
+
+        @OneToMany(targetEntity = Recipe_Ingredients::class, fetch = FetchType.EAGER, mappedBy = "recipe")
+        var recipe_ingredients: MutableList<Recipe_Ingredients> = mutableListOf()
 
 )
