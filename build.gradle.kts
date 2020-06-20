@@ -31,9 +31,12 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+
+    // Junit Tests
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
     }
+    testImplementation("org.junit.jupiter:junit-jupiter-api")
 
     // Db JPA HibernateORM, Postgres
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -64,11 +67,15 @@ tasks.withType<KotlinCompile> {
 tasks.register("start") {
     this.group = "Application"
     this.description = "Run the spring_mvc_ohm backend server"
+    if (project.hasProperty("build")) {
+        println("[ gradle start -Pbuild=true :: Rebuilding spring_mvc_ohm ]")
+        this.dependsOn(tasks.build.get())
+    }
     doLast {
         if (System.getenv().contains("ENV_SPOONACULAR_API_KEY")) {
-            println("INFO 00001 --- [ Environment variable 'ENV_SPOONACULAR_API_KEY' is set]")
-            println("INFO 00002 --- [ BootRun ]")
+            println("INFO 00001 --- [ Run::spring_mvc_ohm -- Start ]")
             tasks.run.get().exec()
+            //tasks.bootRun.get().exec()
         } else {
             val ANSI_RESET = "\u001B[0m"
             val ANSI_RED = "\u001B[31m"
