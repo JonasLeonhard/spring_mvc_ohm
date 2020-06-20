@@ -12,3 +12,11 @@ connect to the psql commandline
 psql -U postgres_usr    //connect with your psql user
 \l                      //show databases
 ```
+
+### Used Tech
+
+Junit
+Postgresql
+Hibernate
+Jackson
+...

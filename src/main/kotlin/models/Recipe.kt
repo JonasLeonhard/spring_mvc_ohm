@@ -34,13 +34,12 @@ class Recipe(
 
         var vegetarian: Boolean = false,
 
-        // dish types array [Lunch, Dinner, main course, main dish] ?
-
         var instructions: String,
 
         var summary: String,
 
         @OneToMany(targetEntity = Recipe_Ingredients::class, fetch = FetchType.EAGER, mappedBy = "recipe")
-        var recipe_ingredients: MutableList<Recipe_Ingredients> = mutableListOf()
+        var recipe_ingredients: MutableList<Recipe_Ingredients> = mutableListOf(),
 
+        var spoonacularId: Long?
 )
