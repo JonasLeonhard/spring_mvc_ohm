@@ -9,8 +9,8 @@ data class Ingredient(
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         var id: Long = -1,
 
-        @OneToMany(targetEntity = Recipe_Ingredients::class, fetch = FetchType.EAGER, mappedBy = "ingredient")
-        var recipe_ingredients: MutableList<Recipe_Ingredients> = mutableListOf(),
+        @OneToMany(targetEntity = RecipeIngredients::class, fetch = FetchType.EAGER, mappedBy = "embeddedKey.ingredient")
+        var recipe_ingredients: MutableList<RecipeIngredients> = mutableListOf(),
 
         var name: String,
 

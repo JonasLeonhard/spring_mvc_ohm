@@ -30,6 +30,8 @@ dependencies {
     // Spring Boot
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-web")
+
+    // Jackson for JSON to Class Dezerialization
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
     // Junit Tests

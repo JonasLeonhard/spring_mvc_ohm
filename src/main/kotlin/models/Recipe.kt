@@ -5,7 +5,7 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "recipe")
-class Recipe(
+data class Recipe(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         var id: Long = -1,
@@ -34,12 +34,14 @@ class Recipe(
 
         var vegetarian: Boolean = false,
 
+        @Column(columnDefinition = "TEXT")
         var instructions: String,
 
+        @Column(columnDefinition = "TEXT")
         var summary: String,
 
-        @OneToMany(targetEntity = Recipe_Ingredients::class, fetch = FetchType.EAGER, mappedBy = "recipe")
-        var recipe_ingredients: MutableList<Recipe_Ingredients> = mutableListOf(),
+        @OneToMany(targetEntity = RecipeIngredients::class, fetch = FetchType.EAGER, mappedBy = "embeddedKey.recipe")
+        var recipe_ingredients: MutableList<RecipeIngredients> = mutableListOf(),
 
-        var spoonacularId: Long?
+        var spoonacularId: Long? = null
 )
