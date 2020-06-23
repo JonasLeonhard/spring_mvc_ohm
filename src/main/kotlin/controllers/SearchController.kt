@@ -36,7 +36,9 @@ class SearchController(val userService: UserService, val recipeService: RecipeSe
     fun setSearchRecipes(model: Model, type: String, q: String) {
         if (type == "everywhere" || type == "recipes") {
             // TODO
-            model["searchRecipes"] = recipeService.searchApi(q)
+            val summaries = recipeService.searchApi(q)
+            println("${summaries.size} items: search got ... $summaries")
+            model["recipeSummaries"] = summaries
         }
     }
 }

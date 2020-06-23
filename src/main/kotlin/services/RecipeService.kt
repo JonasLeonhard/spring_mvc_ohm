@@ -11,7 +11,7 @@ import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.reactive.function.client.WebClient
-import pojos.SpoonacularRecipeSummary
+import pojos.RecipeSummary
 import repositories.IngredientRepository
 import repositories.RecipeIngredientsRepository
 import repositories.RecipeRepository
@@ -34,21 +34,11 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
      * in the database
      * @param q Query string to search the api & database for
      */
-    fun searchApi(q: String): MutableList<Recipe> {
-        val recipeSummaries = getRecipeSummariesSpoonacular(q)
-        // add database recipes that fit query params by adding them to the list?
-
-
-        // TODO -> seperate this into clicked a sum get recipe by id:
-        // create a coroutine -> check if sums are indexed, if not: save them
-        val recipeFromSum = this.getIndexedRecipe(recipeSummaries[0])
-        println("get recipeFromSummaries 0 : $recipeFromSum")
-        val recievedRecipeFromSum = this.saveUnindexedRecipe(recipeSummaries[0])
-        // foreach recipe summary:
-        // check if it is indexed
-        // if yes: get indexed
-        // if not save it
-        return TODO()
+    fun searchApi(q: String): MutableList<RecipeSummary> {
+        val dbRecipes = searchRecipeSummariesInDatabase(q)
+        val recipeSummaries = searchRecipeSummariesSpoonacular(q, 2)
+        dbRecipes.addAll(recipeSummaries)
+        return dbRecipes
     }
 
     fun saveRecipe(recipe: Recipe): Recipe {
@@ -70,15 +60,17 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
         }
     }
 
-    private fun getRecipeSummariesSpoonacular(q: String): MutableList<SpoonacularRecipeSummary> {
+    private fun searchRecipeSummariesSpoonacular(q: String, amount: Int): MutableList<RecipeSummary> {
         val jsonResponseBody = spoonacularWebClient.get().uri { builder ->
             builder.path("/recipes/search")
                     .queryParam("apiKey", props.ENV_SPOONACULAR_API_KEY)
                     .queryParam("query", q)
-                    .queryParam("number", 2)
+                    .queryParam("number", amount)
+                    .queryParam("addRecipeInformation", true)
                     .build()
         }.retrieve().bodyToMono<JsonNode>(JsonNode::class.java).block()
 
+        println("got info::: $jsonResponseBody")
         return if (jsonResponseBody != null) {
             parseJsonToRecipeSummaries(jsonResponseBody)
         } else {
@@ -86,76 +78,89 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
         }
     }
 
-    private fun parseJsonToRecipeSummaries(jsonNode: JsonNode): MutableList<SpoonacularRecipeSummary> {
-        val parsedRecipes: MutableList<SpoonacularRecipeSummary> = mutableListOf()
+    private fun searchRecipesInDatabase(q: String): MutableList<Recipe> {
+        return this.recipeRepository.searchForRecipe(q)
+    }
+
+    private fun searchRecipeSummariesInDatabase(q: String): MutableList<RecipeSummary> {
+        val recipes = searchRecipesInDatabase(q)
+        val recipeSummaries = mutableListOf<RecipeSummary>()
+        recipes.forEach { recipe ->
+            recipeSummaries.add(RecipeSummary(
+                    id = recipe.id,
+                    title = recipe.title,
+                    readyInMinutes = recipe.readyInMinutes,
+                    servings = recipe.servings,
+                    isDatabaseRecipe = true
+            ))
+        }
+        return recipeSummaries
+    }
+
+    private fun getRecipeJsonFromRecipeSummary(recipeSummary: RecipeSummary): JsonNode? {
+        return spoonacularWebClient.get().uri { builder ->
+            builder.path("/recipes/${recipeSummary.id}/information")
+                    .queryParam("apiKey", props.ENV_SPOONACULAR_API_KEY)
+                    .queryParam("includeNutrition", true)
+                    .queryParam("instructionsRequired", true)
+                    .queryParam("limitLicense", true)
+                    .build()
+        }.retrieve().bodyToMono<JsonNode>(JsonNode::class.java).block()
+    }
+
+    private fun saveRecipeJson(json: JsonNode): Recipe {
+        val parsedRecipe = Recipe(
+                instructions = json.get("instructions").asText(),
+                readyInMinutes = json.get("readyInMinutes").asInt(),
+                servings = json.get("servings").asInt(),
+                spoonacularId = json.get("id").asLong(),
+                summary = trimToMaxCharNum(json.get("summary").asText(), 255),
+                title = json.get("title").asText()
+        )
+        val savedRecipe = saveRecipe(parsedRecipe)
+        saveRecipeJsonIngredients(json, savedRecipe)
+        return savedRecipe
+    }
+
+    private fun saveRecipeJsonIngredients(json: JsonNode, recipe: Recipe) {
+        json.get("extendedIngredients").forEach { ingredient ->
+            val parsedIngredient = Ingredient(
+                    aisle = trimToMaxCharNum(ingredient.get("aisle").asText(), 255),
+                    consistency = trimToMaxCharNum(ingredient.get("consistency").asText(), 255),
+                    meta = trimToMaxCharNum(ingredient.get("meta").asText(), 255),
+                    name = trimToMaxCharNum(ingredient.get("name").asText(), 255),
+                    summary = trimToMaxCharNum(ingredient.get("original").asText(), 255),
+                    unit = ingredient.get("unit").asText()
+            )
+
+            val savedIngredient = saveIngredient(parsedIngredient)
+            val recipeIngredients = RecipeIngredients(
+                    amount = ingredient.get("amount").asDouble(),
+                    ingredient = savedIngredient,
+                    recipe = recipe
+            )
+            saveRecipeIngredients(recipeIngredients)
+        }
+    }
+
+    private fun parseJsonToRecipeSummaries(jsonNode: JsonNode): MutableList<RecipeSummary> {
+        val parsedRecipes: MutableList<RecipeSummary> = mutableListOf()
         jsonNode.get("results").forEach { jsonRecipe ->
-            val parsedRecipeSummary = objectMapper.treeToValue(jsonRecipe, SpoonacularRecipeSummary::class.java)
+            val parsedRecipeSummary = objectMapper.treeToValue(jsonRecipe, RecipeSummary::class.java)
             parsedRecipes.add(parsedRecipeSummary)
         }
         return parsedRecipes
     }
 
-    private fun getIndexedRecipe(recipeSummary: SpoonacularRecipeSummary): Recipe? {
-        return this.recipeRepository.getIndexedRecipe(recipeSummary)
+    private fun getIndexedRecipe(recipeSummaryId: Long): Recipe? {
+        return this.recipeRepository.getIndexedRecipe(recipeSummaryId)
     }
 
     @Transactional
-    fun saveUnindexedRecipe(recipeSummary: SpoonacularRecipeSummary): Recipe {
-        val json = spoonacularWebClient.get().uri { builder ->
-            builder.path("/recipes/${recipeSummary.id}/information")
-                    .queryParam("apiKey", props.ENV_SPOONACULAR_API_KEY)
-                    .queryParam("includeNutrition", true)
-                    .build()
-        }.retrieve().bodyToMono<JsonNode>(JsonNode::class.java).block()
-
-        println("response : $json")
-        if (json != null) {
-            val parsedRecipe = Recipe(
-                    instructions = json.get("instructions").asText(),
-                    readyInMinutes = json.get("readyInMinutes").asInt(),
-                    servings = json.get("servings").asInt(),
-                    spoonacularId = json.get("id").asLong(),
-                    summary = trimToMaxCharNum(json.get("summary").asText(), 255),
-                    title = json.get("title").asText()
-            )
-            val savedRecipe = saveRecipe(parsedRecipe)
-
-            json.get("extendedIngredients").forEach { ingredient ->
-                println("parse ingredient: $ingredient")
-                val parsedIngredient = Ingredient(
-                        aisle = trimToMaxCharNum(ingredient.get("aisle").asText(), 255),
-                        consistency = trimToMaxCharNum(ingredient.get("consistency").asText(), 255),
-                        meta = trimToMaxCharNum(ingredient.get("meta").asText(), 255),
-                        name = trimToMaxCharNum(ingredient.get("name").asText(), 255),
-                        summary = trimToMaxCharNum(ingredient.get("original").asText(), 255),
-                        unit = ingredient.get("unit").asText()
-                )
-                println("parsed ingredient $parsedIngredient")
-                val savedIngredient = saveIngredient(parsedIngredient)
-                println("saved ingredient ...")
-                val recipeIngredients = RecipeIngredients(
-                        amount = ingredient.get("amount").asDouble(),
-                        ingredient = savedIngredient,
-                        recipe = savedRecipe
-                )
-                saveRecipeIngredients(recipeIngredients)
-
-
-                println("added recipe_ingredients for ingredient...")
-            }
-            println("after loop!")
-            //println("got recipe $parsedRecipe")
-            //println("got ingredients $ingredients")
-            //println("got recipeIngredients $recipeIngredients")
-            // save all ingredients
-            //val saved = saveIngredients(ingredients)
-
-
-            println("saved Ingredients $savedRecipe")
-            // save the recipe
-        }
-        // this retrieves the full recipe from the spoonacular api and chaches it in the database
-        TODO()
+    fun getAndSaveRecipeFromRecipeSummary(recipeSummary: RecipeSummary): Recipe {
+        val json = getRecipeJsonFromRecipeSummary(recipeSummary)
+                ?: throw Exception("Couldn't get json response from Api")
+        return saveRecipeJson(json)
     }
 
     private fun trimToMaxCharNum(string: String, maxChars: Int): String {
