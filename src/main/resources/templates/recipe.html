@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header(title = ${pageTitle}, includeHeaderFragment = ${'recipe-header'})"></head>
+
+<body>
+<nav th:replace="fragments/navigation :: navigation"></nav>
+<div class="page-content">
+    called the recipe with the id: ....
+</div>
+</body>
+</html>

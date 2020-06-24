@@ -24,6 +24,7 @@ class WebSecurityConfiguration(val userDetailsService: UserDetailsService) : Web
                 .antMatchers(
                         "/",
                         "/registration",
+                        "/recipe/**",
                         "/js/**",
                         "/styles/**",
                         "/unsecured_files/**",

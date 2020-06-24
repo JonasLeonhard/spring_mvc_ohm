@@ -53,13 +53,6 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
         return recipeIngredientsRepository.save(recipeIngredient)
     }
 
-    @Transactional
-    fun saveIngredients(ingredients: MutableList<Ingredient>): List<Ingredient> {
-        return ingredients.map { ingredient ->
-            saveIngredient(ingredient)
-        }
-    }
-
     private fun searchRecipeSummariesSpoonacular(q: String, amount: Int): MutableList<RecipeSummary> {
         val jsonResponseBody = spoonacularWebClient.get().uri { builder ->
             builder.path("/recipes/search")
@@ -91,7 +84,7 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
                     title = recipe.title,
                     readyInMinutes = recipe.readyInMinutes,
                     servings = recipe.servings,
-                    isDatabaseRecipe = true
+                    cached = true
             ))
         }
         return recipeSummaries

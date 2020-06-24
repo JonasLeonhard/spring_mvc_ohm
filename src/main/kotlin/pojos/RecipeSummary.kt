@@ -1,7 +1,5 @@
 package pojos
 
-import com.fasterxml.jackson.annotation.JsonIgnore
-
 data class RecipeSummary(
         var id: Long,
         var title: String,
@@ -11,6 +9,5 @@ data class RecipeSummary(
         var openLicense: Int? = null,
         var image: String? = null,
 
-        @JsonIgnore
-        var isDatabaseRecipe: Boolean = false
+        var cached: Boolean = false
 )
