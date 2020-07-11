@@ -46,6 +46,10 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
     }
 
     fun saveIngredient(ingredient: Ingredient): Ingredient {
+        val indexedIngredient = ingredientRepository.findIngredientByName(ingredient.name)
+        if (indexedIngredient != null) {
+            return indexedIngredient
+        }
         return ingredientRepository.save(ingredient)
     }
 
@@ -161,6 +165,13 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
      */
     @Transactional
     fun getAndSaveRecipeFromRecipeApiId(id: Long): Recipe {
+        val indexed = recipeRepository.getIndexedRecipeByApiId(id)
+        println("in get and saved $indexed")
+        if (indexed != null) {
+            println("return indexed recipe!:: $indexed")
+            return indexed
+        }
+
         val json = getRecipeJsonFromRecipeApiId(id)
                 ?: throw Exception("Couldn't get json response from Api")
         return saveRecipeJson(json)

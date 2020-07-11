@@ -18,13 +18,12 @@ class RecipeController(val recipeService: RecipeService) {
      * @param recipeId is the api id primary key, not the own db primary key
      */
     @GetMapping("/{id}")
-    fun getRecipe(@PathVariable("id") recipeId: Long, @RequestParam(value = "cached") cached: Boolean, model: Model): String {
+    fun getRecipe(@PathVariable("id") recipeId: Long, @RequestParam(value = "cached") cached: Boolean?, model: Model): String {
         model["pageTitle"] = "Recipe called! fromDB= $cached"
-        //TODO - get the recipe from recipeService from the database
-        if (cached) {
-            model["recipe"] = recipeService.getIndexedRecipeById(recipeId)
-        } else {
+        if (cached != null && cached == false) {
             model["recipe"] = recipeService.getAndSaveRecipeFromRecipeApiId(recipeId)
+        } else {
+            model["recipe"] = recipeService.getIndexedRecipeById(recipeId)
         }
         return "recipe"
     }
