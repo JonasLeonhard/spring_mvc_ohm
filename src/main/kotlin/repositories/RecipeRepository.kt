@@ -9,8 +9,12 @@ import org.springframework.stereotype.Repository
 @Repository
 interface RecipeRepository : JpaRepository<Recipe, Long> {
 
+    /**
+     * Returns a Recipe by its api id
+     * @param recipeSummaryId is equal to its recipe.spoonacularId
+     */
     @Query("SELECT recipe FROM Recipe recipe WHERE recipe.spoonacularId = :#{#recipeSummaryId}")
-    fun getIndexedRecipe(@Param("recipeSummary") recipeSummaryId: Long): Recipe?
+    fun getIndexedRecipeByApiId(@Param("recipeSummary") recipeSummaryId: Long): Recipe?
 
     @Query("SELECT recipe FROM Recipe recipe WHERE lower(recipe.summary) LIKE lower(concat('%', ?1, '%'))")
     fun searchForRecipe(q: String): MutableList<Recipe>

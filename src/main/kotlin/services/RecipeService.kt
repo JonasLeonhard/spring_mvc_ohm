@@ -90,9 +90,9 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
         return recipeSummaries
     }
 
-    private fun getRecipeJsonFromRecipeSummary(recipeSummary: RecipeSummary): JsonNode? {
+    private fun getRecipeJsonFromRecipeApiId(id: Long): JsonNode? {
         return spoonacularWebClient.get().uri { builder ->
-            builder.path("/recipes/${recipeSummary.id}/information")
+            builder.path("/recipes/${id}/information")
                     .queryParam("apiKey", props.ENV_SPOONACULAR_API_KEY)
                     .queryParam("includeNutrition", true)
                     .queryParam("instructionsRequired", true)
@@ -145,13 +145,23 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
         return parsedRecipes
     }
 
-    private fun getIndexedRecipe(recipeSummaryId: Long): Recipe? {
-        return this.recipeRepository.getIndexedRecipe(recipeSummaryId)
+    fun getIndexedRecipeByApiId(recipeSummaryId: Long): Recipe? {
+        return this.recipeRepository.getIndexedRecipeByApiId(recipeSummaryId)
     }
 
+    @Throws(NoSuchElementException::class)
+    fun getIndexedRecipeById(recipeSummaryId: Long): Recipe {
+        return this.recipeRepository.findById(recipeSummaryId).get()
+    }
+
+
+    /**
+     * Returns a Recipe by its api id
+     * @param id Query id to get recipe from api
+     */
     @Transactional
-    fun getAndSaveRecipeFromRecipeSummary(recipeSummary: RecipeSummary): Recipe {
-        val json = getRecipeJsonFromRecipeSummary(recipeSummary)
+    fun getAndSaveRecipeFromRecipeApiId(id: Long): Recipe {
+        val json = getRecipeJsonFromRecipeApiId(id)
                 ?: throw Exception("Couldn't get json response from Api")
         return saveRecipeJson(json)
     }

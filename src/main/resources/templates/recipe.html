@@ -6,6 +6,21 @@
 <nav th:replace="fragments/navigation :: navigation"></nav>
 <div class="page-content">
     called the recipe with the id: ....
+    <span th:if="recipe != null">
+        recipe loaded
+        id: <span th:text="${recipe.id}">id</span> <br>
+        title: <span th:text="${recipe.title}">title</span> <br>
+        servings: <span th:text="${recipe.servings}">servings</span> <br>
+        readyInMinutes: <span th:text="${recipe.readyInMinutes}">readyInMinutes</span> <br>
+        pricePerServing: <span th:text="${recipe.pricePerServing}">pricePerServing</span> <br>
+        glutenFree: <span th:text="${recipe.glutenFree}">glutenFree</span> <br>
+        vegan: <span th:text="${recipe.vegan}">vegan</span> <br>
+        vegetarian: <span th:text="${recipe.vegetarian}">vegetarian</span> <br>
+        instructions: <span th:text="${recipe.instructions}">instructions</span> <br>
+        summary: <span th:text="${recipe.summary}">summary</span> <br>
+        ingredients: <span th:text="${recipe.recipe_ingredients}">ingredients</span> <br>
+        spoonacularId: <span th:text="${recipe.spoonacularId}">spoonacularId</span> <br>
+    </span>
 </div>
 </body>
 </html>
