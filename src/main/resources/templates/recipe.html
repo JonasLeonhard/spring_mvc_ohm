@@ -5,22 +5,47 @@
 <body>
 <nav th:replace="fragments/navigation :: navigation"></nav>
 <div class="page-content">
-    called the recipe with the id: ....
-    <span th:if="recipe != null">
-        recipe loaded
-        id: <span th:text="${recipe.id}">id</span> <br>
-        title: <span th:text="${recipe.title}">title</span> <br>
+    <div class="recipe-card recipe-id-[[${recipe.id}]]">
+        <div class="recipe-card-image-container">
+            <div class="rating">
+                <span>0</span>
+            </div>
+            <img class="recipe-card-img" th:src="@{/unsecured_files/logo_placeholder.png}">
+        </div>
+        <div class="recipe-card-info">
+
+            <span class="recipe-card-info-title">[[${recipe.title}]]</span>
+
+            <div>
+                <span th:utext="${escapedRecipeSummary}">Escaped recipe summary in unsafe text</span>
+            </div>
+
+            <div class="recipe-card-info-flex">
+                <span>Ready in [[${recipe.readyInMinutes}]] Minutes</span>
+                <span>Likes: 0</span>
+                <span>isSpoonacularRecipe: [[${recipe.spoonacularId}]]</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="sub-recipe-card">
         servings: <span th:text="${recipe.servings}">servings</span> <br>
-        readyInMinutes: <span th:text="${recipe.readyInMinutes}">readyInMinutes</span> <br>
         pricePerServing: <span th:text="${recipe.pricePerServing}">pricePerServing</span> <br>
         glutenFree: <span th:text="${recipe.glutenFree}">glutenFree</span> <br>
         vegan: <span th:text="${recipe.vegan}">vegan</span> <br>
         vegetarian: <span th:text="${recipe.vegetarian}">vegetarian</span> <br>
+    </div>
+    <div class="sub-recipe-card">
+        another card! : Ingredients card stacks!
+        <th:block th:if="${recipe.recipeIngredients != null && #lists.size(recipe.recipeIngredients) > 0}"
+                  th:each="recipeIngredient : ${recipe.recipeIngredients}">
+            <div>ingredient [[${recipeIngredient.ingredient.name}]]</div>
+        </th:block>
+    </div>
+
+    <div class="sub-recipe-card">
         instructions: <span th:text="${recipe.instructions}">instructions</span> <br>
-        summary: <span th:text="${recipe.summary}">summary</span> <br>
-        ingredients: <span th:text="${recipe.recipe_ingredients}">ingredients</span> <br>
-        spoonacularId: <span th:text="${recipe.spoonacularId}">spoonacularId</span> <br>
-    </span>
+    </div>
 </div>
 </body>
 </html>

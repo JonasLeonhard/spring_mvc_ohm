@@ -21,6 +21,7 @@ class WebSecurityConfiguration(val userDetailsService: UserDetailsService) : Web
     override fun configure(http: HttpSecurity) {
         http
                 .authorizeRequests()
+                .antMatchers("/favicon.ico").permitAll()
                 .antMatchers(
                         "/",
                         "/registration",

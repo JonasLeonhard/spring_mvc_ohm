@@ -41,7 +41,7 @@ data class Recipe(
         var summary: String,
 
         @OneToMany(targetEntity = RecipeIngredients::class, fetch = FetchType.EAGER, mappedBy = "embeddedKey.recipe")
-        var recipe_ingredients: MutableList<RecipeIngredients> = mutableListOf(),
+        var recipeIngredients: MutableList<RecipeIngredients> = mutableListOf(),
 
         var spoonacularId: Long? = null
 )

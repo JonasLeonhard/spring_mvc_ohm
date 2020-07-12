@@ -52,6 +52,9 @@ dependencies {
 
     // Async Flux Webclient
     implementation("org.springframework.boot:spring-boot-starter-webflux")
+
+    // Jsoup for Html text encoding / decoding & removing html tags & escaping user text
+    implementation("org.jsoup:jsoup:1.13.1")
 }
 
 tasks.withType<Test> {

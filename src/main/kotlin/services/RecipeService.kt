@@ -136,7 +136,7 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
                     ingredient = savedIngredient,
                     recipe = recipe
             )
-            saveRecipeIngredients(recipeIngredients)
+            recipe.recipeIngredients.add(saveRecipeIngredients(recipeIngredients))
         }
     }
 
@@ -166,9 +166,7 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
     @Transactional
     fun getAndSaveRecipeFromRecipeApiId(id: Long): Recipe {
         val indexed = recipeRepository.getIndexedRecipeByApiId(id)
-        println("in get and saved $indexed")
         if (indexed != null) {
-            println("return indexed recipe!:: $indexed")
             return indexed
         }
 
