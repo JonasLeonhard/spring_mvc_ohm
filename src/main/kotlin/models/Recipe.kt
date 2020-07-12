@@ -24,6 +24,8 @@ data class Recipe(
 
         var readyInMinutes: Int,
 
+        var preparationMinutes: Int,
+
         var likes: Int = 0,
 
         var pricePerServing: Double = 0.0,
@@ -33,6 +35,16 @@ data class Recipe(
         var vegan: Boolean = false,
 
         var vegetarian: Boolean = false,
+
+        var dairyFree: Boolean = false,
+
+        var veryHealthy: Boolean = false,
+
+        var cheap: Boolean = false,
+
+        var veryPopular: Boolean = false,
+
+        var sustainable: Boolean = false,
 
         @Column(columnDefinition = "TEXT")
         var instructions: String,
