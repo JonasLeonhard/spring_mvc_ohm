@@ -55,5 +55,7 @@ data class Recipe(
         @OneToMany(targetEntity = RecipeIngredients::class, fetch = FetchType.EAGER, mappedBy = "embeddedKey.recipe")
         var recipeIngredients: MutableList<RecipeIngredients> = mutableListOf(),
 
-        var spoonacularId: Long? = null
+        var spoonacularId: Long? = null,
+
+        var recipeImageUrl: String? = null
 )

@@ -145,7 +145,8 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
                 pricePerServing = json.get("pricePerServing")?.asDouble() ?: 0.0,
                 spoonacularId = json.get("id").asLong(),
                 summary = trimToMaxCharNum(json.get("summary")?.asText() ?: "", 255),
-                title = json.get("title").asText()
+                title = json.get("title").asText(),
+                recipeImageUrl = json.get("image")?.asText() ?: null
         )
         val savedRecipe = saveRecipe(parsedRecipe)
         saveRecipeJsonIngredients(json, savedRecipe)

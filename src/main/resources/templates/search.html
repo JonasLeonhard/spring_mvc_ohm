@@ -28,7 +28,8 @@
                                 <span th:text="${recipe.likes}">likes</span>
                             </div>
                             <a th:href="'/recipe/'+ ${recipe.id}">
-                                <img class="recipe-card-img" th:src="@{/unsecured_files/logo_placeholder.png}">
+                                <img class="recipe-card-img"
+                                     th:src="${recipe.recipeImageUrl != null ? recipe.recipeImageUrl : '/unsecured_files/logo_placeholder.png'}">
                             </a>
                         </div>
                         <div class="recipe-card-info">

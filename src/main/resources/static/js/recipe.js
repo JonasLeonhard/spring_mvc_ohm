@@ -1,26 +1,71 @@
-console.log("loaded recipe.js!")
+let selected = false;
+let onCopyTimeout = false;
+let instructionsToClipboard = "";
 
-insertCopyToClipboardButton()
-
-//copyInstructionsToClipboard()
+insertCopyToClipboardButton();
 
 function insertCopyToClipboardButton() {
     document.querySelector("#recipe-card-container").insertAdjacentHTML("afterbegin",
         `
-        <div class='copy-to-clipboard-wrapper' onclick='document.execCommand("copy")' title="Copy instructions to clipboard">
-            <ion-icon name="copy-outline"></ion-icon>
+        <div class='copy-to-clipboard-wrapper' onclick='onCopyClick()' title="Copy instructions to clipboard">
+            <ion-icon id="copy-symbol" name="copy-outline"></ion-icon>
         </div>
         `);
-
-    document.addEventListener('copy', overrideCopyEvent)
+    setInstructionsText();
 }
 
-function overrideCopyEvent(event) {
-    event.clipboardData.setData('text/plain', 'Hello, world!');
-    displayCopiedSymbol()
-    event.preventDefault();
+function onCopyClick() {
+    const textarea = createCopyTextarea();
+    document.body.appendChild(textarea);
+
+    storeSelection();
+
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+
+    restoreSelection();
+    displayCopiedSymbol();
+}
+
+function setInstructionsText() {
+    instructionsToClipboard += document.querySelector(".recipe-card-info-title").innerText + ":\n"
+    document.querySelectorAll(".ingredient").forEach((node, index) => {
+        instructionsToClipboard += `${index}: ${node.querySelector(".ingredient-amount").innerText}x ${node.querySelector(".ingredient-name").innerText}\n`
+    });
+}
+
+function createCopyTextarea() {
+    const textarea = document.createElement('textarea');
+    textarea.value = instructionsToClipboard;
+    textarea.setAttribute('readonly', '');
+    textarea.style.position = 'absolute';
+    textarea.style.left = '-9999px';
+    return textarea;
+}
+
+function storeSelection() {
+    selected = document.getSelection().rangeCount > 0
+        ? document.getSelection().getRangeAt(0)
+        : false;
+}
+
+function restoreSelection() {
+    if (selected) {
+        document.getSelection().removeAllRanges();
+        document.getSelection().addRange(selected);
+    }
 }
 
 function displayCopiedSymbol() {
-    console.log("display copy symbol called")
+    if (!onCopyTimeout) {
+        console.log("display copy symbol called")
+        const copySymbol = document.querySelector("#copy-symbol");
+        copySymbol.setAttribute("name", "checkbox-outline");
+        onCopyTimeout = true;
+        setTimeout(function () {
+            copySymbol.setAttribute("name", "copy-outline");
+            onCopyTimeout = false;
+        }, 5000);
+    }
 }

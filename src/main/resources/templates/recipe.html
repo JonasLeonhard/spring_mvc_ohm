@@ -12,7 +12,8 @@ includeIonicons = ${true})"></head>
             <div class="rating">
                 <span th:text="${recipe.likes}">likes</span>
             </div>
-            <img class="recipe-card-img" th:src="@{/unsecured_files/logo_placeholder.png}">
+            <img class="recipe-card-img"
+                 th:src="${recipe.recipeImageUrl != null ? recipe.recipeImageUrl : '/unsecured_files/logo_placeholder.png'}">
         </div>
         <div class="recipe-card-info">
 
@@ -36,13 +37,25 @@ includeIonicons = ${true})"></head>
         glutenFree: <span th:text="${recipe.glutenFree}">glutenFree</span> <br>
         vegan: <span th:text="${recipe.vegan}">vegan</span> <br>
         vegetarian: <span th:text="${recipe.vegetarian}">vegetarian</span> <br>
+
+        recipeImageUrl:: [[${recipe.recipeImageUrl != null ? recipe.recipeImageUrl : "notset!"}]]
     </div>
     <div class="sub-recipe-card" id="recipe-card-container">
         another card! : Ingredients card stacks! - add a copy to clipboard here!
-        <th:block th:if="${recipe.recipeIngredients != null && #lists.size(recipe.recipeIngredients) > 0}"
-                  th:each="recipeIngredient : ${recipe.recipeIngredients}">
-            <div>ingredient [[${recipeIngredient.ingredient.name}]]</div>
-        </th:block>
+        <div id="ingredients-container">
+            <th:block th:if="${recipe.recipeIngredients != null && #lists.size(recipe.recipeIngredients) > 0}"
+                      th:each="recipeIngredient : ${recipe.recipeIngredients}">
+                <div class="ingredient">
+                    ingredient
+                    <span class="ingredient-name">
+                        [[${recipeIngredient.ingredient.name}]]
+                    </span>
+                    <span class="ingredient-amount">
+                        [[${recipeIngredient.amount}]]
+                    </span>
+                </div>
+            </th:block>
+        </div>
     </div>
 
     <div class="sub-recipe-card">
