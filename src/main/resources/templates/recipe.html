@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header(title = ${pageTitle}, includeHeaderFragment = ${'recipe-header'})"></head>
+<head th:replace="fragments/header :: header(title = ${pageTitle},
+includeHeaderFragment = ${'recipe-header'},
+includeIonicons = ${true})"></head>
 
 <body>
 <nav th:replace="fragments/navigation :: navigation"></nav>
@@ -35,7 +37,7 @@
         vegan: <span th:text="${recipe.vegan}">vegan</span> <br>
         vegetarian: <span th:text="${recipe.vegetarian}">vegetarian</span> <br>
     </div>
-    <div class="sub-recipe-card">
+    <div class="sub-recipe-card" id="recipe-card-container">
         another card! : Ingredients card stacks! - add a copy to clipboard here!
         <th:block th:if="${recipe.recipeIngredients != null && #lists.size(recipe.recipeIngredients) > 0}"
                   th:each="recipeIngredient : ${recipe.recipeIngredients}">
@@ -47,5 +49,8 @@
         instructions: <span th:text="${recipe.instructions}">instructions</span> <br>
     </div>
 </div>
+
+<!-- Scripts -->
+<script type="text/javascript" th:src="@{/js/recipe.js}"></script>
 </body>
 </html>

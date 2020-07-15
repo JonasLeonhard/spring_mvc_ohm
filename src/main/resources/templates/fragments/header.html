@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!--/*@thymesVar id="includeHeaderFragment" type=""*/-->
+<!--/*@thymesVar id="includeIonicons" type=""*/-->
 <head th:fragment="header(title)">
     <title th:text="${title}">Title</title>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
@@ -8,6 +9,12 @@
 
     <th:block th:if="${includeHeaderFragment}">
         <link th:replace="fragments/header :: ${includeHeaderFragment}">
+    </th:block>
+
+    <th:block th:if="${includeIonicons}">
+        <!-- Ionicon Icons-->
+        <script type="module" src="https://unpkg.com/ionicons@5.1.2/dist/ionicons/ionicons.esm.js"></script>
+        <script nomodule="" src="https://unpkg.com/ionicons@5.1.2/dist/ionicons/ionicons.js"></script>
     </th:block>
 </head>
 
