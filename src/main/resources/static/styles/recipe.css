@@ -118,3 +118,23 @@
         transform: translateY(0)
     }
 }
+
+#ingredients-container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 3em;
+}
+
+.ingredient {
+    border-radius: 5px;
+    padding: 0.5em 1.5em;
+    margin: 0.25em;
+}
+
+.ingredient:nth-of-type(2n -1) {
+    background: var(--primary-light);
+}
+
+.ingredient:nth-of-type(2n) {
+    background: var(--secondary-light);
+}

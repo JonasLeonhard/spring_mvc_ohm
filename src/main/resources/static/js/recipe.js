@@ -30,8 +30,8 @@ function onCopyClick() {
 
 function setInstructionsText() {
     instructionsToClipboard += document.querySelector(".recipe-card-info-title").innerText + ":\n"
-    document.querySelectorAll(".ingredient").forEach((node, index) => {
-        instructionsToClipboard += `${index}: ${node.querySelector(".ingredient-amount").innerText}x ${node.querySelector(".ingredient-name").innerText}\n`
+    document.querySelectorAll(".ingredient").forEach(node => {
+        instructionsToClipboard += `${node.querySelector(".ingredient-stats").innerText}\n`
     });
 }
 

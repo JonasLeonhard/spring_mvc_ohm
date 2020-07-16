@@ -15,8 +15,6 @@ data class Ingredient(
         @Column(unique = true)
         var name: String,
 
-        var summary: String?,
-
         var meta: String?,
 
         var aisle: String?,

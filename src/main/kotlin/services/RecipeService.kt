@@ -165,7 +165,6 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
                     consistency = trimToMaxCharNum(ingredient.get("consistency").asText(), 255),
                     meta = trimToMaxCharNum(ingredient.get("meta").asText(), 255),
                     name = trimToMaxCharNum(ingredient.get("name").asText(), 255),
-                    summary = trimToMaxCharNum(ingredient.get("original").asText(), 255),
                     unit = ingredient.get("unit").asText()
             )
 
@@ -173,6 +172,7 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
             val recipeIngredients = RecipeIngredients(
                     amount = ingredient.get("amount").asDouble(),
                     ingredient = savedIngredient,
+                    summary = trimToMaxCharNum(ingredient.get("original").asText(), 255),
                     recipe = recipe
             )
             recipe.recipeIngredients.add(saveRecipeIngredients(recipeIngredients))

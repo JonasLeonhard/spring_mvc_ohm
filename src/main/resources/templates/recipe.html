@@ -41,17 +41,16 @@ includeIonicons = ${true})"></head>
         recipeImageUrl:: [[${recipe.recipeImageUrl != null ? recipe.recipeImageUrl : "notset!"}]]
     </div>
     <div class="sub-recipe-card" id="recipe-card-container">
-        another card! : Ingredients card stacks! - add a copy to clipboard here!
         <div id="ingredients-container">
             <th:block th:if="${recipe.recipeIngredients != null && #lists.size(recipe.recipeIngredients) > 0}"
-                      th:each="recipeIngredient : ${recipe.recipeIngredients}">
+                      th:each="recipeIngredient, iter : ${recipe.recipeIngredients}">
                 <div class="ingredient">
-                    ingredient
-                    <span class="ingredient-name">
-                        [[${recipeIngredient.ingredient.name}]]
-                    </span>
-                    <span class="ingredient-amount">
-                        [[${recipeIngredient.amount}]]
+                    <div class="ingredient-stats">
+                        [[${iter.index}]]: [[${recipeIngredient.amount}]] [[${recipeIngredient.ingredient.unit}]]
+                        [[${recipeIngredient.ingredient.name}]]:
+                    </div>
+                    <span class="ingredient-summary" th:if="${recipeIngredient.summary != null}">
+                        [[${recipeIngredient.summary}]]
                     </span>
                 </div>
             </th:block>
@@ -60,6 +59,17 @@ includeIonicons = ${true})"></head>
 
     <div class="sub-recipe-card">
         instructions: <span th:text="${recipe.instructions}">instructions</span> <br>
+    </div>
+
+    <div class="sub-recipe-card">
+        Actions:
+        1. Like the Recipe
+        2. Add to Favorites
+        3. Show this recipe to a friend / invite a friend to cook this recipe with you
+        4. Add recipe to einkaufsliste
+        5. Comment
+
+        -- TODO() -> have instructions seperated, maybe analyzed instructions?
     </div>
 </div>
 

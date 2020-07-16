@@ -7,7 +7,8 @@ import javax.persistence.*
 class RecipeIngredients(
         recipe: Recipe,
         ingredient: Ingredient,
-        var amount: Double
+        var amount: Double,
+        var summary: String? = null
 ) {
         var recipe: Recipe
                 get() = this.embeddedKey.recipe
