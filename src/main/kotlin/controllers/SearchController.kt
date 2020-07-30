@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import services.JsoupService
 import services.RecipeService
 import services.UserService
+import java.security.Principal
 
 @Controller
 @RequestMapping("/search")
@@ -17,11 +18,12 @@ class SearchController(val userService: UserService,
                        val jsoupService: JsoupService) {
 
     @GetMapping("")
-    fun searchResults(model: Model, @RequestParam(value = "q") q: String, @RequestParam(value = "type") type: String): String {
+    fun searchResults(principal: Principal?, model: Model, @RequestParam(value = "q") q: String, @RequestParam(value = "type") type: String): String {
         model["q"] = q
         model["type"] = type
         model["pageTitle"] = "Search '$q'"
 
+        userService.addAuthenticatedUserToModel(principal, model)
         setSearchUsers(model, type, q)
         setSearchRecipes(model, type, q)
         return "search"

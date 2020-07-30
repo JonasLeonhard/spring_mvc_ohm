@@ -16,9 +16,7 @@ class IndexController(val userService: UserService, val prop: ApplicationPropert
     @GetMapping
     fun index(model: Model, principal: Principal?): String {
         model["pageTitle"] = "INDEXPAGETITLE"
-        if (principal != null) {
-            model["authenticated"] = userService.findByUsername(principal.name)
-        }
+        userService.addAuthenticatedUserToModel(principal, model)
         return "index"
     }
 }

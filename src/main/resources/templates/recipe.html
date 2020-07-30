@@ -63,6 +63,33 @@ includeIonicons = ${true})"></head>
 
     <div class="sub-recipe-card">
         Actions:
+        <form th:action="@{/recipe/{id}/like(id=${recipe.id})}" th:method="post">
+            <button class="like-button"
+                    type="submit"
+                    th:attr="disabled=${authenticated == null}"
+                    th:title="${authenticated == null ? 'Login to like the recipe': 'Like the Recipe'}">
+                Like
+            </button>
+        </form>
+
+        <form th:action="@{/recipe/{id}/favorite(id=${recipe.id})}" th:method="post">
+            <button class="favorite-button"
+                    type="submit"
+                    th:attr="disabled=${authenticated == null}"
+                    th:title="${authenticated == null ? 'Login to favorite the Recipe': 'Favorite the Recipe'}">
+                Favorite
+            </button>
+        </form>
+
+        <form th:action="@{/recipe/{id}/toList(id=${recipe.id})}" th:method="post">
+            <button class="add-to-list-button"
+                    type="submit"
+                    th:attr="disabled=${authenticated == null}"
+                    th:title="${authenticated == null ? 'Login to add the Recipe to the List': 'Add the Recipe to the List'}">
+                Einkaufsliste
+            </button>
+        </form>
+
         1. Like the Recipe
         2. Add to Favorites
         3. Show this recipe to a friend / invite a friend to cook this recipe with you

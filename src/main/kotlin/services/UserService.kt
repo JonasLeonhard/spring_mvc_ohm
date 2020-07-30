@@ -7,10 +7,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.ui.Model
+import org.springframework.ui.set
 import repositories.FriendshipRepository
 import repositories.NotificationRepository
 import repositories.RoleRepository
 import repositories.UserRepository
+import java.security.Principal
 import javax.management.relation.RoleNotFoundException
 
 @Service
@@ -21,6 +24,21 @@ class UserService(
         val notificationRepository: NotificationRepository,
         val bCryptPasswordEncoder: BCryptPasswordEncoder,
         val fileService: FileService) {
+
+    /**
+     * Add model["authenticated"] if the principal user is not null.
+     * The authenticated user refers to userService.findByUsername
+     * @return <User?> for the given principal
+     * */
+    fun addAuthenticatedUserToModel(principal: Principal?, model: Model): User? {
+        return if (principal != null) {
+            val user = findByUsername(principal.name)
+            model["authenticated"] = user
+            user
+        } else {
+            null
+        }
+    }
 
     @Throws(UsernameNotFoundException::class)
     fun findByUsername(username: String): User {
