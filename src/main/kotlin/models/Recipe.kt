@@ -30,10 +30,6 @@ data class Recipe(
 
         var likes: Int = 0,
 
-        @ManyToMany(targetEntity = User::class, cascade = [CascadeType.ALL], mappedBy = "likedRecipes")
-        @LazyCollection(LazyCollectionOption.FALSE)
-        var userLikes: MutableSet<User> = mutableSetOf(),
-
         var pricePerServing: Double = 0.0,
 
         var glutenFree: Boolean = false,

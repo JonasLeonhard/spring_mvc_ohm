@@ -2,8 +2,6 @@ package models
 
 import com.sun.istack.Nullable
 import org.hibernate.annotations.CreationTimestamp
-import org.hibernate.annotations.LazyCollection
-import org.hibernate.annotations.LazyCollectionOption
 import org.hibernate.annotations.UpdateTimestamp
 import org.springframework.web.multipart.MultipartFile
 import java.time.Instant
@@ -56,7 +54,6 @@ data class User(
         var recipes: MutableSet<Recipe> = mutableSetOf(),
 
         @ManyToMany(targetEntity = Recipe::class, cascade = [CascadeType.ALL])
-        @LazyCollection(LazyCollectionOption.FALSE)
         var likedRecipes: MutableSet<Recipe> = mutableSetOf(),
 
         @OneToMany(targetEntity = Friendship::class, mappedBy = "requested_by")

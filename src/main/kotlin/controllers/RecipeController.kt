@@ -3,10 +3,7 @@ package controllers
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.*
 import services.JsoupService
 import services.RecipeService
 import services.UserService
@@ -24,7 +21,7 @@ class RecipeController(val recipeService: RecipeService,
      */
     @GetMapping("/{id}")
     fun getRecipe(principal: Principal?, @PathVariable("id") recipeId: Long, model: Model): String {
-        println("IN gET RECiPE::::::")
+        println("IN gET RECiPE:::::: $recipeId")
         val recipe = recipeService.getIndexedRecipeById(recipeId)
         userService.addAuthenticatedUserToModel(principal, model)
         model["pageTitle"] = recipe.title
@@ -33,12 +30,12 @@ class RecipeController(val recipeService: RecipeService,
         return "recipe"
     }
 
-    @PostMapping("/{id}/like")
-    fun likeRecipe(@PathVariable id: String): String {
-        println("post to /like!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-        // @PathVariable("id") recipeId: Long,
-        //recipeService.likeRecipe(recipeId, principal)
-        println("....... liking recipe succesful! ------ return recipe template!!!!!")
+    @PostMapping("/like")
+    fun likeRecipe(principal: Principal, @RequestParam(name = "recipeId") recipeId: Long): String {
+        println("post to /like!!!!!!!!!!!!!!!!!!!!!!!!!!!!! $recipeId")
+        userService.likeRecipe(recipeId, principal)
+        val savedRecipeIS = recipeService.getIndexedRecipeById(recipeId)
+        println("....... liking recipe succesful! ------ return recipe template!!!!! $savedRecipeIS")
         return "index"
     }
 

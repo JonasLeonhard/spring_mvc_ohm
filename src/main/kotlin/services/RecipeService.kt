@@ -14,7 +14,6 @@ import pojos.RecipeSummary
 import repositories.IngredientRepository
 import repositories.RecipeIngredientsRepository
 import repositories.RecipeRepository
-import java.security.Principal
 import javax.transaction.Transactional
 
 @Service
@@ -53,17 +52,6 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
 
     @Transactional
     fun saveRecipe(recipe: Recipe): Recipe {
-        return recipeRepository.save(recipe)
-    }
-
-    /**
-     * Adds a user to user_profile_liked_recipes table
-     * */
-    @Transactional
-    fun likeRecipe(recipeId: Long, principal: Principal): Recipe {
-        val recipe = recipeRepository.findById(recipeId).get()
-        val user = userService.findByUsername(principal.name)
-        recipe.userLikes.add(user)
         return recipeRepository.save(recipe)
     }
 

@@ -9,10 +9,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.ui.Model
 import org.springframework.ui.set
-import repositories.FriendshipRepository
-import repositories.NotificationRepository
-import repositories.RoleRepository
-import repositories.UserRepository
+import repositories.*
 import java.security.Principal
 import javax.management.relation.RoleNotFoundException
 
@@ -20,6 +17,7 @@ import javax.management.relation.RoleNotFoundException
 class UserService(
         val userRepository: UserRepository,
         val roleRepository: RoleRepository,
+        val recipeRepository: RecipeRepository,
         val friendshipRepository: FriendshipRepository,
         val notificationRepository: NotificationRepository,
         val bCryptPasswordEncoder: BCryptPasswordEncoder,
@@ -102,6 +100,23 @@ class UserService(
     @Throws(IllegalArgumentException::class)
     fun notifiyUser(notification: Notification): Notification {
         return notificationRepository.save(notification)
+    }
+
+    /**
+     * Adds / removes a user to user_profile_liked_recipes table
+     * */
+    @Transactional
+    fun likeRecipe(recipeId: Long, principal: Principal) {
+        val recipe = recipeRepository.findById(recipeId).get()
+        val user = findByUsername(principal.name)
+
+        if (user.likedRecipes.contains(recipe)) {
+            user.likedRecipes.remove(recipe)
+        } else {
+            user.likedRecipes.add(recipe)
+        }
+
+        userRepository.save(user)
     }
 }
 

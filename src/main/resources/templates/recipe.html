@@ -63,12 +63,12 @@ includeIonicons = ${true})"></head>
 
     <div class="sub-recipe-card">
         Actions: [[${recipe}]] - [[${authenticated == null ? 'auth: null' : 'auth: true'}]] --->
-        <form th:action="@{/recipe/{id}/like(id=${recipe.id})}" method="post">
+        <form th:action="@{/recipe/like}" method="post">
             <button class="like-button"
                     type="submit"
-                    th:formaction="@{/recipe/{id}/like(id=${recipe.id})}"
                     th:attr="disabled=${authenticated == null}"
-                    th:title="${authenticated == null ? 'Login to like the recipe': 'Like the Recipe'}">
+                    th:title="${authenticated == null ? 'Login to like the recipe': 'Like the Recipe'}"
+                    name="recipeId" th:value="${recipe.id}">
                 Like
             </button>
 

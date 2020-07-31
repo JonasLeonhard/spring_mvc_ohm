@@ -6,7 +6,7 @@
 <nav th:replace="fragments/navigation :: navigation"></nav>
 
 <div class="errorWrapper">
-    <span>[[${errorMsg}]]<span>
+    <span>[[${errorMsg != null ? errorMsg : 'An Error occurred, please try again!'}]]</span>
 </div>
 </body>
 </html>
