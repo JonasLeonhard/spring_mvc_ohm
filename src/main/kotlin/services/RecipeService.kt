@@ -14,13 +14,16 @@ import pojos.RecipeSummary
 import repositories.IngredientRepository
 import repositories.RecipeIngredientsRepository
 import repositories.RecipeRepository
+import java.security.Principal
+import javax.transaction.Transactional
 
 @Service
 class RecipeService(val props: ApplicationPropertiesConfiguration,
                     val objectMapper: ObjectMapper,
                     val recipeRepository: RecipeRepository,
                     val ingredientRepository: IngredientRepository,
-                    val recipeIngredientsRepository: RecipeIngredientsRepository) {
+                    val recipeIngredientsRepository: RecipeIngredientsRepository,
+                    val userService: UserService) {
 
     private val spoonacularWebClient: WebClient = WebClient.builder()
             .baseUrl("https://api.spoonacular.com")
@@ -48,10 +51,23 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
         return this.recipeRepository.findById(recipeSummaryId).get()
     }
 
+    @Transactional
     fun saveRecipe(recipe: Recipe): Recipe {
         return recipeRepository.save(recipe)
     }
 
+    /**
+     * Adds a user to user_profile_liked_recipes table
+     * */
+    @Transactional
+    fun likeRecipe(recipeId: Long, principal: Principal): Recipe {
+        val recipe = recipeRepository.findById(recipeId).get()
+        val user = userService.findByUsername(principal.name)
+        recipe.userLikes.add(user)
+        return recipeRepository.save(recipe)
+    }
+
+    @Transactional
     fun saveIngredient(ingredient: Ingredient): Ingredient {
         val indexedIngredient = ingredientRepository.findIngredientByName(ingredient.name)
         if (indexedIngredient != null) {
@@ -60,6 +76,7 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
         return ingredientRepository.save(ingredient)
     }
 
+    @Transactional
     fun saveRecipeIngredients(recipeIngredient: RecipeIngredients): RecipeIngredients {
         return recipeIngredientsRepository.save(recipeIngredient)
     }
@@ -112,8 +129,8 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
      * @return Returns a List of Recipe based on their respective summaries
      */
     private fun saveBulkSearchRecipes(jsonNode: JsonNode?): MutableList<Recipe> {
-        val parsedRecipes = jsonNode?.asIterable()?.map { jsonNode ->
-            saveRecipeJson(jsonNode)
+        val parsedRecipes = jsonNode?.asIterable()?.map { jsonNodeB ->
+            saveRecipeJson(jsonNodeB)
         }?.toMutableList()
 
         return parsedRecipes ?: mutableListOf()
@@ -146,7 +163,7 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
                 spoonacularId = json.get("id").asLong(),
                 summary = trimToMaxCharNum(json.get("summary")?.asText() ?: "", 255),
                 title = json.get("title").asText(),
-                recipeImageUrl = json.get("image")?.asText() ?: null
+                recipeImageUrl = json.get("image")?.asText()
         )
         val savedRecipe = saveRecipe(parsedRecipe)
         saveRecipeJsonIngredients(json, savedRecipe)

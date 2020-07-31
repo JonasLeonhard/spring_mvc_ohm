@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<header th:replace="fragments/header :: header(title = ${pageTitle}, includeHeaderFragment = ${'login-header'})"></header>
+
+<body>
+<nav th:replace="fragments/navigation :: navigation"></nav>
+
+<div class="page-content">
+    <div class="login-container">
+        <div class="login-header">
+            Are you sure you want to Logout?
+        </div>
+        <div>
+            <form th:action="@{/logout}" method="post">
+                <button class="logout-button" type="submit">Logout</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

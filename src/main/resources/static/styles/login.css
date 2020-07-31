@@ -24,6 +24,7 @@
 
 .inner-container {
     padding: 0em 2em 2em 2em;
+    background: #fff;
 }
 
 .submit-footer {
@@ -44,4 +45,10 @@ input {
 
 .register-link {
     float: right;
+}
+
+.logout-button {
+    width: 100%;
+    border-radius: 0 0 3px 3px;
+    height: 4em;
 }

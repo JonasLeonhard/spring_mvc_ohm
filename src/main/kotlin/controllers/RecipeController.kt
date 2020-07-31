@@ -24,8 +24,8 @@ class RecipeController(val recipeService: RecipeService,
      */
     @GetMapping("/{id}")
     fun getRecipe(principal: Principal?, @PathVariable("id") recipeId: Long, model: Model): String {
+        println("IN gET RECiPE::::::")
         val recipe = recipeService.getIndexedRecipeById(recipeId)
-
         userService.addAuthenticatedUserToModel(principal, model)
         model["pageTitle"] = recipe.title
         model["recipe"] = recipe
@@ -34,9 +34,12 @@ class RecipeController(val recipeService: RecipeService,
     }
 
     @PostMapping("/{id}/like")
-    fun likeRecipe(principal: Principal, @PathVariable("id") recipeId: Long, model: Model): String {
-        println("likeRecipe $recipeId")
-        return "recipe"
+    fun likeRecipe(@PathVariable id: String): String {
+        println("post to /like!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        // @PathVariable("id") recipeId: Long,
+        //recipeService.likeRecipe(recipeId, principal)
+        println("....... liking recipe succesful! ------ return recipe template!!!!!")
+        return "index"
     }
 
     @PostMapping("/{id}/favorite")

@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 
 
 @Configuration
@@ -19,8 +18,7 @@ class WebSecurityConfiguration(val userDetailsService: UserDetailsService) : Web
 
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
-        http
-                .authorizeRequests()
+        http.authorizeRequests()
                 .antMatchers("/favicon.ico").permitAll()
                 .antMatchers(
                         "/",
@@ -32,20 +30,14 @@ class WebSecurityConfiguration(val userDetailsService: UserDetailsService) : Web
                         "/user/profile/**",
                         "/error/**",
                         "/login**",
+                        "/logout",
                         "/resource/**",
                         "/search/**").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .formLogin()
-                .loginPage("/login")
-                .permitAll()
-                .and()
-                .logout()
-                .invalidateHttpSession(true)
-                .clearAuthentication(true)
-                .logoutRequestMatcher(AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/login?logout=true")
-                .permitAll()
+                .anyRequest().authenticated().and()
+                .formLogin().loginPage("/login").and()
+                .logout().invalidateHttpSession(true).clearAuthentication(true)
+                .logoutUrl("/logout").logoutSuccessUrl("/login?logout=true").and()
+                .httpBasic()
     }
 
     @Autowired

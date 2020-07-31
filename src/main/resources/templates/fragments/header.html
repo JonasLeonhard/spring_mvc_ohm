@@ -5,6 +5,13 @@
 <head th:fragment="header(title)">
     <title th:text="${title}">Title</title>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+    <!-- X-CSRF-TOKEN authentication to invalidate csrf attacks, add values of [_csrf_header]=[_csrf_token] to header req, or [_csrf_header]=[_csrf_parameter] to body req-->
+    <meta name="_csrf_token" th:content="${_csrf != null && _csrf.token != null ? _csrf.token : 'DISABLED'}"/>
+    <meta name="_csrf_header"
+          th:content="${_csrf != null && _csrf.headerName != null ? _csrf.headerName : 'DISABLED'}"/>
+    <meta name="_csrf_parameter"
+          th:content="${_csrf != null && _csrf.parameterName != null ? _csrf.parameterName : 'DISABLED'}"/>
+
     <link th:href="@{/styles/root.css}" rel="stylesheet"/>
 
     <th:block th:if="${includeHeaderFragment}">

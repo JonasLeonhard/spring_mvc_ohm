@@ -1,5 +1,7 @@
 package models
 
+import org.hibernate.annotations.LazyCollection
+import org.hibernate.annotations.LazyCollectionOption
 import org.springframework.lang.Nullable
 import javax.persistence.*
 
@@ -28,6 +30,10 @@ data class Recipe(
 
         var likes: Int = 0,
 
+        @ManyToMany(targetEntity = User::class, cascade = [CascadeType.ALL], mappedBy = "likedRecipes")
+        @LazyCollection(LazyCollectionOption.FALSE)
+        var userLikes: MutableSet<User> = mutableSetOf(),
+
         var pricePerServing: Double = 0.0,
 
         var glutenFree: Boolean = false,
@@ -52,7 +58,8 @@ data class Recipe(
         @Column(columnDefinition = "TEXT")
         var summary: String,
 
-        @OneToMany(targetEntity = RecipeIngredients::class, fetch = FetchType.EAGER, mappedBy = "embeddedKey.recipe")
+        @OneToMany(targetEntity = RecipeIngredients::class, mappedBy = "embeddedKey.recipe")
+        @LazyCollection(LazyCollectionOption.FALSE)
         var recipeIngredients: MutableList<RecipeIngredients> = mutableListOf(),
 
         var spoonacularId: Long? = null,

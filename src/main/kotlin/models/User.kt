@@ -2,6 +2,8 @@ package models
 
 import com.sun.istack.Nullable
 import org.hibernate.annotations.CreationTimestamp
+import org.hibernate.annotations.LazyCollection
+import org.hibernate.annotations.LazyCollectionOption
 import org.hibernate.annotations.UpdateTimestamp
 import org.springframework.web.multipart.MultipartFile
 import java.time.Instant
@@ -52,6 +54,10 @@ data class User(
         @OneToMany(targetEntity = Recipe::class, fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
         @JoinColumn(name = "user_id")
         var recipes: MutableSet<Recipe> = mutableSetOf(),
+
+        @ManyToMany(targetEntity = Recipe::class, cascade = [CascadeType.ALL])
+        @LazyCollection(LazyCollectionOption.FALSE)
+        var likedRecipes: MutableSet<Recipe> = mutableSetOf(),
 
         @OneToMany(targetEntity = Friendship::class, mappedBy = "requested_by")
         var friendshipsFromThisUser: MutableSet<Friendship> = mutableSetOf(),

@@ -45,7 +45,12 @@ button {
     cursor: pointer;
 }
 
-button:hover {
+button[disabled] {
+    background: var(--grey);
+    cursor: default;
+}
+
+button:not([disabled]):hover {
     background: var(--primary);
 }
 

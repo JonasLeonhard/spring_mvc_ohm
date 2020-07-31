@@ -1,6 +1,5 @@
-package controllers
+package configurations
 
-import configurations.ApplicationPropertiesConfiguration
 import models.User
 import org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException
 import org.springframework.core.env.Environment
@@ -13,9 +12,9 @@ import services.UserService
 import java.security.Principal
 
 @ControllerAdvice
-class ExceptionController(val environment: Environment,
-                          val props: ApplicationPropertiesConfiguration,
-                          val userService: UserService) {
+class ExceptionHandlerConfiguration(val environment: Environment,
+                                    val props: ApplicationPropertiesConfiguration,
+                                    val userService: UserService) {
 
     @ExceptionHandler(value = [Exception::class])
     fun globalErrorHandling(principal: Principal?, exception: Exception, model: Model): String {

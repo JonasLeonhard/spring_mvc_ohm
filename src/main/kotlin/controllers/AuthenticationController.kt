@@ -22,6 +22,11 @@ class AuthenticationController(val userService: UserService, val userValidator: 
         return "login"
     }
 
+    @GetMapping("/logout")
+    fun logout(): String {
+        return "logout"
+    }
+
     @GetMapping("/registration")
     fun registration(model: Model): String {
         model["user"] = User()
