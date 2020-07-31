@@ -2,6 +2,7 @@ package services
 
 import models.Friendship
 import models.Notification
+import models.Recipe
 import models.User
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -106,7 +107,7 @@ class UserService(
      * Adds / removes a user to user_profile_liked_recipes table
      * */
     @Transactional
-    fun likeRecipe(recipeId: Long, principal: Principal) {
+    fun likeRecipe(recipeId: Long, principal: Principal): Recipe {
         val recipe = recipeRepository.findById(recipeId).get()
         val user = findByUsername(principal.name)
 
@@ -117,6 +118,7 @@ class UserService(
         }
 
         userRepository.save(user)
+        return recipe
     }
 }
 

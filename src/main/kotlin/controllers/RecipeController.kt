@@ -27,16 +27,18 @@ class RecipeController(val recipeService: RecipeService,
         model["pageTitle"] = recipe.title
         model["recipe"] = recipe
         model["escapedRecipeSummary"] = jsoupService.escapeUserText(recipe.summary)
+        // TODO() display that the user has liked the recipe
         return "recipe"
     }
 
     @PostMapping("/like")
-    fun likeRecipe(principal: Principal, @RequestParam(name = "recipeId") recipeId: Long): String {
-        println("post to /like!!!!!!!!!!!!!!!!!!!!!!!!!!!!! $recipeId")
-        userService.likeRecipe(recipeId, principal)
-        val savedRecipeIS = recipeService.getIndexedRecipeById(recipeId)
-        println("....... liking recipe succesful! ------ return recipe template!!!!! $savedRecipeIS")
-        return "index"
+    fun likeRecipe(principal: Principal, @RequestParam(name = "recipeId") recipeId: Long, model: Model): String {
+        val recipe = userService.likeRecipe(recipeId, principal)
+        userService.addAuthenticatedUserToModel(principal, model)
+        model["pageTitle"] = recipe.title
+        model["recipe"] = recipe
+        model["escapedRecipeSummary"] = jsoupService.escapeUserText(recipe.summary)
+        return "recipe"
     }
 
     @PostMapping("/{id}/favorite")
