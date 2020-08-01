@@ -2,6 +2,8 @@ package models
 
 import com.sun.istack.Nullable
 import org.hibernate.annotations.CreationTimestamp
+import org.hibernate.annotations.LazyCollection
+import org.hibernate.annotations.LazyCollectionOption
 import org.hibernate.annotations.UpdateTimestamp
 import org.springframework.web.multipart.MultipartFile
 import java.time.Instant
@@ -53,8 +55,9 @@ data class User(
         @JoinColumn(name = "user_id")
         var recipes: MutableSet<Recipe> = mutableSetOf(),
 
-        @ManyToMany(targetEntity = Recipe::class, cascade = [CascadeType.ALL])
-        var likedRecipes: MutableSet<Recipe> = mutableSetOf(),
+        @OneToMany(targetEntity = UserLikedRecipe::class, mappedBy = "embeddedKey.user")
+        @LazyCollection(LazyCollectionOption.FALSE)
+        var likedRecipes: MutableSet<UserLikedRecipe> = mutableSetOf(),
 
         @OneToMany(targetEntity = Friendship::class, mappedBy = "requested_by")
         var friendshipsFromThisUser: MutableSet<Friendship> = mutableSetOf(),
@@ -72,4 +75,17 @@ data class User(
         @UpdateTimestamp
         @Temporal(TemporalType.TIMESTAMP)
         var updatedAt: Date = Date.from(Instant.now())
-)
+) {
+        /**
+         * Returns whether or not the user has liked the given recipe
+         * */
+        fun hasLikedRecipe(recipe: Recipe): Boolean {
+                recipe.userLikes.forEach { recipeLikeRow ->
+                        if (recipeLikeRow.user.id == this.id) {
+                                return true
+                        }
+                }
+
+                return false
+        }
+}

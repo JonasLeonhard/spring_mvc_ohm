@@ -67,9 +67,9 @@ includeIonicons = ${true})"></head>
             <button class="like-button"
                     type="submit"
                     th:attr="disabled=${authenticated == null}"
-                    th:title="${authenticated == null ? 'Login to like the recipe': 'Like the Recipe'}"
+                    th:title="${authenticated == null ? 'Login to like the recipe' : (userLikedRecipe != null && userLikedRecipe == true ? 'Unlike the Recipe' : 'Like the Recipe')}"
                     name="recipeId" th:value="${recipe.id}">
-                Like
+                [[${(userLikedRecipe != null && userLikedRecipe == true) ? 'Unlike the Recipe' : 'Like the Recipe'}]]
             </button>
 
             <button class="favorite-button"

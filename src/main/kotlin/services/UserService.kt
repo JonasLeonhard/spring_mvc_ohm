@@ -2,8 +2,8 @@ package services
 
 import models.Friendship
 import models.Notification
-import models.Recipe
 import models.User
+import models.UserLikedRecipe
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
@@ -19,6 +19,7 @@ class UserService(
         val userRepository: UserRepository,
         val roleRepository: RoleRepository,
         val recipeRepository: RecipeRepository,
+        val userLikedRecipeRepository: UserLikedRecipeRepository,
         val friendshipRepository: FriendshipRepository,
         val notificationRepository: NotificationRepository,
         val bCryptPasswordEncoder: BCryptPasswordEncoder,
@@ -105,20 +106,23 @@ class UserService(
 
     /**
      * Adds / removes a user to user_profile_liked_recipes table
+     * If the user.likedRecipes already contains a liked relation of UserLikedRecipe, then the like row will be removed,
+     * otherwise a new UserLikedRecipe row will be created
      * */
     @Transactional
-    fun likeRecipe(recipeId: Long, principal: Principal): Recipe {
+    fun likeRecipe(recipeId: Long, principal: Principal) {
         val recipe = recipeRepository.findById(recipeId).get()
         val user = findByUsername(principal.name)
+        val newUserLikedRecipe = UserLikedRecipe(user, recipe)
 
-        if (user.likedRecipes.contains(recipe)) {
-            user.likedRecipes.remove(recipe)
-        } else {
-            user.likedRecipes.add(recipe)
+        user.likedRecipes.forEach { userLikedRecipe ->
+            if (userLikedRecipe.isSameRow(newUserLikedRecipe)) {
+                userLikedRecipeRepository.delete(userLikedRecipe)
+                return
+            }
         }
 
-        userRepository.save(user)
-        return recipe
+        userLikedRecipeRepository.save(newUserLikedRecipe)
     }
 }
 

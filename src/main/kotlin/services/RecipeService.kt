@@ -50,6 +50,10 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
         return this.recipeRepository.findById(recipeSummaryId).get()
     }
 
+    fun getUsersThatLikedRecipe(recipeId: Long) {
+
+    }
+
     @Transactional
     fun saveRecipe(recipe: Recipe): Recipe {
         return recipeRepository.save(recipe)
