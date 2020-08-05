@@ -30,6 +30,7 @@ class RecipeController(val recipeService: RecipeService,
 
         if (user != null) {
             model["userLikedRecipe"] = user.hasLikedRecipe(recipe)
+            model["userFavoritedRecipe"] = user.hasFavoritedRecipe(recipe)
         }
         return "recipe"
     }
@@ -42,8 +43,8 @@ class RecipeController(val recipeService: RecipeService,
 
     @PostMapping("/{id}/favorite")
     fun favoriteRecipe(principal: Principal, @PathVariable("id") recipeId: Long, model: Model): String {
-        println("favorite recipe $recipeId")
-        return "recipe"
+        userService.favoriteRecipe(recipeId, principal)
+        return "redirect:/recipe/$recipeId"
     }
 
     @PostMapping("/{id}/toList")

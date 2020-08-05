@@ -59,6 +59,9 @@ data class User(
         @LazyCollection(LazyCollectionOption.FALSE)
         var likedRecipes: MutableSet<UserLikedRecipe> = mutableSetOf(),
 
+        @OneToMany(targetEntity = Recipe::class, fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+        var favoriteRecipes: MutableSet<Recipe> = mutableSetOf(),
+
         @OneToMany(targetEntity = Friendship::class, mappedBy = "requested_by")
         var friendshipsFromThisUser: MutableSet<Friendship> = mutableSetOf(),
 
@@ -87,5 +90,9 @@ data class User(
                 }
 
                 return false
+        }
+
+        fun hasFavoritedRecipe(recipe: Recipe): Boolean {
+                return this.favoriteRecipes.contains(recipe)
         }
 }

@@ -124,6 +124,24 @@ class UserService(
 
         userLikedRecipeRepository.save(newUserLikedRecipe)
     }
+
+    @Transactional
+            /**
+             * Favorite a Recipe by a given User
+             * @return Boolean if the recipe is a favorite of the user
+             * */
+    fun favoriteRecipe(recipeId: Long, principal: Principal): Boolean {
+        val recipe = recipeRepository.findById(recipeId).get()
+        val user = findByUsername(principal.name)
+
+        val addedToFavorites = user.favoriteRecipes.add(recipe)
+        if (!addedToFavorites) {
+            user.favoriteRecipes.remove(recipe)
+        }
+
+        userRepository.save(user)
+        return addedToFavorites
+    }
 }
 
 class FriendshipAlreadyExistException(message: String) : Exception(message)
