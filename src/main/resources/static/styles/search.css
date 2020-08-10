@@ -77,3 +77,11 @@
     top: 0.5em;
     right: 0.5em;
 }
+
+.page-content {
+    height: calc(100vh - 3.5em);
+}
+
+.tabs {
+    height: 100%;
+}

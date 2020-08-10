@@ -17,8 +17,6 @@
                 Recipes
             </label>
             <div class="tab">
-                recipe list:
-                -> recipeSummaries
                 <th:block th:if="${recipes != null}"
                           th:each="recipe, iter : ${recipes}"
                           th:object="${recipe}">
@@ -61,7 +59,8 @@
                 </th:block>
 
                 <div>
-                    #4 of 4 NOT WORKING
+                    [[${recipes != null ? #sets.size(recipes) : '-'}]] of [[${recipes != null ? #sets.size(recipes) :
+                    '-'}]] Recipes"
                 </div>
             </div>
         </th:block>
