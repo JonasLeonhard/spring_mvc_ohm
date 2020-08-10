@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header(title = ${pageTitle}, includeHeaderFragment = ${'profile-header'})"></head>
+<head th:replace="fragments/header :: header(
+title = ${pageTitle},
+includeHeaderFragment = ${'profile-header'},
+includeIonicons = ${true})"></head>
 
 <body>
 <nav th:replace="fragments/navigation :: navigation"></nav>
@@ -90,6 +93,103 @@
                             </li>
                         </th:block>
                     </ul>
+                </div>
+
+                <div class="profile-card">
+                    <div class="tabs">
+                        <input type="radio" name="tabs" id="tabone" th:checked="${true}">
+                        <label for="tabone">
+                            <ion-icon name="star"></ion-icon>
+                            Favorite Recipes
+                        </label>
+                        <div class="tab">
+                            <div class="recipe-grid">
+                                <th:block th:each="favoriteRecipe: ${profile.favoriteRecipes}">
+                                    <div class="recipe-card-wrapper">
+                                        <div class="recipe-card-image-container">
+                                            <div class="rating">
+                                                <span th:text="${favoriteRecipe.likes}">likes</span>
+                                            </div>
+                                            <a th:href="'/recipe/'+ ${favoriteRecipe.id}">
+                                                <img class="recipe-card-img"
+                                                     th:src="${favoriteRecipe.recipeImageUrl != null ? favoriteRecipe.recipeImageUrl : '/unsecured_files/logo_placeholder.png'}">
+                                            </a>
+                                        </div>
+                                        <div class="recipe-card-info">
+                                            <a th:href="'/recipe/'+ ${favoriteRecipe.id}">
+                                                <span class="recipe-card-info-title">[[${favoriteRecipe.title}]]</span>
+                                            </a>
+
+                                            <div>
+                                        <span>
+                                            Servings: [[${favoriteRecipe.servings}]]
+                                        </span>
+                                                <a th:href="'/recipe/'+ ${favoriteRecipe.id}">
+                                                    Read more ...</a>
+                                            </div>
+
+                                            <div class="recipe-card-info-flex">
+                                                <span>Ready in [[${favoriteRecipe.readyInMinutes}]] Minutes</span>
+                                                <span>Likes: 0</span>
+                                            </div>
+
+                                            <form th:action="@{/recipe/{id}(id=${favoriteRecipe.id})}">
+                                                <button type="submit">
+                                                    Start cooking
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </th:block>
+                            </div>
+                        </div>
+                        <input type="radio" name="tabs" id="tabtwo" th:checked="${false}">
+                        <label for="tabtwo">
+                            <ion-icon name="arrow-up-circle"></ion-icon>
+                            Liked Recipes
+                        </label>
+                        <div class="tab">
+                            <div class="recipe-grid">
+                                <th:block th:each="userLikedRecipe: ${profile.likedRecipes}">
+                                    <div class="recipe-card-wrapper">
+                                        <div class="recipe-card-image-container">
+                                            <div class="rating">
+                                                <span th:text="${userLikedRecipe.recipe.likes}">likes</span>
+                                            </div>
+                                            <a th:href="'/recipe/'+ ${userLikedRecipe.recipe.id}">
+                                                <img class="recipe-card-img"
+                                                     th:src="${userLikedRecipe.recipe.recipeImageUrl != null ? userLikedRecipe.recipe.recipeImageUrl : '/unsecured_files/logo_placeholder.png'}">
+                                            </a>
+                                        </div>
+                                        <div class="recipe-card-info">
+                                            <a th:href="'/recipe/'+ ${userLikedRecipe.recipe.id}">
+                                                <span class="recipe-card-info-title">[[${userLikedRecipe.recipe.title}]]</span>
+                                            </a>
+
+                                            <div>
+                                        <span>
+                                            Servings: [[${userLikedRecipe.recipe.servings}]]
+                                        </span>
+                                                <a th:href="'/recipe/'+ ${userLikedRecipe.recipe.id}">
+                                                    Read more ...</a>
+                                            </div>
+
+                                            <div class="recipe-card-info-flex">
+                                                <span>Ready in [[${userLikedRecipe.recipe.readyInMinutes}]] Minutes</span>
+                                                <span>Likes: 0</span>
+                                            </div>
+
+                                            <form th:action="@{/recipe/{id}(id=${userLikedRecipe.recipe.id})}">
+                                                <button type="submit">
+                                                    Start cooking
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </th:block>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

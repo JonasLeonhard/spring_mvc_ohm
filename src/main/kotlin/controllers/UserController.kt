@@ -18,6 +18,7 @@ class UserController(val userService: UserService) {
         try {
             val profile = userService.findByUsername(username)
             model["profile"] = profile
+            println("userprofile ::: $profile")
 
             if (principal != null) {
                 val authenticated = userService.findByUsername(principal.name)

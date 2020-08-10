@@ -31,13 +31,9 @@
     display: flex;
 }
 
-.recipe-card-info-flex span {
-
-}
-
 .recipe-card-image-container {
     width: 15em;
-    height: 15em;
+    height: var(--recipe-card-height);
     flex-basis: 15em;
     flex-shrink: 0;
     border-radius: 5px;

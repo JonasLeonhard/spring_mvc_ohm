@@ -69,10 +69,10 @@ includeIonicons = ${true})"></head>
                     th:attr="disabled=${authenticated == null}"
                     th:title="${authenticated == null ? 'Login to like the recipe' : (userLikedRecipe != null && userLikedRecipe == true ? 'Unlike the Recipe' : 'Like the Recipe')}"
                     name="recipeId" th:value="${recipe.id}">
-                <ion-icon th:if="${userLikedRecipe != null && userLikedRecipe == false}"
-                          name="arrow-up-circle-outline"></ion-icon>
                 <ion-icon th:if="${userLikedRecipe != null && userLikedRecipe == true}"
                           name="arrow-up-circle"></ion-icon>
+                <ion-icon th:if="${userLikedRecipe != null && userLikedRecipe == false}"
+                          name="arrow-up-circle-outline"></ion-icon>
                 [[${(userLikedRecipe != null && userLikedRecipe == true) ? 'Unlike the Recipe' : 'Like the Recipe'}]]
             </button>
 
