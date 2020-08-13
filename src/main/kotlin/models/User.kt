@@ -62,10 +62,14 @@ data class User(
         @OneToMany(targetEntity = Recipe::class, fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
         var favoriteRecipes: MutableSet<Recipe> = mutableSetOf(),
 
-        @OneToMany(targetEntity = Friendship::class, mappedBy = "requested_by")
+        @OneToMany(targetEntity = UserRecipeBuyList::class, mappedBy = "embeddedKey.user")
+        @LazyCollection(LazyCollectionOption.FALSE)
+        var buyList: MutableSet<UserRecipeBuyList> = mutableSetOf(),
+
+        @OneToMany(targetEntity = Friendship::class, mappedBy = "requested_by", cascade = [CascadeType.ALL])
         var friendshipsFromThisUser: MutableSet<Friendship> = mutableSetOf(),
 
-        @OneToMany(targetEntity = Friendship::class, mappedBy = "request_to")
+        @OneToMany(targetEntity = Friendship::class, mappedBy = "request_to", cascade = [CascadeType.ALL])
         var friendshipsToThisUser: MutableSet<Friendship> = mutableSetOf(),
 
         @OneToMany(targetEntity = Notification::class)
@@ -94,5 +98,17 @@ data class User(
 
         fun hasFavoritedRecipe(recipe: Recipe): Boolean {
                 return this.favoriteRecipes.contains(recipe)
+        }
+
+        /**
+         * @return boolean if the recipe is on this users buylist
+         */
+        fun hasBuyListedRecipe(recipe: Recipe): Boolean {
+                this.buyList.forEach { userRecipeBuyList ->
+                        if (userRecipeBuyList.user.id == this.id) {
+                                return true
+                        }
+                }
+                return false
         }
 }

@@ -11,11 +11,11 @@ class Friendship(
         var id: Long = -1,
 
         @field:NonNull
-        @ManyToOne(targetEntity = User::class, fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+        @ManyToOne(targetEntity = User::class, fetch = FetchType.EAGER)
         var requested_by: User,
 
         @field:NonNull
-        @ManyToOne(targetEntity = User::class, fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+        @ManyToOne(targetEntity = User::class, fetch = FetchType.EAGER)
         var request_to: User,
 
         var accepted: Boolean = false

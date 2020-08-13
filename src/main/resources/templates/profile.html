@@ -65,23 +65,43 @@ includeIonicons = ${true})"></head>
                     <div th:if="${friendship != null}" class="profile-card">
                         <th:block th:if="${friendship.accepted == true}">
                             you are friends with this profile
+                            <form th:action="@{/user/friendship/cancel}" method="post">
+                                <button type="submit" id="userId" name="userId"
+                                        th:value="${profile.id}">
+                                    Cancel Friendship
+                                </button>
+                            </form>
                         </th:block>
                         <th:block th:if="${friendship.accepted == false}">
                             <th:block th:if="${friendship.request_to.username == authenticated.username}">
                                 Do you want to accept the friendrequest of [[${friendship.requested_by.username}]]
+                                <form th:action="@{/user/friendship/accept}" method="post">
+                                    <button type="submit" id="userId" name="userId"
+                                            th:value="${profile.id}">
+                                        Accept Friendrequest
+                                    </button>
+                                </form>
                             </th:block>
                             <th:block th:if="${friendship.request_to.username != authenticated.username}">
-                                The friendrequest is still pending and has to be accepted by
-                                [[${friendship.request_to.username}]]
+                                Friendship to:
+                                [[${friendship.request_to.username}]], Status: [[${friendship.accepted ? 'accepted' :
+                                'pending'}]]
+                                <form th:action="@{/user/friendship/cancel}" method="post">
+                                    <button type="submit" id="userId" name="userId"
+                                            th:value="${profile.id}">
+                                        Cancel Friendship
+                                    </button>
+                                </form>
                             </th:block>
                         </th:block>
                     </div>
-                    <span th:if="${friendship == null}">
-                         <form class="friend-request-form" th:action="@{/user/friendship}" method="post">
+                    <div class="profile-card" th:if="${friendship == null}">
+                        <form class="friend-request-form" th:action="@{/user/friendship}" method="post">
                             <button type="submit" class="btn btn-success" id="userId" name="userId"
-                                    th:value="${profile.id}">Friend Request</button>
+                                    th:value="${profile.id}">Friend Request
+                            </button>
                         </form>
-                    </span>
+                    </div>
                 </div>
 
                 <div th:if="${authenticated != null && #sets.size(authenticated.friendshipsFromThisUser) > 0 && authenticated.username == profile.username}"

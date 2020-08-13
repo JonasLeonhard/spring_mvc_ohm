@@ -92,8 +92,13 @@ includeIonicons = ${true})"></head>
                     type="submit"
                     th:formaction="@{/recipe/{id}/toList(id=${recipe.id})}"
                     th:attr="disabled=${authenticated == null}"
-                    th:title="${authenticated == null ? 'Login to add the Recipe to the List': 'Add the Recipe to the List'}">
-                Einkaufsliste
+                    th:title="${authenticated == null ? 'Login to add the Recipe to the List': (userBuyListedRecipe != null && userBuyListedRecipe == true ? 'Remove from Buylist' : 'Add to Buylist')}">
+                <ion-icon name="cart"
+                          th:if="${(userBuyListedRecipe != null && userBuyListedRecipe == true)}"></ion-icon>
+                <ion-icon name="cart-outline"
+                          th:if="${(userBuyListedRecipe != null && userBuyListedRecipe == false)}"></ion-icon>
+                [[${(userBuyListedRecipe != null && userBuyListedRecipe == true) ? 'Remove from Buylist' : 'Add to
+                Buylist'}]]
             </button>
         </form>
 

@@ -269,6 +269,15 @@ nav .profile-container:hover > .user-name, nav .profile-container:hover > img.op
     opacity: 0.75;
 }
 
+ul.open-notifications-dropdown .notification-status, ul.open-profile-dropdown li:hover, ul.open-notifications-dropdown li.notification-status:hover {
+    background: var(--tab-active);
+    border-bottom: 2px solid var(--tab-inactive);
+    padding: 0.25em;
+    opacity: 0.25;
+    cursor: default;
+    font-size: 0.75em;
+}
+
 /* PAGE CONTENT WRAPPER*/
 div.page-content {
     padding-top: 3.5em;

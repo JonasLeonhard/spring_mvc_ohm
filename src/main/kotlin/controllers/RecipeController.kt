@@ -31,6 +31,7 @@ class RecipeController(val recipeService: RecipeService,
         if (user != null) {
             model["userLikedRecipe"] = user.hasLikedRecipe(recipe)
             model["userFavoritedRecipe"] = user.hasFavoritedRecipe(recipe)
+            model["userBuyListedRecipe"] = user.hasBuyListedRecipe(recipe)
         }
         return "recipe"
     }
@@ -49,7 +50,7 @@ class RecipeController(val recipeService: RecipeService,
 
     @PostMapping("/{id}/toList")
     fun toListRecipe(principal: Principal, @PathVariable("id") recipeId: Long, model: Model): String {
-        println("tolist recipe $recipeId")
-        return "recipe"
+        userService.addRecipeToBuyList(recipeId, principal)
+        return "redirect:/recipe/$recipeId"
     }
 }

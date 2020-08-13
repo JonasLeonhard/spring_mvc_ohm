@@ -26,16 +26,22 @@
                 </div>
             </div>
             <div class="nav-items">
-                <img th:if="${authenticated}" class="nav-item" th:src="@{/unsecured_files/notification.svg}"
-                     alt="Calender"
-                     title="Calender"/>
+                <a href="user/buyList">
+                    <img th:if="${authenticated}" class="nav-item" th:src="@{/unsecured_files/cart.svg}"
+                         alt="BuyList"
+                         title="BuyList"/>
+                </a>
+
                 <div th:if="${authenticated}"
                      class="notifications-container">
                     <img class="nav-item"
                          alt="Notifications"
                          title="Notifications"
-                         th:src="@{/unsecured_files/notification.svg}"/>
+                         th:src="${(#sets.size(authenticated.friendshipsToThisUser) > 0) ? '/unsecured_files/notifications.svg' : '/unsecured_files/notifications-off.svg'}"/>
                     <ul class="open-notifications-dropdown">
+                        <li class="notification-status">
+                            You have currently [[${ #sets.size(authenticated.friendshipsToThisUser) }]] Notifications
+                        </li>
                         <th:block th:each="friendrequest : ${authenticated.friendshipsToThisUser}">
                             <li th:if="${friendrequest.accepted != true}">
                                 <a th:href="'/user/profile/' + ${friendrequest.requested_by.username}">
@@ -43,6 +49,7 @@
                                 </a>
                             </li>
                         </th:block>
+
                     </ul>
                 </div>
                 <div class="profile-container">

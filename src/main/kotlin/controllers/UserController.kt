@@ -18,7 +18,6 @@ class UserController(val userService: UserService) {
         try {
             val profile = userService.findByUsername(username)
             model["profile"] = profile
-            println("userprofile ::: $profile")
 
             if (principal != null) {
                 val authenticated = userService.findByUsername(principal.name)
@@ -26,8 +25,6 @@ class UserController(val userService: UserService) {
 
                 if (authenticated != profile) {
                     val friendship = userService.findFriendshipBetween(authenticated, profile)
-                    println(profile.friendshipsFromThisUser.size)
-                    println("------------found friendship: ${friendship?.id} ....")
                     if (friendship != null) model["friendship"] = friendship
                 }
             }
@@ -47,15 +44,37 @@ class UserController(val userService: UserService) {
         return "settings"
     }
 
+    @GetMapping("/buyList")
+    fun userBuyList(principal: Principal, model: Model): String {
+        return "buyList"
+    }
+
     @PostMapping("/friendship")
     fun friendship(principal: Principal, @RequestParam(value = "userId", required = true) userId: Long, model: Model): String {
-        println("post to firendship ... create friendship between $principal and form id user with id $userId...")
         val authenticated = userService.findByUsername(principal.name)
         val toUser = userService.findById(userId)
 
         model["authenticated"] = authenticated
         model["pageTitle"] = "${principal.name}' Settings"
         model["friendship"] = userService.friendRequest(authenticated, toUser)
-        return "profile"
+        return "redirect:/user/profile/${toUser.username}"
+    }
+
+    @PostMapping("/friendship/accept")
+    fun friendshipAccept(principal: Principal, @RequestParam(value = "userId", required = true) userId: Long, model: Model): String {
+        val authenticated = userService.findByUsername(principal.name)
+        val toUser = userService.findById(userId)
+        val accept = userService.friendRequestAccept(authenticated, toUser)
+        println("friendrequest accept: $accept")
+        return "redirect:/user/profile/${toUser.username}"
+    }
+
+    @PostMapping("/friendship/cancel")
+    fun friendshipCancel(principal: Principal, @RequestParam(value = "userId", required = true) userId: Long, model: Model): String {
+        val authenticated = userService.findByUsername(principal.name)
+        val toUser = userService.findById(userId)
+        val test = userService.friendRequestCancel(authenticated, toUser)
+        println("friendrequest cancel::: $test")
+        return "redirect:/user/profile/${toUser.username}"
     }
 }

@@ -1,9 +1,6 @@
 package services
 
-import models.Friendship
-import models.Notification
-import models.User
-import models.UserLikedRecipe
+import models.*
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
@@ -20,6 +17,7 @@ class UserService(
         val roleRepository: RoleRepository,
         val recipeRepository: RecipeRepository,
         val userLikedRecipeRepository: UserLikedRecipeRepository,
+        val userRecipeBuyListRepository: UserRecipeBuyListRepository,
         val friendshipRepository: FriendshipRepository,
         val notificationRepository: NotificationRepository,
         val bCryptPasswordEncoder: BCryptPasswordEncoder,
@@ -89,9 +87,24 @@ class UserService(
     }
 
     @Transactional
-    fun friendRequestAccept(friendship: Friendship): Friendship {
-        friendship.accepted = true
-        return friendship
+    fun friendRequestAccept(authenticated: User, profile: User): Boolean {
+        val friendship = friendshipRepository.findFriendshipBetween(authenticated, profile)
+        if (friendship != null && friendship.request_to.id == authenticated.id) {
+            friendship.accepted = true
+            friendshipRepository.save(friendship)
+            return true
+        }
+        return false
+    }
+
+    @Transactional
+    fun friendRequestCancel(from: User, to: User): Boolean {
+        val friendship = friendshipRepository.findFriendshipBetween(from, to)
+        if (friendship != null) {
+            friendshipRepository.delete(friendship)
+            return true
+        }
+        return false
     }
 
     fun findFriendshipBetween(from: User, to: User): Friendship? {
@@ -125,11 +138,11 @@ class UserService(
         userLikedRecipeRepository.save(newUserLikedRecipe)
     }
 
+    /**
+     * Favorite a Recipe by a given User
+     * @return Boolean if the recipe is a favorite of the user
+     * */
     @Transactional
-            /**
-             * Favorite a Recipe by a given User
-             * @return Boolean if the recipe is a favorite of the user
-             * */
     fun favoriteRecipe(recipeId: Long, principal: Principal): Boolean {
         val recipe = recipeRepository.findById(recipeId).get()
         val user = findByUsername(principal.name)
@@ -141,6 +154,25 @@ class UserService(
 
         userRepository.save(user)
         return addedToFavorites
+    }
+
+    /**
+     * Adds / remove a Recipe to / from the users buy list
+     * */
+    @Transactional
+    fun addRecipeToBuyList(recipeId: Long, principal: Principal) {
+        val recipe = recipeRepository.findById(recipeId).get()
+        val user = findByUsername(principal.name)
+        val newUserRecipeBuyList = UserRecipeBuyList(user, recipe)
+
+        user.buyList.forEach { userRecipeBuyList ->
+            if (userRecipeBuyList.isSameRow(newUserRecipeBuyList)) {
+                userRecipeBuyListRepository.delete(userRecipeBuyList)
+                return
+            }
+        }
+
+        userRecipeBuyListRepository.save(newUserRecipeBuyList)
     }
 }
 
