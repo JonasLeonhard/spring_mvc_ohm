@@ -7,6 +7,70 @@
 
 <div class="page-content">
     <span>... create recipe</span>
+    <form th:action="@{/recipe/create}" th:object="${recipeForm}" enctype="multipart/form-data" method="post">
+        <input th:field="*{title}"
+               placeholder="title"/>
+        <span th:errors="*{title}" class="error"></span>
+
+        <input th:field="*{servings}"
+               placeholder="servings"/>
+        <span th:errors="*{servings}" class="error"></span>
+
+        <input th:field="*{readyInMinutes}"
+               placeholder="readyInMinutes"/>
+        <span th:errors="*{readyInMinutes}" class="error"></span>
+
+        <input th:field="*{preparationMinutes}"
+               placeholder="preparationMinutes"/>
+        <span th:errors="*{preparationMinutes}" class="error"></span>
+
+        <input th:field="*{pricePerServing}"
+               placeholder="pricePerServing"/>
+        <span th:errors="*{pricePerServing}" class="error"></span>
+
+        <input th:field="*{glutenFree}"
+               placeholder="glutenFree"/>
+        <span th:errors="*{glutenFree}" class="error"></span>
+
+        <input th:field="*{vegan}"
+               placeholder="vegan"/>
+        <span th:errors="*{vegan}" class="error"></span>
+
+        <input th:field="*{vegetarian}"
+               placeholder="vegetarian"/>
+        <span th:errors="*{vegetarian}" class="error"></span>
+
+        <input th:field="*{dairyFree}"
+               placeholder="dairyFree"/>
+        <span th:errors="*{dairyFree}" class="error"></span>
+
+        <input th:field="*{veryHealthy}"
+               placeholder="veryHealthy"/>
+        <span th:errors="*{veryHealthy}" class="error"></span>
+
+        <input th:field="*{cheap}"
+               placeholder="cheap"/>
+        <span th:errors="*{cheap}" class="error"></span>
+
+        <input th:field="*{sustainable}"
+               placeholder="sustainable"/>
+        <span th:errors="*{sustainable}" class="error"></span>
+
+        <input th:field="*{instructions}"
+               placeholder="instructions"/>
+        <span th:errors="*{instructions}" class="error"></span>
+
+        <input th:field="*{summary}"
+               placeholder="summary"/>
+        <span th:errors="*{summary}" class="error"></span>
+
+        <input th:field="*{recipeIngredients}"
+               placeholder="recipeIngredients"/>
+        <span th:errors="*{recipeIngredients}" class="error"></span>
+
+
+        <button type="submit">Create Recipe</button>
+    </form>
 </div>
 </body>
 </html>
