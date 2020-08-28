@@ -105,7 +105,7 @@ data class User(
          */
         fun hasBuyListedRecipe(recipe: Recipe): Boolean {
                 this.buyList.forEach { userRecipeBuyList ->
-                        if (userRecipeBuyList.user.id == this.id) {
+                        if (userRecipeBuyList.recipe.id == recipe.id) {
                                 return true
                         }
                 }

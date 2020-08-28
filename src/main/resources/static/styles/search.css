@@ -85,3 +85,15 @@
 .tabs {
     height: 100%;
 }
+
+.tabs .tab-control {
+    position: absolute;
+    right: 0;
+    padding: 0;
+    height: 3rem;
+    display: flex;
+}
+
+.tabs .tab-control button {
+    margin: 10px;
+}

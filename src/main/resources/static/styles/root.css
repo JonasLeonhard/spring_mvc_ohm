@@ -18,7 +18,7 @@
     --tab-active: #fff;
     --tab-inactive: #939393;
 
-    --navbar-border: #5a189a;
+    --navbar-border: #efb450;
 
     --recipe-card-height: 15em;
 }
@@ -245,20 +245,21 @@ nav .profile-container ul.open-profile-dropdown, .notifications-container ul.ope
 
 ul.open-profile-dropdown li, ul.open-notifications-dropdown li {
     width: 100%;
-    background: var(--secondary);
+    background: var(--tab-active);
     cursor: pointer;
 }
 
 ul.open-profile-dropdown li a, ul.open-notifications-dropdown li a {
     width: 100%;
     height: 100%;
-    color: white;
+    color: black;
     display: block;
     padding: 0.5em;
 }
 
 ul.open-profile-dropdown li:hover, ul.open-notifications-dropdown li:hover {
-    background: var(--third);
+    border-top: 1px solid var(--primary);
+    border-bottom: 1px solid var(--primary);
 }
 
 nav .profile-container:hover > ul.open-profile-dropdown, nav .notifications-container:hover > ul.open-notifications-dropdown {
@@ -269,7 +270,7 @@ nav .profile-container:hover > .user-name, nav .profile-container:hover > img.op
     opacity: 0.75;
 }
 
-ul.open-notifications-dropdown .notification-status, ul.open-profile-dropdown li:hover, ul.open-notifications-dropdown li.notification-status:hover {
+ul.open-notifications-dropdown .notification-status, ul.open-notifications-dropdown li.notification-status:hover {
     background: var(--tab-active);
     border-bottom: 2px solid var(--tab-inactive);
     padding: 0.25em;
@@ -299,6 +300,7 @@ div.page-content {
     transition: color 0.25s cubic-bezier(0.7, 0, 0.3, 1);
     display: flex;
     align-items: center;
+    height: 1em;
 }
 
 .tabs label:hover::after {
@@ -328,6 +330,7 @@ div.page-content {
     order: 99;
     display: none;
     width: 100%;
+    height: calc(100% - 3rem);
     background: var(--tab-active)
 }
 

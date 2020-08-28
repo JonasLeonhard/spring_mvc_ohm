@@ -4,6 +4,8 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set
 import org.springframework.web.bind.annotation.RequestMapping
+import services.UserService
+import java.security.Principal
 import javax.servlet.RequestDispatcher
 import javax.servlet.http.HttpServletRequest
 import org.springframework.boot.web.servlet.error.ErrorController as DefaultErrorController
@@ -11,10 +13,11 @@ import org.springframework.boot.web.servlet.error.ErrorController as DefaultErro
 
 @Controller
 @RequestMapping("/error")
-class ErrorController : DefaultErrorController {
+class ErrorController(val userService: UserService) : DefaultErrorController {
 
     @RequestMapping
-    fun handleError(request: HttpServletRequest, model: Model): String {
+    fun handleError(principal: Principal?, request: HttpServletRequest, model: Model): String {
+        userService.addAuthenticatedUserToModel(principal, model)
         val statusCode = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE)
         model["pageTitle"] = "Error, ${statusCode}"
 

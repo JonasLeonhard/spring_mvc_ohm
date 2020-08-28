@@ -39,13 +39,14 @@ class UserController(val userService: UserService) {
 
     @GetMapping("/settings")
     fun userSettings(principal: Principal, model: Model): String {
-        model["authenticated"] = userService.findByUsername(principal.name)
+        userService.addAuthenticatedUserToModel(principal, model)
         model["pageTitle"] = "${principal.name}' Settings"
         return "settings"
     }
 
     @GetMapping("/buyList")
     fun userBuyList(principal: Principal, model: Model): String {
+        userService.addAuthenticatedUserToModel(principal, model)
         return "buyList"
     }
 

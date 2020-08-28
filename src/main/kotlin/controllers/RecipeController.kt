@@ -36,6 +36,12 @@ class RecipeController(val recipeService: RecipeService,
         return "recipe"
     }
 
+    @GetMapping("/create")
+    fun createRecipePage(principal: Principal, model: Model): String {
+        userService.addAuthenticatedUserToModel(principal, model)
+        return "createRecipe"
+    }
+
     @PostMapping("/like")
     fun likeRecipe(principal: Principal, @RequestParam(name = "recipeId") recipeId: Long): String {
         userService.likeRecipe(recipeId, principal)
@@ -49,8 +55,8 @@ class RecipeController(val recipeService: RecipeService,
     }
 
     @PostMapping("/{id}/toList")
-    fun toListRecipe(principal: Principal, @PathVariable("id") recipeId: Long, model: Model): String {
+    fun toListRecipe(principal: Principal, @PathVariable("id") recipeId: Long, model: Model, @RequestParam(required = false, name = "redirectTo") redirectTo: String?): String {
         userService.addRecipeToBuyList(recipeId, principal)
-        return "redirect:/recipe/$recipeId"
+        return if (redirectTo == null) "redirect:/recipe/$recipeId" else "redirect:$redirectTo"
     }
 }

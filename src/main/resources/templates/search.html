@@ -89,6 +89,17 @@
                 </span>
             </div>
         </th:block>
+
+        <th:block th:if="${type == 'recipes' || type == 'everywhere'}">
+            <div class="tab-control">
+                <a th:href="@{/recipe/create}">
+                    <button th:disabled="${authenticated == null}"
+                            th:title="${authenticated == null ? 'Login to create a new Recipe' : 'Create a new Recipe'}">
+                        + Create Recipe
+                    </button>
+                </a>
+            </div>
+        </th:block>
     </div>
 </div>
 </body>

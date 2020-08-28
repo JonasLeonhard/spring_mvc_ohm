@@ -80,18 +80,23 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
      * @param offset the number of results to skip
      */
     private fun searchRecipeSummariesSpoonacular(q: String, amount: Int, offset: Int): MutableList<RecipeSummary> {
-        return spoonacularWebClient.get().uri { builder ->
-            builder.path("/recipes/search")
-                    .queryParam("apiKey", props.ENV_SPOONACULAR_API_KEY)
-                    .queryParam("query", q)
-                    .queryParam("number", amount)
-                    .queryParam("offset", offset)
-                    .queryParam("addRecipeInformation", true)
-                    .build()
-        }.retrieve().bodyToMono<JsonNode>(JsonNode::class.java).block()
-                ?.get("results")?.asIterable()?.map { jsonRecipe ->
-                    objectMapper.treeToValue(jsonRecipe, RecipeSummary::class.java)
-                }?.toMutableList() ?: mutableListOf()
+        try {
+            return spoonacularWebClient.get().uri { builder ->
+                builder.path("/recipes/search")
+                        .queryParam("apiKey", props.ENV_SPOONACULAR_API_KEY)
+                        .queryParam("query", q)
+                        .queryParam("number", amount)
+                        .queryParam("offset", offset)
+                        .queryParam("addRecipeInformation", true)
+                        .build()
+            }.retrieve().bodyToMono<JsonNode>(JsonNode::class.java).block()
+                    ?.get("results")?.asIterable()?.map { jsonRecipe ->
+                        objectMapper.treeToValue(jsonRecipe, RecipeSummary::class.java)
+                    }?.toMutableList() ?: mutableListOf()
+        } catch (e: Exception) {
+            println("Api_Exception: 'Connection Timeout' -> in Remote api call: 'fun searchRecipeSummariesSpoonacular()...' ")
+            return mutableListOf()
+        }
     }
 
     /**

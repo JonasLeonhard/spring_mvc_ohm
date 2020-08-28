@@ -6,7 +6,34 @@
 <nav th:replace="fragments/navigation :: navigation"></nav>
 
 <div class="page-content">
-    buylist...
+    <div id="buyList-copy-wrapper">
+        You want to buy the following recipes:
+    </div>
+
+    <div th:each="listItem, listItemIter : ${authenticated.buyList}" class="buyList-card">
+        <span class="recipe-title">[[${listItem.recipe.title}]]</span>
+        <form th:action="${'/recipe/' + listItem.recipe.id + '/toList'}" method="post">
+            <Button type="submit" value="/user/buyList" name="redirectTo">remove recipe</Button>
+        </form>
+        <div>
+            <ul>
+                <li th:each="recipeIngredient, ingredientIter : ${listItem.recipe.recipeIngredients}"
+                    class="recipe-ingredient">
+                    <label th:for="${'recipe-' + listItem.recipe.id + '-ingredient-' + recipeIngredient.ingredient.id}">
+                        <span class="index">[[${listItemIter.index}]].[[${ingredientIter.index}]]:</span>
+                        <span class="amount">[[${recipeIngredient.amount}]]</span>
+                        <span class="unit">[[${recipeIngredient.ingredient.unit}]]</span>
+                        <span class="name">[[${recipeIngredient.ingredient.name}]]:</span>
+                    </label>
+                    <input type="checkbox"
+                           th:id="${'recipe-' + listItem.recipe.id + '-ingredient-' + recipeIngredient.ingredient.id}">
+                </li>
+            </ul>
+        </div>
+    </div>
 </div>
+
+<!-- Scripts -->
+<script type="text/javascript" th:src="@{/js/buyList.js}"></script>
 </body>
 </html>

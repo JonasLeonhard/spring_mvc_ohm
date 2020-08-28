@@ -1,0 +1,50 @@
+.buyList-card, #buyList-copy-wrapper {
+    background: white;
+    padding: 0.5em 1.5em;
+    margin: 4em;
+    border-radius: 3px;
+}
+
+#buyList-copy-wrapper {
+    min-height: 2.1rem;
+}
+
+.copy-to-clipboard-wrapper {
+    border: 1px solid var(--secondary);
+    border-radius: 3px;
+    cursor: copy;
+    width: 1em;
+    height: 1em;
+    padding: 0.5em;
+    float: right;
+}
+
+.copy-to-clipboard-wrapper:hover {
+    background: var(--main-bg-color);
+}
+
+#copy-symbol[name="copy-outline"] {
+    animation: copy-symbol-initial 0.25s ease;
+}
+
+#copy-symbol[name="checkbox-outline"] {
+    animation: copy-symbol-appear 0.25s ease;
+}
+
+@keyframes copy-symbol-appear {
+    from {
+        transform: scale(0)
+    }
+    to {
+        transform: scale(1)
+    }
+}
+
+@keyframes copy-symbol-initial {
+    from {
+        transform: translateY(-5px)
+    }
+    to {
+        transform: translateY(0)
+    }
+}

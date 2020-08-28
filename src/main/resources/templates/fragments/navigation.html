@@ -26,8 +26,8 @@
                 </div>
             </div>
             <div class="nav-items">
-                <a href="user/buyList">
-                    <img th:if="${authenticated}" class="nav-item" th:src="@{/unsecured_files/cart.svg}"
+                <a th:if="${authenticated}" th:href="@{/user/buyList}">
+                    <img class="nav-item" th:src="@{/unsecured_files/cart.svg}"
                          alt="BuyList"
                          title="BuyList"/>
                 </a>
