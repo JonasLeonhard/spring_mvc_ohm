@@ -7,68 +7,145 @@
 
 <div class="page-content">
     <span>... create recipe</span>
-    <form th:action="@{/recipe/create}" th:object="${recipeForm}" enctype="multipart/form-data" method="post">
+    <form th:action="@{/recipe/create}" th:object="${recipeForm}" method="post">
+        <label th:for="*{title}">title</label>
         <input th:field="*{title}"
                placeholder="title"/>
         <span th:errors="*{title}" class="error"></span>
 
+        <br/>
+        <label th:for="*{servings}">servings</label>
         <input th:field="*{servings}"
                placeholder="servings"/>
         <span th:errors="*{servings}" class="error"></span>
 
+        <br/>
+        <label th:for="*{readyInMinutes}">readyInMinutes</label>
         <input th:field="*{readyInMinutes}"
                placeholder="readyInMinutes"/>
         <span th:errors="*{readyInMinutes}" class="error"></span>
 
+        <br/>
+        <label th:for="*{preparationMinutes}">preparationMinutes</label>
         <input th:field="*{preparationMinutes}"
                placeholder="preparationMinutes"/>
         <span th:errors="*{preparationMinutes}" class="error"></span>
 
+        <br/>
+        <label th:for="*{pricePerServing}">pricePerServing</label>
         <input th:field="*{pricePerServing}"
                placeholder="pricePerServing"/>
         <span th:errors="*{pricePerServing}" class="error"></span>
 
+        <br/>
+        <label th:for="*{glutenFree}">glutenFree</label>
         <input th:field="*{glutenFree}"
                placeholder="glutenFree"/>
         <span th:errors="*{glutenFree}" class="error"></span>
 
+        <br/>
+        <label th:for="*{vegan}">vegan</label>
         <input th:field="*{vegan}"
                placeholder="vegan"/>
         <span th:errors="*{vegan}" class="error"></span>
 
+        <br/>
+        <label th:for="*{vegetarian}">vegetarian</label>
         <input th:field="*{vegetarian}"
                placeholder="vegetarian"/>
         <span th:errors="*{vegetarian}" class="error"></span>
 
+        <br/>
+        <label th:for="*{dairyFree}">dairyFree</label>
         <input th:field="*{dairyFree}"
                placeholder="dairyFree"/>
         <span th:errors="*{dairyFree}" class="error"></span>
 
+        <br/>
+        <label th:for="*{veryHealthy}">veryHealthy</label>
         <input th:field="*{veryHealthy}"
                placeholder="veryHealthy"/>
         <span th:errors="*{veryHealthy}" class="error"></span>
 
+        <br/>
+        <label th:for="*{cheap}">cheap</label>
         <input th:field="*{cheap}"
                placeholder="cheap"/>
         <span th:errors="*{cheap}" class="error"></span>
 
+        <br/>
+        <label th:for="*{sustainable}">sustainable</label>
         <input th:field="*{sustainable}"
                placeholder="sustainable"/>
         <span th:errors="*{sustainable}" class="error"></span>
 
+        <br/>
+        <label th:for="*{instructions}">instructions</label>
         <input th:field="*{instructions}"
                placeholder="instructions"/>
         <span th:errors="*{instructions}" class="error"></span>
 
+        <br/>
+        <label th:for="*{summary}">summary</label>
         <input th:field="*{summary}"
                placeholder="summary"/>
         <span th:errors="*{summary}" class="error"></span>
 
-        <input th:field="*{recipeIngredients}"
-               placeholder="recipeIngredients"/>
-        <span th:errors="*{recipeIngredients}" class="error"></span>
+        <br/>
+        <div th:each="ingredient, iter : ${recipeForm.ingredientsName != null ? recipeForm.ingredientsName : #numbers.sequence(0, 10)}"
+             class="ingredient">
+            <------- BEGIN INGREDIENT -------->
+            <span>ingredient [[${iter.index}]]:</span>
+            <div>
+                <label for="ingredientsName">ingredientsName</label>
+                <input id="ingredientsName" name="ingredientsName"
+                       th:value="${recipeForm.ingredientsName != null ? recipeForm.ingredientsName[iter.index] : ''}"
+                       placeholder="ingredientsName"/>
+                <span th:errors="*{ingredientsName}" class="error"></span>
+            </div>
 
+            <div>
+                <label for="ingredientsMeta">ingredientsMeta</label>
+                <input id="ingredientsMeta" name="ingredientsMeta"
+                       th:value="${recipeForm.ingredientsMeta != null ? recipeForm.ingredientsMeta[iter.index] : ''}"
+                       placeholder="ingredientsMeta"/>
+                <span th:errors="*{ingredientsMeta}" class="error"></span>
+            </div>
 
+            <div>
+                <label for="ingredientsAisle">ingredientsAisle</label>
+                <input id="ingredientsAisle" name="ingredientsAisle"
+                       th:value="${recipeForm.ingredientsAisle != null ? recipeForm.ingredientsAisle[iter.index] : ''}"
+                       placeholder="ingredientsAisle"/>
+                <span th:errors="*{ingredientsAisle}" class="error"></span>
+            </div>
+
+            <div>
+                <label for="ingredientsConsistency">ingredientsConsistency</label>
+                <input id="ingredientsConsistency" name="ingredientsConsistency"
+                       th:value="${recipeForm.ingredientsConsistency != null ? recipeForm.ingredientsConsistency[iter.index] : ''}"
+                       placeholder="ingredientsConsistency"/>
+                <span th:errors="*{ingredientsConsistency}" class="error"></span>
+            </div>
+
+            <div>
+                <label for="ingredientsUnit">ingredientsUnit</label>
+                <input id="ingredientsUnit" name="ingredientsUnit"
+                       th:value="${recipeForm.ingredientsUnit != null ? recipeForm.ingredientsUnit[iter.index] : ''}"
+                       placeholder="ingredientsUnit"/>
+                <span th:errors="*{ingredientsUnit}" class="error"></span>
+            </div>
+
+            <div>
+                <label for="ingredientsAmount">ingredientsAmount</label>
+                <input id="ingredientsAmount" name="ingredientsAmount"
+                       th:value="${recipeForm.ingredientsAmount != null ? recipeForm.ingredientsAmount[iter.index] : ''}"
+                       placeholder="ingredientsAmount"/>
+                <span th:errors="*{ingredientsAmount}" class="error"></span>
+            </div>
+            <--------- END INGREDIENT ---------->
+        </div>
+        <br/>
         <button type="submit">Create Recipe</button>
     </form>
 </div>

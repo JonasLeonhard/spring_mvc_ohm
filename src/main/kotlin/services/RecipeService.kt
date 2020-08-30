@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
+import pojos.RecipeForm
 import pojos.RecipeSummary
 import repositories.IngredientRepository
 import repositories.RecipeIngredientsRepository
@@ -221,5 +222,9 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
             }
         }
         return commaSeparatedIds
+    }
+
+    fun createRecipeFromForm(recipeForm: RecipeForm): Recipe {
+        TODO()
     }
 }

@@ -45,10 +45,11 @@ class RecipeController(val recipeService: RecipeService,
     fun createRecipePage(principal: Principal, model: Model): String {
         userService.addAuthenticatedUserToModel(principal, model)
         model["recipeForm"] = RecipeForm()
+
         return "createRecipe"
     }
 
-    @PostMapping("/create", consumes = ["multipart/form-data"])
+    @PostMapping("/create")
     fun createRecipe(principal: Principal, @Valid @ModelAttribute recipeForm: RecipeForm, bindingResult: BindingResult, model: Model): String {
         recipeFormValidator.validate(recipeForm, bindingResult)
         if (bindingResult.hasErrors()) {
@@ -60,7 +61,7 @@ class RecipeController(val recipeService: RecipeService,
         // TODO: no errors: Create recipe here
         println("principal:: ${principal.name}")
         println("recipeForm :: $recipeForm... bingingResutl:: $bindingResult")
-
+        val recipe = recipeService.createRecipeFromForm(recipeForm)
         // TODO: on success: redirect to recipe page
         return "redirect:/recipe/create"
     }
