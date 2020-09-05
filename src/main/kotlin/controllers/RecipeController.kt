@@ -44,7 +44,28 @@ class RecipeController(val recipeService: RecipeService,
     @GetMapping("/create")
     fun createRecipePage(principal: Principal, model: Model): String {
         userService.addAuthenticatedUserToModel(principal, model)
-        model["recipeForm"] = RecipeForm()
+        model["recipeForm"] = RecipeForm(
+                title = "THIS IS A TEST TITLE",
+                servings = 2,
+                readyInMinutes = 20,
+                preparationMinutes = 15,
+                pricePerServing = 12.0,
+                glutenFree = false,
+                vegan = true,
+                vegetarian = true,
+                veryHealthy = false,
+                sustainable = false,
+                dairyFree = false,
+                cheap = true,
+                instructions = "THIS IS A TEST INSTRUCTION",
+                summary = "THIS IS A TEST SUMMARY",
+                ingredientsName = listOf("ab", "bc"),
+                ingredientsMeta = listOf("meta1", "meta2"),
+                ingredientsAisle = listOf("aisle1", "aisle2"),
+                ingredientsAmount = listOf(10.0, 2.0),
+                ingredientsConsistency = listOf("consistency1", "consistency2"),
+                ingredientsUnit = listOf("unit1", "unit2")
+        )
 
         return "createRecipe"
     }
@@ -58,12 +79,8 @@ class RecipeController(val recipeService: RecipeService,
             return "createRecipe"
         }
 
-        // TODO: no errors: Create recipe here
-        println("principal:: ${principal.name}")
-        println("recipeForm :: $recipeForm... bingingResutl:: $bindingResult")
-        val recipe = recipeService.createRecipeFromForm(recipeForm)
-        // TODO: on success: redirect to recipe page
-        return "redirect:/recipe/create"
+        val recipe = recipeService.createRecipeFromForm(recipeForm, principal)
+        return "redirect:/recipe/${recipe.id}"
     }
 
     @PostMapping("/like")

@@ -1,5 +1,5 @@
 #### Starting the application - run:
-###### or 'gradle start' when you have gradle installed
+###### or 'gradle start' when you have gradle installed, then follow the instructions to set environment variables.
 ```
 ./gradlew start
 ```

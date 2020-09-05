@@ -9,49 +9,52 @@ import pojos.RecipeForm
 class RecipeFormValidator : Validator {
     override fun validate(target: Any, errors: Errors) {
         val recipeForm = target as RecipeForm
-        something(errors, recipeForm)
+        canBuildIngredientsFromLists(errors, recipeForm)
     }
 
     override fun supports(aClass: Class<*>): Boolean {
         return RecipeForm::class.java == aClass
     }
 
-    fun something(errors: Errors, recipeForm: RecipeForm) {
-        // TODO
-        // errors.reject
-        println("validate recipeForm: $recipeForm")
-        errors.rejectValue("summary", "SummaryError", "this is a summary error")
-    }
-
     fun canBuildIngredientsFromLists(errors: Errors, recipeForm: RecipeForm) {
-        // are all lists the same length?
-        // are the values not null?
-        TODO()
+        if (recipeForm.ingredientsAmount.isNullOrEmpty()) {
+            errors.rejectValue("ingredientsAmount", "AmountError", "Field 'ingredientsAmount' cannot be null or empty")
+        }
+        if (recipeForm.ingredientsAisle.isNullOrEmpty()) {
+            errors.rejectValue("ingredientsAisle", "AisleError", "Field 'ingredientsAisle' cannot be null or empty")
+        }
+        if (recipeForm.ingredientsConsistency.isNullOrEmpty()) {
+            errors.rejectValue("ingredientsConsistency", "ConsistencyError", "Field 'ingredientsConsistency' cannot be null or empty")
+        }
+        if (recipeForm.ingredientsMeta.isNullOrEmpty()) {
+            errors.rejectValue("ingredientsMeta", "MetaError", "Field 'ingredientsMeta' cannot be null or empty")
+        }
+        if (recipeForm.ingredientsName.isNullOrEmpty()) {
+            errors.rejectValue("ingredientsName", "NameError", "Field 'ingredientsName' cannot be null or empty")
+        }
+        if (recipeForm.ingredientsUnit.isNullOrEmpty()) {
+            errors.rejectValue("ingredientsUnit", "UnitError", "Field 'ingredientsUnit' cannot be null or empty")
+        }
+
+        val baseLength = recipeForm.ingredientsName?.size
+        if (baseLength != recipeForm.ingredientsAisle?.size) {
+            errors.rejectValue("ingredientsAisle", "SizeError", "Field 'ingredientsAisle' has to have as many entries as ingredientsName")
+        }
+
+        if (baseLength != recipeForm.ingredientsAmount?.size) {
+            errors.rejectValue("ingredientsAmount", "SizeError", "Field 'ingredientsAmount' has to have as many entries as ingredientsName")
+        }
+
+        if (baseLength != recipeForm.ingredientsConsistency?.size) {
+            errors.rejectValue("ingredientsConsistency", "SizeError", "Field 'ingredientsConsistency' has to have as many entries as ingredientsName")
+        }
+
+        if (baseLength != recipeForm.ingredientsMeta?.size) {
+            errors.rejectValue("ingredientsMeta", "SizeError", "Field 'ingredientsMeta' has to have as many entries as ingredientsName")
+        }
+
+        if (baseLength != recipeForm.ingredientsUnit?.size) {
+            errors.rejectValue("ingredientsUnit", "SizeError", "Field 'ingredientsUnit' has to have as many entries as ingredientsName")
+        }
     }
-
-    fun ingredientsName(errors: Errors, recipeForm: RecipeForm) {
-        TODO()
-    }
-
-    fun ingredientsMeta(errors: Errors, recipeForm: RecipeForm) {
-        TODO()
-    }
-
-    fun ingredientsAisle(errors: Errors, recipeForm: RecipeForm) {
-        TODO()
-    }
-
-    fun ingredientsConsistency(errors: Errors, recipeForm: RecipeForm) {
-        TODO()
-    }
-
-    fun ingredientsUnit(errors: Errors, recipeForm: RecipeForm) {
-        TODO()
-    }
-
-    fun ingredientsAmount(errors: Errors, recipeForm: RecipeForm) {
-        TODO()
-    }
-
-
 }

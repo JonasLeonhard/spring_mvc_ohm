@@ -1,5 +1,4 @@
 package models
-
 import org.hibernate.annotations.LazyCollection
 import org.hibernate.annotations.LazyCollectionOption
 import org.springframework.lang.Nullable
@@ -13,7 +12,8 @@ data class Recipe(
         var id: Long = -1,
 
         @field:Nullable
-        @ManyToOne(targetEntity = User::class, fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+        @ManyToOne(targetEntity = User::class, fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+        @JoinColumn(name = "user_id")
         var user: User? = null,
 
         var title: String,

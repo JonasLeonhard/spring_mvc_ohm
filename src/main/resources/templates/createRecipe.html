@@ -16,66 +16,78 @@
         <br/>
         <label th:for="*{servings}">servings</label>
         <input th:field="*{servings}"
+               type="number"
                placeholder="servings"/>
         <span th:errors="*{servings}" class="error"></span>
 
         <br/>
         <label th:for="*{readyInMinutes}">readyInMinutes</label>
         <input th:field="*{readyInMinutes}"
+               type="number"
                placeholder="readyInMinutes"/>
         <span th:errors="*{readyInMinutes}" class="error"></span>
 
         <br/>
         <label th:for="*{preparationMinutes}">preparationMinutes</label>
         <input th:field="*{preparationMinutes}"
+               type="number"
                placeholder="preparationMinutes"/>
         <span th:errors="*{preparationMinutes}" class="error"></span>
 
         <br/>
         <label th:for="*{pricePerServing}">pricePerServing</label>
         <input th:field="*{pricePerServing}"
+               type="number"
+               step="0.01"
                placeholder="pricePerServing"/>
         <span th:errors="*{pricePerServing}" class="error"></span>
 
         <br/>
         <label th:for="*{glutenFree}">glutenFree</label>
         <input th:field="*{glutenFree}"
+               type="checkbox"
                placeholder="glutenFree"/>
         <span th:errors="*{glutenFree}" class="error"></span>
 
         <br/>
         <label th:for="*{vegan}">vegan</label>
         <input th:field="*{vegan}"
+               type="checkbox"
                placeholder="vegan"/>
         <span th:errors="*{vegan}" class="error"></span>
 
         <br/>
         <label th:for="*{vegetarian}">vegetarian</label>
         <input th:field="*{vegetarian}"
+               type="checkbox"
                placeholder="vegetarian"/>
         <span th:errors="*{vegetarian}" class="error"></span>
 
         <br/>
         <label th:for="*{dairyFree}">dairyFree</label>
         <input th:field="*{dairyFree}"
+               type="checkbox"
                placeholder="dairyFree"/>
         <span th:errors="*{dairyFree}" class="error"></span>
 
         <br/>
         <label th:for="*{veryHealthy}">veryHealthy</label>
         <input th:field="*{veryHealthy}"
+               type="checkbox"
                placeholder="veryHealthy"/>
         <span th:errors="*{veryHealthy}" class="error"></span>
 
         <br/>
         <label th:for="*{cheap}">cheap</label>
         <input th:field="*{cheap}"
+               type="checkbox"
                placeholder="cheap"/>
         <span th:errors="*{cheap}" class="error"></span>
 
         <br/>
         <label th:for="*{sustainable}">sustainable</label>
         <input th:field="*{sustainable}"
+               type="checkbox"
                placeholder="sustainable"/>
         <span th:errors="*{sustainable}" class="error"></span>
 
@@ -140,6 +152,7 @@
                 <label for="ingredientsAmount">ingredientsAmount</label>
                 <input id="ingredientsAmount" name="ingredientsAmount"
                        th:value="${recipeForm.ingredientsAmount != null ? recipeForm.ingredientsAmount[iter.index] : ''}"
+                       type="number"
                        placeholder="ingredientsAmount"/>
                 <span th:errors="*{ingredientsAmount}" class="error"></span>
             </div>

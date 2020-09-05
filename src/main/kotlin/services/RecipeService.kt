@@ -8,6 +8,7 @@ import models.Recipe
 import models.RecipeIngredients
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
+import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
 import pojos.RecipeForm
@@ -15,6 +16,7 @@ import pojos.RecipeSummary
 import repositories.IngredientRepository
 import repositories.RecipeIngredientsRepository
 import repositories.RecipeRepository
+import java.security.Principal
 import javax.transaction.Transactional
 
 @Service
@@ -224,7 +226,29 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
         return commaSeparatedIds
     }
 
-    fun createRecipeFromForm(recipeForm: RecipeForm): Recipe {
-        TODO()
+    @Throws(UsernameNotFoundException::class)
+    fun createRecipeFromForm(recipeForm: RecipeForm, principal: Principal): Recipe {
+        val user = userService.findByUsername(principal.name)
+
+        val recipe = Recipe(
+                user = user,
+                title = recipeForm.title!!,
+                servings = recipeForm.servings!!,
+                dairyFree = recipeForm.dairyFree!!,
+                summary = recipeForm.summary!!,
+                instructions = recipeForm.instructions!!,
+                sustainable = recipeForm.sustainable!!,
+                veryHealthy = recipeForm.veryHealthy!!,
+                vegetarian = recipeForm.vegetarian!!,
+                glutenFree = recipeForm.glutenFree!!,
+                pricePerServing = recipeForm.pricePerServing!!,
+                preparationMinutes = recipeForm.preparationMinutes!!,
+                readyInMinutes = recipeForm.readyInMinutes!!,
+                vegan = recipeForm.vegan!!,
+                cheap = recipeForm.cheap!!)
+
+        // TODO: add ingredients
+        // recipe.recipeIngredients.add...
+        return recipeRepository.save(recipe)
     }
 }

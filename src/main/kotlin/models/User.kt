@@ -51,8 +51,7 @@ data class User(
         var roles: MutableSet<Role> = mutableSetOf(),
 
         @field:Nullable
-        @OneToMany(targetEntity = Recipe::class, fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
-        @JoinColumn(name = "user_id")
+        @OneToMany(targetEntity = Recipe::class, fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
         var recipes: MutableSet<Recipe> = mutableSetOf(),
 
         @OneToMany(targetEntity = UserLikedRecipe::class, mappedBy = "embeddedKey.user")
