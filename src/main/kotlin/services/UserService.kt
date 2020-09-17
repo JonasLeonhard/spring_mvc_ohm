@@ -18,6 +18,7 @@ class UserService(
         val recipeRepository: RecipeRepository,
         val userLikedRecipeRepository: UserLikedRecipeRepository,
         val userRecipeBuyListRepository: UserRecipeBuyListRepository,
+        val userRecipeCommentRepository: UserRecipeCommentRepository,
         val friendshipRepository: FriendshipRepository,
         val notificationRepository: NotificationRepository,
         val bCryptPasswordEncoder: BCryptPasswordEncoder,
@@ -173,6 +174,18 @@ class UserService(
         }
 
         userRecipeBuyListRepository.save(newUserRecipeBuyList)
+    }
+
+    @Transactional
+    fun commentRecipe(recipeId: Long, principal: Principal, message: String) {
+        val recipe = recipeRepository.findById(recipeId).get()
+        val user = findByUsername(principal.name)
+
+        userRecipeCommentRepository.save(UserRecipeComment(
+                user = user,
+                recipe = recipe,
+                message = message
+        ))
     }
 }
 

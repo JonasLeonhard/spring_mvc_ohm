@@ -6,6 +6,7 @@ import configurations.ApplicationPropertiesConfiguration
 import models.Ingredient
 import models.Recipe
 import models.RecipeIngredients
+import models.UserRecipeComment
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.security.core.userdetails.UsernameNotFoundException
@@ -16,6 +17,7 @@ import pojos.RecipeSummary
 import repositories.IngredientRepository
 import repositories.RecipeIngredientsRepository
 import repositories.RecipeRepository
+import repositories.UserRecipeCommentRepository
 import java.security.Principal
 import javax.transaction.Transactional
 
@@ -25,6 +27,7 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
                     val recipeRepository: RecipeRepository,
                     val ingredientRepository: IngredientRepository,
                     val recipeIngredientsRepository: RecipeIngredientsRepository,
+                    val userRecipeCommentRepository: UserRecipeCommentRepository,
                     val userService: UserService) {
 
     private val spoonacularWebClient: WebClient = WebClient.builder()
@@ -271,5 +274,9 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
         } catch (e: Exception) {
             throw Exception("CreateRecipeException: tried to unwrap <!!> value that should be caught in validation. Are recipe values validated?")
         }
+    }
+
+    fun getComments(recipe: Recipe): MutableList<UserRecipeComment> {
+        return userRecipeCommentRepository.findAllCommentsForRecipe(recipe.id)
     }
 }

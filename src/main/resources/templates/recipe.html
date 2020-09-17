@@ -114,6 +114,25 @@ includeIonicons = ${true})"></head>
 
         -- TODO() -> have instructions seperated, maybe analyzed instructions?
     </div>
+
+    <div>
+        comment section:
+        <div>
+            <div th:each="comment, iter : ${recipeComments}">
+                [[${comment.message}]] by user: [[${comment.user.name}]]
+            </div>
+        </div>
+        <form th:action="@{/recipe/{id}/comment(id=${recipe.id})}" method="post">
+            <label>
+                Comment:
+                <textarea rows="4" name="message" th:disabled="${authenticated == null}"
+                          th:placeholder="${(authenticated == null ? 'Login to comment on ' : 'Comment on ')  + recipe.title}"></textarea>
+            </label>
+            <button type="submit" th:title="${authenticated == null ? 'Login to Comment' : 'Submit Comment'}"
+                    th:disabled="${authenticated == null}">Comment
+            </button>
+        </form>
+    </div>
 </div>
 
 <!-- Scripts -->

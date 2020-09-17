@@ -31,7 +31,6 @@ data class Recipe(
         var likes: Int = 0,
 
         @OneToMany(targetEntity = UserLikedRecipe::class, mappedBy = "embeddedKey.recipe")
-        @LazyCollection(LazyCollectionOption.FALSE)
         var userLikes: MutableSet<UserLikedRecipe> = mutableSetOf(),
 
         var pricePerServing: Double = 0.0,

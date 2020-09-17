@@ -32,6 +32,7 @@ class RecipeController(val recipeService: RecipeService,
         model["pageTitle"] = recipe.title
         model["recipe"] = recipe
         model["escapedRecipeSummary"] = jsoupService.escapeUserText(recipe.summary)
+        model["recipeComments"] = recipeService.getComments(recipe)
 
         if (user != null) {
             model["userLikedRecipe"] = user.hasLikedRecipe(recipe)
@@ -113,5 +114,12 @@ class RecipeController(val recipeService: RecipeService,
     fun toListRecipe(principal: Principal, @PathVariable("id") recipeId: Long, model: Model, @RequestParam(required = false, name = "redirectTo") redirectTo: String?): String {
         userService.addRecipeToBuyList(recipeId, principal)
         return if (redirectTo == null) "redirect:/recipe/$recipeId" else "redirect:$redirectTo"
+    }
+
+    @PostMapping("/{id}/comment")
+    fun commentOn(principal: Principal, @PathVariable("id") recipeId: Long, @RequestParam(name = "message") message: String): String {
+        println("commentON $recipeId $message")
+        userService.commentRecipe(recipeId, principal, message)
+        return "redirect:/recipe/$recipeId"
     }
 }
