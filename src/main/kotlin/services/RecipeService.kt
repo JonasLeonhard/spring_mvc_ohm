@@ -57,12 +57,10 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
 
     }
 
-    @Transactional
     fun saveRecipe(recipe: Recipe): Recipe {
         return recipeRepository.save(recipe)
     }
 
-    @Transactional
     fun saveIngredient(ingredient: Ingredient): Ingredient {
         val indexedIngredient = ingredientRepository.findIngredientByName(ingredient.name)
         if (indexedIngredient != null) {
@@ -71,7 +69,6 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
         return ingredientRepository.save(ingredient)
     }
 
-    @Transactional
     fun saveRecipeIngredients(recipeIngredient: RecipeIngredients): RecipeIngredients {
         return recipeIngredientsRepository.save(recipeIngredient)
     }
@@ -109,7 +106,7 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
      * @param exclude Already cached recipes in the database that should not be included in the request
      * @return Returns null or a JsonNode Array of JsonNodes containing Recipe Information
      */
-    private fun bulkSearchRecipesFromSummaries(summaries: MutableList<RecipeSummary>, exclude: MutableList<Recipe>): JsonNode? {
+    fun bulkSearchRecipesFromSummaries(summaries: MutableList<RecipeSummary>, exclude: MutableList<Recipe>): JsonNode? {
         val commaSeparatedIds = getCommaSeparatedIds(summaries, exclude)
         if (commaSeparatedIds.isNotEmpty()) {
             return spoonacularWebClient.get().uri { builder ->
@@ -144,7 +141,8 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
      * Saves a JsonNode of a single Recipe and its ingredients if they do not exists
      * @param json A JsonNode containig recipeInformation
      */
-    private fun saveRecipeJson(json: JsonNode): Recipe {
+    @Transactional
+    fun saveRecipeJson(json: JsonNode): Recipe {
         val parsedRecipe = Recipe(
                 instructions = json.get("instructions")?.asText() ?: "",
                 readyInMinutes = json.get("readyInMinutes")?.asInt() ?: 0,
@@ -175,7 +173,8 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
      * @param json Json containing recipe ingredients as the key "extendedIngredients"
      * @param recipe The recipe the ingredients are related (saved) to
      */
-    private fun saveRecipeJsonIngredients(json: JsonNode, recipe: Recipe) {
+    @Transactional
+    fun saveRecipeJsonIngredients(json: JsonNode, recipe: Recipe) {
         json.get("extendedIngredients").forEach { ingredient ->
             val parsedIngredient = Ingredient(
                     aisle = trimToMaxCharNum(ingredient.get("aisle").asText(), 255),
@@ -226,29 +225,51 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
         return commaSeparatedIds
     }
 
-    @Throws(UsernameNotFoundException::class)
+    @Throws(UsernameNotFoundException::class, Exception::class)
+    @Transactional
     fun createRecipeFromForm(recipeForm: RecipeForm, principal: Principal): Recipe {
         val user = userService.findByUsername(principal.name)
 
-        val recipe = Recipe(
-                user = user,
-                title = recipeForm.title!!,
-                servings = recipeForm.servings!!,
-                dairyFree = recipeForm.dairyFree!!,
-                summary = recipeForm.summary!!,
-                instructions = recipeForm.instructions!!,
-                sustainable = recipeForm.sustainable!!,
-                veryHealthy = recipeForm.veryHealthy!!,
-                vegetarian = recipeForm.vegetarian!!,
-                glutenFree = recipeForm.glutenFree!!,
-                pricePerServing = recipeForm.pricePerServing!!,
-                preparationMinutes = recipeForm.preparationMinutes!!,
-                readyInMinutes = recipeForm.readyInMinutes!!,
-                vegan = recipeForm.vegan!!,
-                cheap = recipeForm.cheap!!)
+        try {
+            val recipe = Recipe(
+                    user = user,
+                    title = recipeForm.title!!,
+                    servings = recipeForm.servings!!,
+                    dairyFree = recipeForm.dairyFree!!,
+                    summary = recipeForm.summary!!,
+                    instructions = recipeForm.instructions!!,
+                    sustainable = recipeForm.sustainable!!,
+                    veryHealthy = recipeForm.veryHealthy!!,
+                    vegetarian = recipeForm.vegetarian!!,
+                    glutenFree = recipeForm.glutenFree!!,
+                    pricePerServing = recipeForm.pricePerServing!!,
+                    preparationMinutes = recipeForm.preparationMinutes!!,
+                    readyInMinutes = recipeForm.readyInMinutes!!,
+                    vegan = recipeForm.vegan!!,
+                    cheap = recipeForm.cheap!!)
+            val savedRecipe = recipeRepository.save(recipe)
 
-        // TODO: add ingredients
-        // recipe.recipeIngredients.add...
-        return recipeRepository.save(recipe)
+            recipeForm.ingredientsName!!.forEachIndexed { index: Int, name: String? ->
+                val ingredient = Ingredient(
+                        aisle = recipeForm.ingredientsAisle!![index]?.let { trimToMaxCharNum(it, 255) },
+                        consistency = recipeForm.ingredientsConsistency!![index]?.let { trimToMaxCharNum(it, 255) },
+                        meta = recipeForm.ingredientsMeta!![index]?.let { trimToMaxCharNum(it, 255) },
+                        name = trimToMaxCharNum(name!!, 255),
+                        unit = recipeForm.ingredientsUnit!![index]?.let { trimToMaxCharNum(it, 255) }!!
+                )
+
+                val savedIngredient = saveIngredient(ingredient)
+                val recipeIngredients = RecipeIngredients(
+                        amount = recipeForm.ingredientsAmount!![index]!!,
+                        ingredient = savedIngredient,
+                        summary = recipeForm.ingredientsSummary!![index]?.let { trimToMaxCharNum(it, 255) },
+                        recipe = savedRecipe
+                )
+                recipe.recipeIngredients.add(saveRecipeIngredients(recipeIngredients))
+            }
+            return savedRecipe
+        } catch (e: Exception) {
+            throw Exception("CreateRecipeException: tried to unwrap <!!> value that should be caught in validation. Are recipe values validated?")
+        }
     }
 }

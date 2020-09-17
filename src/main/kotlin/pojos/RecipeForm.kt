@@ -56,20 +56,23 @@ data class RecipeForm(
 
         /* INGREDIENTS */
         @field:NotNull(message = "Ingredient names have to be specified")
-        val ingredientsName: List<String?>? = null,
+        val ingredientsName: MutableList<String?>? = null,
 
         @field:NotNull(message = "Ingredient meta info's have to be specified")
-        val ingredientsMeta: List<String?>? = null,
+        val ingredientsMeta: MutableList<String?>? = null,
+
+        @field:NotNull(message = "ingredient summary has to be specified")
+        val ingredientsSummary: MutableList<String?>? = null,
 
         @field:NotNull(message = "Ingredient aisle's have to be specified")
-        val ingredientsAisle: List<String?>? = null,
+        val ingredientsAisle: MutableList<String?>? = null,
 
         @field:NotNull(message = "Ingredient consistencies have to be specified")
-        val ingredientsConsistency: List<String?>? = null,
+        val ingredientsConsistency: MutableList<String?>? = null,
 
         @field:NotNull(message = "Ingredient unit's have to be specified")
-        val ingredientsUnit: List<String?>? = null,
+        val ingredientsUnit: MutableList<String?>? = null,
 
         @field:NotNull(message = "Ingredient amount's have to be specified")
-        val ingredientsAmount: List<Double?>? = null
+        val ingredientsAmount: MutableList<Double?>? = null
 )

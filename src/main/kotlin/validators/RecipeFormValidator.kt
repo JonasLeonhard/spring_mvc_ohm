@@ -10,6 +10,7 @@ class RecipeFormValidator : Validator {
     override fun validate(target: Any, errors: Errors) {
         val recipeForm = target as RecipeForm
         canBuildIngredientsFromLists(errors, recipeForm)
+        ingredientValuesNotNull(errors, recipeForm)
     }
 
     override fun supports(aClass: Class<*>): Boolean {
@@ -29,6 +30,11 @@ class RecipeFormValidator : Validator {
         if (recipeForm.ingredientsMeta.isNullOrEmpty()) {
             errors.rejectValue("ingredientsMeta", "MetaError", "Field 'ingredientsMeta' cannot be null or empty")
         }
+
+        if (recipeForm.ingredientsSummary.isNullOrEmpty()) {
+            errors.rejectValue("ingredientsSummary", "SummaryError", "Field 'ingredientsSummary' cannot be null or empty")
+        }
+
         if (recipeForm.ingredientsName.isNullOrEmpty()) {
             errors.rejectValue("ingredientsName", "NameError", "Field 'ingredientsName' cannot be null or empty")
         }
@@ -53,8 +59,64 @@ class RecipeFormValidator : Validator {
             errors.rejectValue("ingredientsMeta", "SizeError", "Field 'ingredientsMeta' has to have as many entries as ingredientsName")
         }
 
+        if (baseLength != recipeForm.ingredientsSummary?.size) {
+            errors.rejectValue("ingredientsSummary", "SizeError", "Field 'ingredientsSummary' has to have as many entries as ingredientsName")
+        }
+
         if (baseLength != recipeForm.ingredientsUnit?.size) {
             errors.rejectValue("ingredientsUnit", "SizeError", "Field 'ingredientsUnit' has to have as many entries as ingredientsName")
         }
+    }
+
+    fun ingredientValuesNotNull(errors: Errors, recipeForm: RecipeForm) {
+        recipeForm.ingredientsName?.forEach local@{ name ->
+            if (name.isNullOrEmpty()) {
+                errors.rejectValue("ingredientsName", "NameError", "Field 'ingredientsName' cannot be null or empty")
+                return@local
+            }
+        }
+
+        recipeForm.ingredientsUnit?.forEach local@{ unit ->
+            if (unit.isNullOrEmpty()) {
+                errors.rejectValue("ingredientsUnit", "UnitError", "Field 'ingredientsUnit' cannot be null or empty")
+                return@local
+            }
+        }
+
+        recipeForm.ingredientsSummary?.forEach local@{ sum ->
+            if (sum.isNullOrEmpty()) {
+                errors.rejectValue("ingredientsSummary", "SummaryError", "Field 'ingredientsSummary' cannot be null or empty")
+                return@local
+            }
+        }
+
+        recipeForm.ingredientsMeta?.forEach local@{ meta ->
+            if (meta.isNullOrEmpty()) {
+                errors.rejectValue("ingredientsMeta", "MetaError", "Field 'ingredientsMeta' cannot be null or empty")
+                return@local
+            }
+        }
+
+        recipeForm.ingredientsConsistency?.forEach local@{ con ->
+            if (con.isNullOrEmpty()) {
+                errors.rejectValue("ingredientsConsistency", "ConsistencyError", "Field 'ingredientsConsistency' cannot be null or empty")
+                return@local
+            }
+        }
+
+        recipeForm.ingredientsAmount?.forEach local@{ amount ->
+            if (amount == null) {
+                errors.rejectValue("ingredientsAmount", "IngredientsError", "Field 'ingredientsAmount' cannot be null")
+                return@local
+            }
+        }
+
+        recipeForm.ingredientsAisle?.forEach local@{ aisle ->
+            if (aisle.isNullOrEmpty()) {
+                errors.rejectValue("ingredientsAisle", "AisleError", "Field 'ingredientsAisle' cannot be null")
+                return@local
+            }
+        }
+
     }
 }

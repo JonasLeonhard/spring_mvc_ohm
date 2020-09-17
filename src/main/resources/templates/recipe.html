@@ -49,6 +49,9 @@ includeIonicons = ${true})"></head>
                         [[${iter.index}]]: [[${recipeIngredient.amount}]] [[${recipeIngredient.ingredient.unit}]]
                         [[${recipeIngredient.ingredient.name}]]:
                     </div>
+                    <p class="ingredient-meta" th:if="${recipeIngredient.ingredient.meta != null}">
+                        [[${recipeIngredient.ingredient.meta}]]
+                    <p>
                     <span class="ingredient-summary" th:if="${recipeIngredient.summary != null}">
                         [[${recipeIngredient.summary}]]
                     </span>

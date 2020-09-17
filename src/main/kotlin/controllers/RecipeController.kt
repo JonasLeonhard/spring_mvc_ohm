@@ -42,31 +42,45 @@ class RecipeController(val recipeService: RecipeService,
     }
 
     @GetMapping("/create")
-    fun createRecipePage(principal: Principal, model: Model): String {
+    fun createRecipePage(principal: Principal, recipeForm: RecipeForm?, model: Model): String {
         userService.addAuthenticatedUserToModel(principal, model)
-        model["recipeForm"] = RecipeForm(
-                title = "THIS IS A TEST TITLE",
-                servings = 2,
-                readyInMinutes = 20,
-                preparationMinutes = 15,
-                pricePerServing = 12.0,
-                glutenFree = false,
-                vegan = true,
-                vegetarian = true,
-                veryHealthy = false,
-                sustainable = false,
-                dairyFree = false,
-                cheap = true,
-                instructions = "THIS IS A TEST INSTRUCTION",
-                summary = "THIS IS A TEST SUMMARY",
-                ingredientsName = listOf("ab", "bc"),
-                ingredientsMeta = listOf("meta1", "meta2"),
-                ingredientsAisle = listOf("aisle1", "aisle2"),
-                ingredientsAmount = listOf(10.0, 2.0),
-                ingredientsConsistency = listOf("consistency1", "consistency2"),
-                ingredientsUnit = listOf("unit1", "unit2")
-        )
 
+        if (recipeForm != null) {
+            recipeForm.ingredientsName?.add(null)
+            recipeForm.ingredientsAisle?.add(null)
+            recipeForm.ingredientsAmount?.add(null)
+            recipeForm.ingredientsConsistency?.add(null)
+            recipeForm.ingredientsMeta?.add(null)
+            recipeForm.ingredientsSummary?.add(null)
+            recipeForm.ingredientsUnit?.add(null)
+            model["recipeForm"] = recipeForm
+        }
+
+        if (recipeForm?.ingredientsName == null) {
+            model["recipeForm"] = RecipeForm(
+                    title = "THIS IS A TEST TITLE",
+                    servings = 2,
+                    readyInMinutes = 20,
+                    preparationMinutes = 15,
+                    pricePerServing = 12.0,
+                    glutenFree = false,
+                    vegan = true,
+                    vegetarian = true,
+                    veryHealthy = false,
+                    sustainable = false,
+                    dairyFree = false,
+                    cheap = true,
+                    instructions = "THIS IS A TEST INSTRUCTION",
+                    summary = "THIS IS A TEST SUMMARY",
+                    ingredientsName = mutableListOf("ab"),
+                    ingredientsMeta = mutableListOf("meta1"),
+                    ingredientsSummary = mutableListOf("sum1"),
+                    ingredientsAisle = mutableListOf("aisle1"),
+                    ingredientsAmount = mutableListOf(10.0),
+                    ingredientsConsistency = mutableListOf("consistency1"),
+                    ingredientsUnit = mutableListOf("unit1")
+            )
+        }
         return "createRecipe"
     }
 

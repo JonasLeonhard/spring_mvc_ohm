@@ -145,7 +145,7 @@ nav .nav-logo {
     height: 2em;
 }
 
-nav .nav-items {
+nav .nav-items, nav .nav-items a {
     display: flex;
     justify-content: center;
     align-items: center;

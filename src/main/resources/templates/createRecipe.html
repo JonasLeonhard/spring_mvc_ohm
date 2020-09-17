@@ -104,59 +104,80 @@
         <span th:errors="*{summary}" class="error"></span>
 
         <br/>
-        <div th:each="ingredient, iter : ${recipeForm.ingredientsName != null ? recipeForm.ingredientsName : #numbers.sequence(0, 10)}"
-             class="ingredient">
-            <------- BEGIN INGREDIENT -------->
-            <span>ingredient [[${iter.index}]]:</span>
-            <div>
-                <label for="ingredientsName">ingredientsName</label>
-                <input id="ingredientsName" name="ingredientsName"
-                       th:value="${recipeForm.ingredientsName != null ? recipeForm.ingredientsName[iter.index] : ''}"
-                       placeholder="ingredientsName"/>
-                <span th:errors="*{ingredientsName}" class="error"></span>
+
+        <div class="ingredients-wrapper">
+            <div th:each="ingredient, iter : ${recipeForm.ingredientsName != null ? recipeForm.ingredientsName : #numbers.sequence(0, 0)}"
+                 class="ingredient">
+                <------- BEGIN INGREDIENT -------->
+                <span>ingredient [[${iter.index}]]:</span>
+                <div>
+                    <label for="ingredientsName">ingredientsName</label>
+                    <input id="ingredientsName" name="ingredientsName"
+                           th:value="${recipeForm.ingredientsName != null ? recipeForm.ingredientsName[iter.index] : ''}"
+                           placeholder="ingredientsName"
+                           required/>
+                    <span th:errors="*{ingredientsName}" class="error"></span>
+                </div>
+
+                <div>
+                    <label for="ingredientsMeta">ingredientsMeta</label>
+                    <input id="ingredientsMeta" name="ingredientsMeta"
+                           th:value="${recipeForm.ingredientsMeta != null ? recipeForm.ingredientsMeta[iter.index] : ''}"
+                           placeholder="ingredientsMeta"
+                           required/>
+                    <span th:errors="*{ingredientsMeta}" class="error"></span>
+                </div>
+
+                <div>
+                    <label for="ingredientsMeta">ingredientsSummary</label>
+                    <input id="ingredientsSummary" name="ingredientsSummary"
+                           th:value="${recipeForm.ingredientsSummary != null ? recipeForm.ingredientsSummary[iter.index] : ''}"
+                           placeholder="ingredientsSummary"
+                           required/>
+                    <span th:errors="*{ingredientsSummary}" class="error"></span>
+                </div>
+
+                <div>
+                    <label for="ingredientsAisle">ingredientsAisle</label>
+                    <input id="ingredientsAisle" name="ingredientsAisle"
+                           th:value="${recipeForm.ingredientsAisle != null ? recipeForm.ingredientsAisle[iter.index] : ''}"
+                           placeholder="ingredientsAisle"
+                           required/>
+                    <span th:errors="*{ingredientsAisle}" class="error"></span>
+                </div>
+
+                <div>
+                    <label for="ingredientsConsistency">ingredientsConsistency</label>
+                    <input id="ingredientsConsistency" name="ingredientsConsistency"
+                           th:value="${recipeForm.ingredientsConsistency != null ? recipeForm.ingredientsConsistency[iter.index] : ''}"
+                           placeholder="ingredientsConsistency"
+                           required/>
+                    <span th:errors="*{ingredientsConsistency}" class="error"></span>
+                </div>
+
+                <div>
+                    <label for="ingredientsUnit">ingredientsUnit</label>
+                    <input id="ingredientsUnit" name="ingredientsUnit"
+                           th:value="${recipeForm.ingredientsUnit != null ? recipeForm.ingredientsUnit[iter.index] : ''}"
+                           placeholder="ingredientsUnit"
+                           required/>
+                    <span th:errors="*{ingredientsUnit}" class="error"></span>
+                </div>
+
+                <div>
+                    <label for="ingredientsAmount">ingredientsAmount</label>
+                    <input id="ingredientsAmount" name="ingredientsAmount"
+                           th:value="${recipeForm.ingredientsAmount != null ? recipeForm.ingredientsAmount[iter.index] : ''}"
+                           type="number"
+                           step="0.01"
+                           placeholder="1.00"
+                           required/>
+                    <span th:errors="*{ingredientsAmount}" class="error"></span>
+                </div>
+                <--------- END INGREDIENT ---------->
             </div>
 
-            <div>
-                <label for="ingredientsMeta">ingredientsMeta</label>
-                <input id="ingredientsMeta" name="ingredientsMeta"
-                       th:value="${recipeForm.ingredientsMeta != null ? recipeForm.ingredientsMeta[iter.index] : ''}"
-                       placeholder="ingredientsMeta"/>
-                <span th:errors="*{ingredientsMeta}" class="error"></span>
-            </div>
-
-            <div>
-                <label for="ingredientsAisle">ingredientsAisle</label>
-                <input id="ingredientsAisle" name="ingredientsAisle"
-                       th:value="${recipeForm.ingredientsAisle != null ? recipeForm.ingredientsAisle[iter.index] : ''}"
-                       placeholder="ingredientsAisle"/>
-                <span th:errors="*{ingredientsAisle}" class="error"></span>
-            </div>
-
-            <div>
-                <label for="ingredientsConsistency">ingredientsConsistency</label>
-                <input id="ingredientsConsistency" name="ingredientsConsistency"
-                       th:value="${recipeForm.ingredientsConsistency != null ? recipeForm.ingredientsConsistency[iter.index] : ''}"
-                       placeholder="ingredientsConsistency"/>
-                <span th:errors="*{ingredientsConsistency}" class="error"></span>
-            </div>
-
-            <div>
-                <label for="ingredientsUnit">ingredientsUnit</label>
-                <input id="ingredientsUnit" name="ingredientsUnit"
-                       th:value="${recipeForm.ingredientsUnit != null ? recipeForm.ingredientsUnit[iter.index] : ''}"
-                       placeholder="ingredientsUnit"/>
-                <span th:errors="*{ingredientsUnit}" class="error"></span>
-            </div>
-
-            <div>
-                <label for="ingredientsAmount">ingredientsAmount</label>
-                <input id="ingredientsAmount" name="ingredientsAmount"
-                       th:value="${recipeForm.ingredientsAmount != null ? recipeForm.ingredientsAmount[iter.index] : ''}"
-                       type="number"
-                       placeholder="ingredientsAmount"/>
-                <span th:errors="*{ingredientsAmount}" class="error"></span>
-            </div>
-            <--------- END INGREDIENT ---------->
+            <button type="submit" formmethod="get">+Add Ingredient</button>
         </div>
         <br/>
         <button type="submit">Create Recipe</button>
