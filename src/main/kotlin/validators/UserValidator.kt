@@ -36,14 +36,6 @@ class UserValidator(val userService: UserService) : Validator {
     }
 
     fun fileMimeTypeValid(errors: Errors, user: User) {
-        val file = user.file
-        if (
-                file != null &&
-                !file.isEmpty &&
-                !(file.contentType?.toLowerCase().equals("image/jpg")
-                        || file.contentType?.toLowerCase().equals("image/jpeg")
-                        || file.contentType?.toLowerCase().equals("image/png"))) {
-            errors.rejectValue("file", "InvalidMimeTypeException", "jpg, jpeg & png file types are only supported")
-        }
+        FileValidator.fileMimeTypeValid(errors, user.file, "file")
     }
 }

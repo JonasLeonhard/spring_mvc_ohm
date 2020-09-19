@@ -26,6 +26,12 @@
                 </div>
             </div>
             <div class="nav-items">
+                <a th:if="${authenticated}" th:href="@{/user/freezer}">
+                    <img class="nav-item" th:src="@{/unsecured_files/fast-food-outline.svg}"
+                         alt="Freezer"
+                         title="Freezer">
+                </a>
+
                 <a th:if="${authenticated}" th:href="@{/recipe/create}">
                     <img class="nav-item" th:src="@{/unsecured_files/create-outline.svg}"
                          alt="Create Recipe"

@@ -28,7 +28,8 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
                     val ingredientRepository: IngredientRepository,
                     val recipeIngredientsRepository: RecipeIngredientsRepository,
                     val userRecipeCommentRepository: UserRecipeCommentRepository,
-                    val userService: UserService) {
+                    val userService: UserService,
+                    val fileService: FileService) {
 
     private val spoonacularWebClient: WebClient = WebClient.builder()
             .baseUrl("https://api.spoonacular.com")
@@ -232,10 +233,11 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
     @Transactional
     fun createRecipeFromForm(recipeForm: RecipeForm, principal: Principal): Recipe {
         val user = userService.findByUsername(principal.name)
-
+        val file = fileService.trySaveMultipartFile(recipeForm.file)
         try {
             val recipe = Recipe(
                     user = user,
+                    picture = file,
                     title = recipeForm.title!!,
                     servings = recipeForm.servings!!,
                     dairyFree = recipeForm.dairyFree!!,
@@ -251,7 +253,6 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
                     vegan = recipeForm.vegan!!,
                     cheap = recipeForm.cheap!!)
             val savedRecipe = recipeRepository.save(recipe)
-
             recipeForm.ingredientsName!!.forEachIndexed { index: Int, name: String? ->
                 val ingredient = Ingredient(
                         aisle = recipeForm.ingredientsAisle!![index]?.let { trimToMaxCharNum(it, 255) },

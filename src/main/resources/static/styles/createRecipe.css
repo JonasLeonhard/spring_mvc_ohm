@@ -1,3 +1,18 @@
 input:valid > .error {
     display: none;
 }
+
+.preview-img-container {
+    width: 10rem;
+    height: 10rem;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--primary);
+}
+
+#preview-img {
+    max-width: 100%;
+    max-height: 100%;
+}

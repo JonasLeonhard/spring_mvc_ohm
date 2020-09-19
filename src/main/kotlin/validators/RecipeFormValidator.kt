@@ -11,6 +11,8 @@ class RecipeFormValidator : Validator {
         val recipeForm = target as RecipeForm
         canBuildIngredientsFromLists(errors, recipeForm)
         ingredientValuesNotNull(errors, recipeForm)
+        fileExists(errors, recipeForm)
+        fileMimeTypeValid(errors, recipeForm)
     }
 
     override fun supports(aClass: Class<*>): Boolean {
@@ -69,54 +71,62 @@ class RecipeFormValidator : Validator {
     }
 
     fun ingredientValuesNotNull(errors: Errors, recipeForm: RecipeForm) {
-        recipeForm.ingredientsName?.forEach local@{ name ->
+        recipeForm.ingredientsName?.forEachIndexed { index, name ->
             if (name.isNullOrEmpty()) {
-                errors.rejectValue("ingredientsName", "NameError", "Field 'ingredientsName' cannot be null or empty")
-                return@local
+                errors.rejectValue("ingredientsName", "NameError_$index", "err_on_$index")
             }
         }
 
-        recipeForm.ingredientsUnit?.forEach local@{ unit ->
+        recipeForm.ingredientsUnit?.forEachIndexed { index, unit ->
             if (unit.isNullOrEmpty()) {
-                errors.rejectValue("ingredientsUnit", "UnitError", "Field 'ingredientsUnit' cannot be null or empty")
-                return@local
+                errors.rejectValue("ingredientsUnit", "UnitError_$index", "err_on_$index")
             }
         }
 
-        recipeForm.ingredientsSummary?.forEach local@{ sum ->
+        recipeForm.ingredientsSummary?.forEachIndexed { index, sum ->
             if (sum.isNullOrEmpty()) {
-                errors.rejectValue("ingredientsSummary", "SummaryError", "Field 'ingredientsSummary' cannot be null or empty")
-                return@local
+                errors.rejectValue("ingredientsSummary", "SummaryError_$index", "err_on_$index")
             }
         }
 
-        recipeForm.ingredientsMeta?.forEach local@{ meta ->
+        recipeForm.ingredientsMeta?.forEachIndexed { index, meta ->
             if (meta.isNullOrEmpty()) {
-                errors.rejectValue("ingredientsMeta", "MetaError", "Field 'ingredientsMeta' cannot be null or empty")
-                return@local
+                errors.rejectValue("ingredientsMeta", "MetaError_$index", "err_on_$index")
             }
         }
 
-        recipeForm.ingredientsConsistency?.forEach local@{ con ->
+        recipeForm.ingredientsConsistency?.forEachIndexed { index, con ->
             if (con.isNullOrEmpty()) {
-                errors.rejectValue("ingredientsConsistency", "ConsistencyError", "Field 'ingredientsConsistency' cannot be null or empty")
-                return@local
+                errors.rejectValue("ingredientsConsistency", "ConsistencyError_$index", "err_on_$index")
             }
         }
 
-        recipeForm.ingredientsAmount?.forEach local@{ amount ->
+        recipeForm.ingredientsAmount?.forEachIndexed { index, amount ->
             if (amount == null) {
-                errors.rejectValue("ingredientsAmount", "IngredientsError", "Field 'ingredientsAmount' cannot be null")
-                return@local
+                errors.rejectValue("ingredientsAmount", "IngredientsError_$index", "err_on_$index")
             }
         }
 
-        recipeForm.ingredientsAisle?.forEach local@{ aisle ->
+        recipeForm.ingredientsAisle?.forEachIndexed { index, aisle ->
             if (aisle.isNullOrEmpty()) {
-                errors.rejectValue("ingredientsAisle", "AisleError", "Field 'ingredientsAisle' cannot be null")
-                return@local
+                errors.rejectValue("ingredientsAisle", "AisleError_$index", "err_on_$index")
             }
         }
 
+    }
+
+    fun fileMimeTypeValid(errors: Errors, recipeForm: RecipeForm) {
+        FileValidator.fileMimeTypeValid(errors, recipeForm.file, "file")
+    }
+
+    fun fileExists(errors: Errors, recipeForm: RecipeForm) {
+        println("file exists $recipeForm")
+        if (recipeForm.file == null) {
+            errors.rejectValue("file", "FileError", "Field file is missing")
+        }
+
+        if (recipeForm.file != null && recipeForm.file!!.isEmpty) {
+            errors.rejectValue("file", "FileError", "Field file is empty")
+        }
     }
 }

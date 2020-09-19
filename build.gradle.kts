@@ -71,16 +71,28 @@ tasks.withType<KotlinCompile> {
 // Run with gradle start
 tasks.register("start") {
     this.group = "Application"
-    this.description = "Run the spring_mvc_ohm backend server"
-    if (project.hasProperty("build")) {
-        println("[ gradle start -Pbuild=true :: Rebuilding spring_mvc_ohm ]")
+    this.description = "RECOMMENDED: Run the spring_mvc_ohm backend server"
+
+    // Get Project (-Pvars) & ENV variables:
+    val build: String by project // get -Pbuild Variable (default in gradle.properties)
+    val ENV_SPOONACULAR_API_KEY = System.getenv("ENV_SPOONACULAR_API_KEY")
+
+    println("""
+        [ gradle start :: Run task('start') with properties: ]
+        { 
+            -Pbuild: $build 
+            ENV_SPOONACULAR_API_KEY: $ENV_SPOONACULAR_API_KEY
+        }
+        """)
+    if (project.hasProperty("build") && build == "true") {
+        println("[ gradle start -Pbuild=$build :: Rebuilding spring_mvc_ohm ]")
         this.dependsOn(tasks.build.get())
     }
     doLast {
-        if (System.getenv().contains("ENV_SPOONACULAR_API_KEY")) {
+        if (ENV_SPOONACULAR_API_KEY != null) {
             println("INFO 00001 --- [ Run::spring_mvc_ohm -- Start ]")
-            tasks.run.get().exec()
-            //tasks.bootRun.get().exec()
+            //tasks.run.get().exec()
+            tasks.bootRun.get().exec()
         } else {
             val ANSI_RESET = "\u001B[0m"
             val ANSI_RED = "\u001B[31m"

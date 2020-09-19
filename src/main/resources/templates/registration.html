@@ -35,7 +35,13 @@
                 <span th:errors="*{name}" class="error"></span>
 
                 <div class="input-wrapper">
-                    <input th:field="*{file}" type="file" accept="image/jpeg, image/jpg, image/png">
+                    <div class="preview-img-container">
+                        <img id="preview-img"
+                             th:src="@{/unsecured_files/camera-outline.svg}"
+                             alt="Profile Preview Image"/>
+                    </div>
+                    <input id="preview-img-input" th:field="*{file}" type="file"
+                           accept="image/jpeg, image/jpg, image/png">
                     <label th:for="*{file}" class="control-label">picture</label>
                 </div>
                 <div th:if="${fileUploadException}" class="error">[[${fileUploadException}]]</div>
@@ -64,5 +70,8 @@
         </div>
     </div>
 </div>
+
+<!-- Scripts -->
+<script type="text/javascript" th:src="@{/js/registration.js}"></script>
 </body>
 </html>

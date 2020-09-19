@@ -9,6 +9,12 @@ import java.util.*
 @Service
 class FileService(val fileRepository: FileRepository) {
 
+    /**
+     * Tries to save a mutipart form file to the database.
+     * You can retrieve the file by using the ResourceController path -> get -> /resource/{id}
+     * @return saved file
+     * */
+    @Throws(FileSaveException::class, IllegalArgumentException::class)
     fun trySaveMultipartFile(file: MultipartFile?): File? {
         if (file != null && !(file.isEmpty)) {
             val fileName = file.originalFilename ?: "undefined"

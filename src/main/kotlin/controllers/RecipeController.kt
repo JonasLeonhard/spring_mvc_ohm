@@ -5,6 +5,7 @@ import org.springframework.ui.Model
 import org.springframework.ui.set
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 import pojos.RecipeForm
 import services.JsoupService
 import services.RecipeService
@@ -43,17 +44,27 @@ class RecipeController(val recipeService: RecipeService,
     }
 
     @GetMapping("/create")
-    fun createRecipePage(principal: Principal, recipeForm: RecipeForm?, model: Model): String {
+    fun createRecipePage(principal: Principal, recipeForm: RecipeForm?, @RequestParam subtractIngredient: Boolean?, model: Model): String {
         userService.addAuthenticatedUserToModel(principal, model)
 
         if (recipeForm != null) {
-            recipeForm.ingredientsName?.add(null)
-            recipeForm.ingredientsAisle?.add(null)
-            recipeForm.ingredientsAmount?.add(null)
-            recipeForm.ingredientsConsistency?.add(null)
-            recipeForm.ingredientsMeta?.add(null)
-            recipeForm.ingredientsSummary?.add(null)
-            recipeForm.ingredientsUnit?.add(null)
+            if (subtractIngredient == true && recipeForm.ingredientsName != null && recipeForm.ingredientsName.size > 1) {
+                recipeForm.ingredientsName.removeAt(recipeForm.ingredientsName.size - 1)
+                recipeForm.ingredientsAisle?.removeAt(recipeForm.ingredientsAisle.size - 1)
+                recipeForm.ingredientsAmount?.removeAt(recipeForm.ingredientsAmount.size - 1)
+                recipeForm.ingredientsConsistency?.removeAt(recipeForm.ingredientsConsistency.size - 1)
+                recipeForm.ingredientsMeta?.removeAt(recipeForm.ingredientsMeta.size - 1)
+                recipeForm.ingredientsSummary?.removeAt(recipeForm.ingredientsSummary.size - 1)
+                recipeForm.ingredientsUnit?.removeAt(recipeForm.ingredientsUnit.size - 1)
+            } else if (subtractIngredient != true) {
+                recipeForm.ingredientsName?.add(null)
+                recipeForm.ingredientsAisle?.add(null)
+                recipeForm.ingredientsAmount?.add(null)
+                recipeForm.ingredientsConsistency?.add(null)
+                recipeForm.ingredientsMeta?.add(null)
+                recipeForm.ingredientsSummary?.add(null)
+                recipeForm.ingredientsUnit?.add(null)
+            }
             model["recipeForm"] = recipeForm
         }
 
@@ -82,15 +93,28 @@ class RecipeController(val recipeService: RecipeService,
                     ingredientsUnit = mutableListOf("unit1")
             )
         }
+
+        model["ingredientsAmount"] = if (recipeForm?.ingredientsName == null) {
+            0
+        } else {
+            recipeForm.ingredientsName.size
+        }
         return "createRecipe"
     }
 
     @PostMapping("/create")
-    fun createRecipe(principal: Principal, @Valid @ModelAttribute recipeForm: RecipeForm, bindingResult: BindingResult, model: Model): String {
+    fun createRecipe(principal: Principal, @Valid @ModelAttribute recipeForm: RecipeForm, @RequestParam formFile: MultipartFile?, bindingResult: BindingResult, model: Model): String {
+        println("create a recipe from: $recipeForm $formFile")
+        recipeForm.file = formFile
         recipeFormValidator.validate(recipeForm, bindingResult)
         if (bindingResult.hasErrors()) {
             model["errors"] = bindingResult
             model["recipeForm"] = recipeForm
+            model["ingredientsAmount"] = if (recipeForm.ingredientsName == null) {
+                0
+            } else {
+                recipeForm.ingredientsName.size
+            }
             return "createRecipe"
         }
 

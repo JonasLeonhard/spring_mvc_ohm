@@ -13,7 +13,7 @@ includeIonicons = ${true})"></head>
                 <span th:text="${recipe.likes}">likes</span>
             </div>
             <img class="recipe-card-img"
-                 th:src="${recipe.recipeImageUrl != null ? recipe.recipeImageUrl : '/unsecured_files/logo_placeholder.png'}">
+                 th:src="${recipe.picture != null ? '/resource/' + recipe.picture.id : (recipe.recipeImageUrl != null ? recipe.recipeImageUrl : '/unsecured_files/logo_placeholder.png')}">
         </div>
         <div class="recipe-card-info">
 
@@ -65,7 +65,7 @@ includeIonicons = ${true})"></head>
     </div>
 
     <div class="sub-recipe-card">
-        Actions: [[${recipe}]] - [[${authenticated == null ? 'auth: null' : 'auth: true'}]] --->
+        Actions:
         <form th:action="@{/recipe/like}" method="post">
             <button class="like-button"
                     type="submit"

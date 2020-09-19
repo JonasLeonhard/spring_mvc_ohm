@@ -1,5 +1,7 @@
 package pojos
 
+import com.sun.istack.Nullable
+import org.springframework.web.multipart.MultipartFile
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Positive
@@ -8,6 +10,9 @@ data class RecipeForm(
         @field:NotBlank(message = "Title cannot be empty")
         @field:NotNull(message = "Title has to be specified")
         val title: String? = null,
+
+        @Nullable
+        var file: MultipartFile? = null,
 
         @field:NotNull(message = "Servings has to be specified")
         @field:Positive(message = "Servings has to be positive")

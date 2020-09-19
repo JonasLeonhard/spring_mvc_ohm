@@ -50,6 +50,12 @@ class UserController(val userService: UserService) {
         return "buyList"
     }
 
+    @GetMapping("/freezer")
+    fun freezer(principal: Principal, model: Model): String {
+        userService.addAuthenticatedUserToModel(principal, model)
+        return "freezer"
+    }
+
     @PostMapping("/friendship")
     fun friendship(principal: Principal, @RequestParam(value = "userId", required = true) userId: Long, model: Model): String {
         val authenticated = userService.findByUsername(principal.name)
