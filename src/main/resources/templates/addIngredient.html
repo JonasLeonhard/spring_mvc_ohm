@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header(title = ${pageTitle},
+includeHeaderFragment = ${'addIngredient-header'})"></head>
+
+<body>
+<nav th:replace="fragments/navigation :: navigation"></nav>
+<div class="page-content">
+    <h1>The ingredient "[[${addIngredientForm.name}]]" is missing more information</h1>
+
+    <form th:action="@{/user/freezer/add/ingredient}" th:object="${addIngredientForm}" method="post"
+          enctype="multipart/form-data">
+        <label th:for="*{name}" class="control-label">Name*</label>
+        <input type="text" th:field="*{name}" placeholder="name">
+        <span th:errors="*{name}" class="error"></span>
+
+        <br/>
+        <label th:for="*{aisle}" class="control-label">Aisle*</label>
+        <input type="text" th:field="*{aisle}" placeholder="aisle">
+        <span th:errors="*{aisle}" class="error"></span>
+
+        <br/>
+        <label th:for="*{consistency}" class="control-label">Consistency*</label>
+        <input type="text" th:field="*{consistency}" placeholder="consistency">
+        <span th:errors="*{consistency}" class="error"></span>
+
+        <br/>
+        <label th:for="*{meta}" class="control-label">Meta</label>
+        <input type="text" th:field="*{meta}" placeholder="meta">
+        <span th:errors="*{meta}" class="error"></span>
+
+        <br/>
+        <label th:for="*{unit}" class="control-label">Unit*</label>
+        <input type="text" th:field="*{unit}" placeholder="unit">
+        <span th:errors="*{unit}" class="error"></span>
+
+        <br/>
+        <div class="preview-img-container">
+            <img id="preview-img"
+                 th:src="@{/unsecured_files/camera-outline.svg}"
+                 alt="Recipe Preview Image"/>
+        </div>
+
+        <label th:for="*{file}" class="control-label">picture</label>
+        <input id="preview-img-input" name="formFile" type="file"
+               accept="image/jpeg, image/jpg, image/png">
+        <span th:if="${fileUploadException}" class="error">[[${fileUploadException}]]</span>
+        <span th:if="${fileLimitExceedException}" class="error">[[${fileLimitExceedException}]]</span>
+        <span th:errors="*{file}" class="error"></span>
+
+        <br/>
+        <button type="submit" name="amount" th:value="${amount}">+Add ingredient</button>
+    </form>
+
+</div>
+
+<!-- Scripts -->
+<script type="text/javascript" th:src="@{/js/previewImage.js}"></script>
+</body>
+</html>

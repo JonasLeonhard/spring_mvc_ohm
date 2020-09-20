@@ -4,13 +4,19 @@ import models.User
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set
+import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
+import pojos.AddIngredientForm
+import services.FreezerService
 import services.UserService
+import validators.AddIngredientFormValidator
 import java.security.Principal
+import javax.validation.Valid
 
 @Controller
 @RequestMapping("/user")
-class UserController(val userService: UserService) {
+class UserController(val userService: UserService, val freezerService: FreezerService, val addIngredientFormValidator: AddIngredientFormValidator) {
 
     @GetMapping("/profile/{username}")
     fun userProfile(principal: Principal?, model: Model, @PathVariable username: String): String {
@@ -52,8 +58,22 @@ class UserController(val userService: UserService) {
 
     @GetMapping("/freezer")
     fun freezer(principal: Principal, model: Model): String {
-        userService.addAuthenticatedUserToModel(principal, model)
+        val user = userService.findByUsername(principal.name)
+        model["authenticated"] = user
+        model["freezer"] = freezerService.getFreezer(user)
+
+        model["ingredients"] = freezerService.getIngredients()
         return "freezer"
+    }
+
+    @GetMapping("/freezer/add/ingredient")
+    fun addIngredient(principal: Principal, @RequestParam ingredientName: String, @RequestParam amount: Int, model: Model): String {
+        println("get /freezer/add/ingredient")
+        userService.addAuthenticatedUserToModel(principal, model)
+        model["addIngredientForm"] = AddIngredientForm(name = ingredientName)
+        model["amount"] = amount
+
+        return "addIngredient"
     }
 
     @PostMapping("/friendship")
@@ -83,5 +103,46 @@ class UserController(val userService: UserService) {
         val test = userService.friendRequestCancel(authenticated, toUser)
         println("friendrequest cancel::: $test")
         return "redirect:/user/profile/${toUser.username}"
+    }
+
+    @PostMapping("/freezer")
+    fun freezer(principal: Principal, @RequestParam(value = "ingredientName") ingredientName: String, @RequestParam(value = "amount") amount: Int): String {
+        val ingredientInFreezer = freezerService.addIngredientToFreezer(principal, ingredientName, amount)
+        return if (!ingredientInFreezer) {
+            "redirect:/user/freezer/add/ingredient?ingredientName=$ingredientName&amount=$amount"
+        } else {
+            "redirect:/user/freezer"
+        }
+    }
+
+    @PostMapping("/freezer/update")
+    fun changeFreezerItem(principal: Principal, @RequestParam freezerIngredientId: Long, @RequestParam subtract: Boolean?, @RequestParam delete: Boolean?): String {
+        val user = userService.findByUsername(principal.name)
+
+        if (delete != null && delete) {
+            freezerService.deleteMapping(user, freezerIngredientId)
+        } else {
+            freezerService.incrementAmount(user, freezerIngredientId, subtract)
+        }
+
+        return "redirect:/user/freezer"
+    }
+
+    @PostMapping("/freezer/add/ingredient")
+    fun addIngredient(principal: Principal, @Valid addIngredientForm: AddIngredientForm, bindingResult: BindingResult, @RequestParam formFile: MultipartFile?, @RequestParam amount: Int, model: Model): String {
+        println("post /freezer/add/ingredient inAddIngredient $addIngredientForm")
+        userService.addAuthenticatedUserToModel(principal, model)
+
+        addIngredientForm.file = formFile
+        addIngredientFormValidator.validate(addIngredientForm, bindingResult)
+        if (bindingResult.hasErrors()) {
+            model["errors"] = bindingResult
+            model["addIngredientForm"] = addIngredientForm
+            model["amount"] = amount
+            return "addIngredient"
+        }
+
+        freezerService.addIngredientFormToFreezer(principal, addIngredientForm, amount)
+        return "redirect:/user/freezer"
     }
 }

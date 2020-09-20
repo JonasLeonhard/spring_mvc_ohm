@@ -74,6 +74,9 @@ data class User(
         @OneToMany(targetEntity = Notification::class)
         var notifications: MutableSet<Notification> = mutableSetOf(),
 
+        @OneToMany(targetEntity = Freezer::class, mappedBy = "embeddedKey.user", cascade = [CascadeType.ALL])
+        var freezer: MutableSet<Freezer> = mutableSetOf(),
+
         @CreationTimestamp
         @Temporal(TemporalType.TIMESTAMP)
         var createdAt: Date = Date.from(Instant.now()),

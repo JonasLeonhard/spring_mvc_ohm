@@ -7,6 +7,37 @@ includeHeaderFragment = ${'freezer-header'})"></head>
 <nav th:replace="fragments/navigation :: navigation"></nav>
 <div class="page-content">
     <h1>freezer loaded ...</h1>
+    <div>
+        <form th:action="@{/user/freezer/update}" method="post" th:each="freezerItem : ${freezer}">
+            <span>[[${freezerItem.user.name}]]: [[${freezerItem.ingredient.name}]] -> amount: [[${freezerItem.amount}]]</span>
+
+            <input type="hidden" name="freezerIngredientId" th:value="${freezerItem.ingredient.id}">
+            <button type="submit">+Add</button>
+            <button type="submit" name="subtract" value="true" th:disabled="${freezerItem.amount == 0}">-Sub</button>
+            <button type="submit" name="delete" value="true">Delete</button>
+        </form>
+    </div>
+
+    <form th:action="@{/user/freezer}" method="post">
+        <label>
+            Amount:
+            <input type="number" id="amount" name="amount">
+        </label>
+
+        <label>
+            Ingredient Name:
+            <input list="ingredientNames" name="ingredientName" id="ingredientName">
+            <datalist id="ingredientNames">
+                <option th:each="ingredient : ${ingredients}" th:value="${ingredient.name}"></option>
+            </datalist>
+        </label>
+
+        <button type="submit">Add to Freezer</button>
+    </form>
+
+    <form th:action="@{/user/freezer/suggestions}" th:method="get">
+        <button type="submit">Get Cooking Suggestions!</button>
+    </form>
 </div>
 </body>
 </html>

@@ -147,7 +147,7 @@
                 </div>
 
                 <div>
-                    <label for="ingredientsMeta">ingredientsSummary</label>
+                    <label for="ingredientsSummary">ingredientsSummary</label>
                     <input id="ingredientsSummary" name="ingredientsSummary"
                            th:value="${recipeForm.ingredientsSummary != null ? recipeForm.ingredientsSummary[iter.index] : ''}"
                            placeholder="ingredientsSummary"/>
@@ -216,6 +216,6 @@
 </div>
 
 <!-- Scripts -->
-<script type="text/javascript" th:src="@{/js/createRecipe.js}"></script>
+<script type="text/javascript" th:src="@{/js/previewImage.js}"></script>
 </body>
 </html>
