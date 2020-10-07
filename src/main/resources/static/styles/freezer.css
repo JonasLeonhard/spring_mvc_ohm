@@ -1,0 +1,16 @@
+.freezer-suggestions .freezer-suggestion {
+    background: white;
+    margin: 1rem;
+}
+
+.suggestions-ingredients .suggestions-ingredient .enough {
+    background: green;
+}
+
+.suggestions-ingredients .suggestions-ingredient .not-enough {
+    background: var(--warning);
+}
+
+.suggestions-ingredients .suggestions-ingredient .missing {
+    background: var(--error);
+}

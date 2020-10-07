@@ -8,210 +8,215 @@
 <div class="page-content">
     <span>... create recipe</span>
     <form th:action="@{/recipe/create}" th:object="${recipeForm}" method="post" enctype="multipart/form-data">
-        <label th:for="*{title}">title</label>
-        <input th:field="*{title}"
-               placeholder="title"/>
-        <span th:errors="*{title}" class="error"></span>
+        <section class="card">
+            <label th:for="*{title}">title</label>
+            <input th:field="*{title}"
+                   placeholder="title"/>
+            <span th:errors="*{title}" class="error"></span>
 
-        <br/>
+            <br/>
 
-        <div class="preview-img-container">
-            <img id="preview-img"
-                 th:src="@{/unsecured_files/camera-outline.svg}"
-                 alt="Recipe Preview Image"/>
-        </div>
-        <label th:for="*{file}" class="control-label">picture</label>
-        <input id="preview-img-input" name="formFile" th:value="*{file}" type="file"
-               accept="image/jpeg, image/jpg, image/png">
-        <span th:if="${fileUploadException}" class="error">[[${fileUploadException}]]</span>
-        <span th:if="${fileLimitExceedException}" class="error">[[${fileLimitExceedException}]]</span>
-        <span th:errors="*{file}" class="error"></span>
-
-        <br/>
-        <label th:for="*{servings}">servings</label>
-        <input th:field="*{servings}"
-               type="number"
-               placeholder="servings"/>
-        <span th:errors="*{servings}" class="error"></span>
-
-        <br/>
-        <label th:for="*{readyInMinutes}">readyInMinutes</label>
-        <input th:field="*{readyInMinutes}"
-               type="number"
-               placeholder="readyInMinutes"/>
-        <span th:errors="*{readyInMinutes}" class="error"></span>
-
-        <br/>
-        <label th:for="*{preparationMinutes}">preparationMinutes</label>
-        <input th:field="*{preparationMinutes}"
-               type="number"
-               placeholder="preparationMinutes"/>
-        <span th:errors="*{preparationMinutes}" class="error"></span>
-
-        <br/>
-        <label th:for="*{pricePerServing}">pricePerServing</label>
-        <input th:field="*{pricePerServing}"
-               type="number"
-               step="0.01"
-               placeholder="pricePerServing"/>
-        <span th:errors="*{pricePerServing}" class="error"></span>
-
-        <br/>
-        <label th:for="*{glutenFree}">glutenFree</label>
-        <input th:field="*{glutenFree}"
-               type="checkbox"
-               placeholder="glutenFree"/>
-        <span th:errors="*{glutenFree}" class="error"></span>
-
-        <br/>
-        <label th:for="*{vegan}">vegan</label>
-        <input th:field="*{vegan}"
-               type="checkbox"
-               placeholder="vegan"/>
-        <span th:errors="*{vegan}" class="error"></span>
-
-        <br/>
-        <label th:for="*{vegetarian}">vegetarian</label>
-        <input th:field="*{vegetarian}"
-               type="checkbox"
-               placeholder="vegetarian"/>
-        <span th:errors="*{vegetarian}" class="error"></span>
-
-        <br/>
-        <label th:for="*{dairyFree}">dairyFree</label>
-        <input th:field="*{dairyFree}"
-               type="checkbox"
-               placeholder="dairyFree"/>
-        <span th:errors="*{dairyFree}" class="error"></span>
-
-        <br/>
-        <label th:for="*{veryHealthy}">veryHealthy</label>
-        <input th:field="*{veryHealthy}"
-               type="checkbox"
-               placeholder="veryHealthy"/>
-        <span th:errors="*{veryHealthy}" class="error"></span>
-
-        <br/>
-        <label th:for="*{cheap}">cheap</label>
-        <input th:field="*{cheap}"
-               type="checkbox"
-               placeholder="cheap"/>
-        <span th:errors="*{cheap}" class="error"></span>
-
-        <br/>
-        <label th:for="*{sustainable}">sustainable</label>
-        <input th:field="*{sustainable}"
-               type="checkbox"
-               placeholder="sustainable"/>
-        <span th:errors="*{sustainable}" class="error"></span>
-
-        <br/>
-        <label th:for="*{instructions}">instructions</label>
-        <input th:field="*{instructions}"
-               placeholder="instructions"/>
-        <span th:errors="*{instructions}" class="error"></span>
-
-        <br/>
-        <label th:for="*{summary}">summary</label>
-        <input th:field="*{summary}"
-               placeholder="summary"/>
-        <span th:errors="*{summary}" class="error"></span>
-
-        <br/>
-
-        <div class="ingredients-wrapper">
-            <div th:each="ingredient, iter : ${recipeForm.ingredientsName != null ? recipeForm.ingredientsName : #numbers.sequence(0, 0)}"
-                 class="ingredient">
-                <------- BEGIN INGREDIENT -------->
-                <span>ingredient [[${iter.index}]]:</span>
-                <div>
-                    <label for="ingredientsName">ingredientsName</label>
-                    <input id="ingredientsName" name="ingredientsName"
-                           th:value="${recipeForm.ingredientsName != null ? recipeForm.ingredientsName[iter.index] : ''}"
-                           placeholder="ingredientsName"/>
-                    <span class="error"
-                          th:if="${errors != null && #lists.contains(#fields.errors('ingredientsName'), 'err_on_' + iter.index) == true}">
-                        Field has to be specified
-                    </span>
-                </div>
-
-                <div>
-                    <label for="ingredientsMeta">ingredientsMeta</label>
-                    <input id="ingredientsMeta" name="ingredientsMeta"
-                           th:value="${recipeForm.ingredientsMeta != null ? recipeForm.ingredientsMeta[iter.index] : ''}"
-                           placeholder="ingredientsMeta"/>
-                    <span class="error"
-                          th:if="${errors != null && #lists.contains(#fields.errors('ingredientsMeta'), 'err_on_' + iter.index) == true}">
-                        Field has to be specified
-                    </span>
-                </div>
-
-                <div>
-                    <label for="ingredientsSummary">ingredientsSummary</label>
-                    <input id="ingredientsSummary" name="ingredientsSummary"
-                           th:value="${recipeForm.ingredientsSummary != null ? recipeForm.ingredientsSummary[iter.index] : ''}"
-                           placeholder="ingredientsSummary"/>
-                    <span class="error"
-                          th:if="${errors != null && #lists.contains(#fields.errors('ingredientsSummary'), 'err_on_' + iter.index) == true}">
-                        Field has to be specified
-                    </span>
-                </div>
-
-                <div>
-                    <label for="ingredientsAisle">ingredientsAisle</label>
-                    <input id="ingredientsAisle" name="ingredientsAisle"
-                           th:value="${recipeForm.ingredientsAisle != null ? recipeForm.ingredientsAisle[iter.index] : ''}"
-                           placeholder="ingredientsAisle"/>
-                    <span class="error"
-                          th:if="${errors != null && #lists.contains(#fields.errors('ingredientsAisle'), 'err_on_' + iter.index) == true}">
-                        Field has to be specified
-                    </span>
-                </div>
-
-                <div>
-                    <label for="ingredientsConsistency">ingredientsConsistency</label>
-                    <input id="ingredientsConsistency" name="ingredientsConsistency"
-                           th:value="${recipeForm.ingredientsConsistency != null ? recipeForm.ingredientsConsistency[iter.index] : ''}"
-                           placeholder="ingredientsConsistency"/>
-                    <span class="error"
-                          th:if="${errors != null && #lists.contains(#fields.errors('ingredientsConsistency'), 'err_on_' + iter.index) == true}">
-                        Field has to be specified
-                    </span>
-                </div>
-
-                <div>
-                    <label for="ingredientsUnit">ingredientsUnit</label>
-                    <input id="ingredientsUnit" name="ingredientsUnit"
-                           th:value="${recipeForm.ingredientsUnit != null ? recipeForm.ingredientsUnit[iter.index] : ''}"
-                           placeholder="ingredientsUnit"/>
-                    <span class="error"
-                          th:if="${errors != null && #lists.contains(#fields.errors('ingredientsUnit'), 'err_on_' + iter.index) == true}">
-                        Field has to be specified
-                    </span>
-                </div>
-
-                <div>
-                    <label for="ingredientsAmount">ingredientsAmount</label>
-                    <input id="ingredientsAmount" name="ingredientsAmount"
-                           th:value="${recipeForm.ingredientsAmount != null ? recipeForm.ingredientsAmount[iter.index] : ''}"
-                           type="number"
-                           step="0.01"
-                           placeholder="1.00"/>
-                    <span class="error"
-                          th:if="${errors != null && #lists.contains(#fields.errors('ingredientsAmount'), 'err_on_' + iter.index) == true}">
-                        Field has to be specified
-                    </span>
-                </div>
-                <--------- END INGREDIENT ---------->
+            <div class="preview-img-container">
+                <img id="preview-img"
+                     th:src="@{/unsecured_files/camera-outline.svg}"
+                     alt="Recipe Preview Image"/>
             </div>
+            <label th:for="*{file}" class="control-label">picture</label>
+            <input id="preview-img-input" name="formFile" th:value="*{file}" type="file"
+                   accept="image/jpeg, image/jpg, image/png">
+            <span th:if="${fileUploadException}" class="error">[[${fileUploadException}]]</span>
+            <span th:if="${fileLimitExceedException}" class="error">[[${fileLimitExceedException}]]</span>
+            <span th:errors="*{file}" class="error"></span>
 
-            <button type="submit" formmethod="get">+Add Ingredient</button>
-            <button type="submit" formmethod="get" name="subtractIngredient" value=true
-                    th:disabled="${ingredientsAmount <= 1}">-Subtract Ingredient
-            </button>
-        </div>
+            <br/>
+            <label th:for="*{servings}">servings</label>
+            <input th:field="*{servings}"
+                   type="number"
+                   placeholder="servings"/>
+            <span th:errors="*{servings}" class="error"></span>
+
+            <br/>
+            <label th:for="*{readyInMinutes}">readyInMinutes</label>
+            <input th:field="*{readyInMinutes}"
+                   type="number"
+                   placeholder="readyInMinutes"/>
+            <span th:errors="*{readyInMinutes}" class="error"></span>
+
+            <br/>
+            <label th:for="*{preparationMinutes}">preparationMinutes</label>
+            <input th:field="*{preparationMinutes}"
+                   type="number"
+                   placeholder="preparationMinutes"/>
+            <span th:errors="*{preparationMinutes}" class="error"></span>
+
+            <br/>
+            <label th:for="*{pricePerServing}">pricePerServing</label>
+            <input th:field="*{pricePerServing}"
+                   type="number"
+                   step="0.01"
+                   placeholder="pricePerServing"/>
+            <span th:errors="*{pricePerServing}" class="error"></span>
+
+            <br/>
+            <label th:for="*{glutenFree}">glutenFree</label>
+            <input th:field="*{glutenFree}"
+                   type="checkbox"
+                   placeholder="glutenFree"/>
+            <span th:errors="*{glutenFree}" class="error"></span>
+
+            <br/>
+            <label th:for="*{vegan}">vegan</label>
+            <input th:field="*{vegan}"
+                   type="checkbox"
+                   placeholder="vegan"/>
+            <span th:errors="*{vegan}" class="error"></span>
+
+            <br/>
+            <label th:for="*{vegetarian}">vegetarian</label>
+            <input th:field="*{vegetarian}"
+                   type="checkbox"
+                   placeholder="vegetarian"/>
+            <span th:errors="*{vegetarian}" class="error"></span>
+
+            <br/>
+            <label th:for="*{dairyFree}">dairyFree</label>
+            <input th:field="*{dairyFree}"
+                   type="checkbox"
+                   placeholder="dairyFree"/>
+            <span th:errors="*{dairyFree}" class="error"></span>
+
+            <br/>
+            <label th:for="*{veryHealthy}">veryHealthy</label>
+            <input th:field="*{veryHealthy}"
+                   type="checkbox"
+                   placeholder="veryHealthy"/>
+            <span th:errors="*{veryHealthy}" class="error"></span>
+
+            <br/>
+            <label th:for="*{cheap}">cheap</label>
+            <input th:field="*{cheap}"
+                   type="checkbox"
+                   placeholder="cheap"/>
+            <span th:errors="*{cheap}" class="error"></span>
+
+            <br/>
+            <label th:for="*{sustainable}">sustainable</label>
+            <input th:field="*{sustainable}"
+                   type="checkbox"
+                   placeholder="sustainable"/>
+            <span th:errors="*{sustainable}" class="error"></span>
+
+            <br/>
+            <label th:for="*{instructions}">instructions</label>
+            <input th:field="*{instructions}"
+                   placeholder="instructions"/>
+            <span th:errors="*{instructions}" class="error"></span>
+
+            <br/>
+            <label th:for="*{summary}">summary</label>
+            <input th:field="*{summary}"
+                   placeholder="summary"/>
+            <span th:errors="*{summary}" class="error"></span>
+        </section>
         <br/>
-        <button type="submit">Create Recipe</button>
+        <section class="card">
+            <div class="ingredients-wrapper">
+                <div th:each="ingredient, iter : ${recipeForm.ingredientsName != null ? recipeForm.ingredientsName : #numbers.sequence(0, 0)}"
+                     class="ingredient">
+                    <------- BEGIN INGREDIENT -------->
+                    <span>ingredient [[${iter.index}]]:</span>
+                    <div>
+                        <label for="ingredientsName">ingredientsName</label>
+                        <input id="ingredientsName" name="ingredientsName"
+                               th:value="${recipeForm.ingredientsName != null ? recipeForm.ingredientsName[iter.index] : ''}"
+                               placeholder="ingredientsName"/>
+                        <span class="error"
+                              th:if="${errors != null && #lists.contains(#fields.errors('ingredientsName'), 'err_on_' + iter.index) == true}">
+                        Field has to be specified
+                    </span>
+                    </div>
+
+                    <div>
+                        <label for="ingredientsMeta">ingredientsMeta</label>
+                        <input id="ingredientsMeta" name="ingredientsMeta"
+                               th:value="${recipeForm.ingredientsMeta != null ? recipeForm.ingredientsMeta[iter.index] : ''}"
+                               placeholder="ingredientsMeta"/>
+                        <span class="error"
+                              th:if="${errors != null && #lists.contains(#fields.errors('ingredientsMeta'), 'err_on_' + iter.index) == true}">
+                        Field has to be specified
+                    </span>
+                    </div>
+
+                    <div>
+                        <label for="ingredientsSummary">ingredientsSummary</label>
+                        <input id="ingredientsSummary" name="ingredientsSummary"
+                               th:value="${recipeForm.ingredientsSummary != null ? recipeForm.ingredientsSummary[iter.index] : ''}"
+                               placeholder="ingredientsSummary"/>
+                        <span class="error"
+                              th:if="${errors != null && #lists.contains(#fields.errors('ingredientsSummary'), 'err_on_' + iter.index) == true}">
+                        Field has to be specified
+                    </span>
+                    </div>
+
+                    <div>
+                        <label for="ingredientsAisle">ingredientsAisle</label>
+                        <input id="ingredientsAisle" name="ingredientsAisle"
+                               th:value="${recipeForm.ingredientsAisle != null ? recipeForm.ingredientsAisle[iter.index] : ''}"
+                               placeholder="ingredientsAisle"/>
+                        <span class="error"
+                              th:if="${errors != null && #lists.contains(#fields.errors('ingredientsAisle'), 'err_on_' + iter.index) == true}">
+                        Field has to be specified
+                    </span>
+                    </div>
+
+                    <div>
+                        <label for="ingredientsConsistency">ingredientsConsistency</label>
+                        <input id="ingredientsConsistency" name="ingredientsConsistency"
+                               th:value="${recipeForm.ingredientsConsistency != null ? recipeForm.ingredientsConsistency[iter.index] : ''}"
+                               placeholder="ingredientsConsistency"/>
+                        <span class="error"
+                              th:if="${errors != null && #lists.contains(#fields.errors('ingredientsConsistency'), 'err_on_' + iter.index) == true}">
+                        Field has to be specified
+                    </span>
+                    </div>
+
+                    <div>
+                        <label for="ingredientsUnit">ingredientsUnit</label>
+                        <input id="ingredientsUnit" name="ingredientsUnit"
+                               th:value="${recipeForm.ingredientsUnit != null ? recipeForm.ingredientsUnit[iter.index] : ''}"
+                               placeholder="ingredientsUnit"/>
+                        <span class="error"
+                              th:if="${errors != null && #lists.contains(#fields.errors('ingredientsUnit'), 'err_on_' + iter.index) == true}">
+                        Field has to be specified
+                    </span>
+                    </div>
+
+                    <div>
+                        <label for="ingredientsAmount">ingredientsAmount</label>
+                        <input id="ingredientsAmount" name="ingredientsAmount"
+                               th:value="${recipeForm.ingredientsAmount != null ? recipeForm.ingredientsAmount[iter.index] : ''}"
+                               type="number"
+                               step="0.01"
+                               placeholder="1.00"/>
+                        <span class="error"
+                              th:if="${errors != null && #lists.contains(#fields.errors('ingredientsAmount'), 'err_on_' + iter.index) == true}">
+                        Field has to be specified
+                    </span>
+                    </div>
+                    <--------- END INGREDIENT ---------->
+                </div>
+
+
+                <button type="submit" formmethod="get">+Add Ingredient</button>
+                <button type="submit" formmethod="get" name="subtractIngredient" value=true
+                        th:disabled="${ingredientsAmount <= 1}">-Subtract Ingredient
+                </button>
+            </div>
+        </section>
+        <br/>
+        <section class="card">
+            <button type="submit">Create Recipe</button>
+        </section>
     </form>
 </div>
 

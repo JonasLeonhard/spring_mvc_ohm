@@ -61,8 +61,8 @@ class UserController(val userService: UserService, val freezerService: FreezerSe
         val user = userService.findByUsername(principal.name)
         model["authenticated"] = user
         model["freezer"] = freezerService.getFreezer(user)
-
         model["ingredients"] = freezerService.getIngredients()
+        model["freezerSuggestions"] = freezerService.getSuggestions(user)
         return "freezer"
     }
 

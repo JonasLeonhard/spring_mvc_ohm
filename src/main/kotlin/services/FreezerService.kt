@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import pojos.AddIngredientForm
+import pojos.RecipeSuggestions
 import repositories.FreezerRepository
 import repositories.IngredientRepository
 import java.security.Principal
@@ -69,6 +70,15 @@ class FreezerService(val freezerRepository: FreezerRepository,
         } catch (e: NoSuchElementException) {
             mutableListOf()
         }
+    }
+
+    fun getSuggestions(user: User): MutableList<RecipeSuggestions> {
+        val freezer = freezerRepository.findByUserId(user.id).get()
+        val ingredients = freezer.map { row ->
+            row.ingredient
+        }.toMutableList()
+
+        return freezerRepository.findSuggestions(ingredients)
     }
 
     @Throws(NoSuchElementException::class)
