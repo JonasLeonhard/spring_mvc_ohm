@@ -3,14 +3,35 @@
     margin: 1rem;
 }
 
-.suggestions-ingredients .suggestions-ingredient .enough {
+.suggestions-ingredients .enough {
     background: green;
 }
 
-.suggestions-ingredients .suggestions-ingredient .not-enough {
+.suggestions-ingredients .not-enough {
     background: var(--warning);
 }
 
-.suggestions-ingredients .suggestions-ingredient .missing {
+.suggestions-ingredients .missing {
     background: var(--error);
+}
+
+.multiselect-selected {
+    margin: 1rem 0;
+    display: flex;
+}
+
+.multiselect-selected div {
+    background: var(--primary);
+    color: var(--tab-active);
+    width: max-content;
+    padding: 0.5rem;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 0.5rem;
+    transition: all 0.25s ease;
+    margin: 0 0.5rem;
+}
+
+.multiselect-selected div:hover {
+    background: var(--primary-light);
 }

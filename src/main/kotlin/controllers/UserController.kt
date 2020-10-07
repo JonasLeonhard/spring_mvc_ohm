@@ -28,6 +28,7 @@ class UserController(val userService: UserService, val freezerService: FreezerSe
             if (principal != null) {
                 val authenticated = userService.findByUsername(principal.name)
                 model["authenticated"] = authenticated
+                model["userFriendships"] = userService.getFriendships(authenticated)
 
                 if (authenticated != profile) {
                     val friendship = userService.findFriendshipBetween(authenticated, profile)
@@ -57,12 +58,14 @@ class UserController(val userService: UserService, val freezerService: FreezerSe
     }
 
     @GetMapping("/freezer")
-    fun freezer(principal: Principal, model: Model): String {
+    fun freezer(principal: Principal, model: Model, @RequestParam(value = "friends") friends: MutableList<String>?): String {
         val user = userService.findByUsername(principal.name)
         model["authenticated"] = user
         model["freezer"] = freezerService.getFreezer(user)
         model["ingredients"] = freezerService.getIngredients()
-        model["freezerSuggestions"] = freezerService.getSuggestions(user)
+        model["freezerSuggestions"] = freezerService.getSuggestions(user, friends)
+        model["userFriendships"] = userService.getFriendships(user)
+
         return "freezer"
     }
 
@@ -97,11 +100,13 @@ class UserController(val userService: UserService, val freezerService: FreezerSe
     }
 
     @PostMapping("/friendship/cancel")
-    fun friendshipCancel(principal: Principal, @RequestParam(value = "userId", required = true) userId: Long, model: Model): String {
+    fun friendshipCancel(principal: Principal, @RequestParam(value = "userId", required = true) userId: Long, @RequestParam(value = "stayOnPage") stayOnPage: Boolean?, model: Model): String {
         val authenticated = userService.findByUsername(principal.name)
         val toUser = userService.findById(userId)
-        val test = userService.friendRequestCancel(authenticated, toUser)
-        println("friendrequest cancel::: $test")
+        userService.friendRequestCancel(authenticated, toUser)
+        if (stayOnPage != null && stayOnPage) {
+            return "redirect:/user/profile/${authenticated.username}"
+        }
         return "redirect:/user/profile/${toUser.username}"
     }
 

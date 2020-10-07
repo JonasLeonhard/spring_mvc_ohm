@@ -112,6 +112,20 @@ class UserService(
         return friendshipRepository.findFriendshipBetween(from, to)
     }
 
+    /**
+     * Get all friendships of a given user
+     * @return List of accepted Friendships
+     * */
+    fun getFriendships(user: User): List<Friendship> {
+        val friendships = mutableSetOf<Friendship>()
+        friendships.addAll(user.friendshipsToThisUser)
+        friendships.addAll(user.friendshipsFromThisUser)
+
+        return friendships.filter { friendship ->
+            friendship.accepted
+        }
+    }
+
     @Transactional
     @Throws(IllegalArgumentException::class)
     fun notifiyUser(notification: Notification): Notification {

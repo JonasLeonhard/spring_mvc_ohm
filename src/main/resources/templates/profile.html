@@ -211,6 +211,21 @@ includeIonicons = ${true})"></head>
                         </div>
                     </div>
                 </div>
+
+                <div class="userFriendships profile-card"
+                     th:if="${authenticated != null && authenticated.username == profile.username}">
+                    Friendships:
+                    <form th:action="@{/user/friendship/cancel}" th:each="friendship : ${userFriendships}"
+                          method="post">
+                        [[${friendship.requested_by.username != authenticated.username ?
+                        friendship.requested_by.username : friendship.request_to.username}]]
+                        <input type="hidden" name="stayOnPage" value="true">
+                        <button name="userId"
+                                th:value="${friendship.requested_by.id != authenticated.id ? friendship.requested_by.id : friendship.request_to.id}">
+                            Cancel Friendship
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </th:block>

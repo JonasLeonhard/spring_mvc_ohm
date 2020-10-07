@@ -72,13 +72,31 @@ class FreezerService(val freezerRepository: FreezerRepository,
         }
     }
 
-    fun getSuggestions(user: User): MutableList<RecipeSuggestions> {
-        val freezer = freezerRepository.findByUserId(user.id).get()
-        val ingredients = freezer.map { row ->
-            row.ingredient
-        }.toMutableList()
+    fun getSuggestions(user: User, friends: MutableList<String>?): MutableList<RecipeSuggestions> {
 
-        return freezerRepository.findSuggestions(ingredients)
+        if (friends != null) {
+            try {
+                val friendFreezers = friends.map { friend ->
+                    userService.findByUsername(friend)
+                }
+                // TODO: loop each  listOf(user) + friendFreezer
+                // TODO: combine ingredients of freezers -> then findSuggestion
+                // TODO: how can is still seperate suggestions by which freezer they belong to?
+                val freezerOptional = freezerRepository.findByUserId(user.id)
+
+                if (freezerOptional.isPresent) {
+                    val freezer = freezerOptional.get()
+                    val ingredients = freezer.map { row ->
+                        row.ingredient
+                    }.toMutableList()
+
+                    return freezerRepository.findSuggestions(ingredients)
+                }
+            } catch (e: Exception) {
+                println("freezerService Exception: $e")
+            }
+        }
+        return mutableListOf()
     }
 
     @Throws(NoSuchElementException::class)

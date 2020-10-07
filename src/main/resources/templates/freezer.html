@@ -6,6 +6,28 @@ includeHeaderFragment = ${'freezer-header'})"></head>
 <body>
 <nav th:replace="fragments/navigation :: navigation"></nav>
 <div class="page-content">
+    <section>
+        add a friends freezer
+        <form th:action="@{/user/freezer}" method="get" class="multiselect-form">
+            <label for="freezerFriendList">Friends</label>
+            <select id="freezerFriendList" class="multiselect" name="friends"
+                    th:disabled="${userFriendships.isEmpty()}">
+                <option value="" disabled selected>
+                    [[${userFriendships.isEmpty() ? 'You have no Friends yet' : 'Select Friends'}]]
+                </option>
+
+                <option class="friend-option" th:if="${!userFriendships.isEmpty()}"
+                        th:each="friendship : ${userFriendships}"
+                        th:value="${friendship.requested_by.username != authenticated.username ? friendship.requested_by.username : friendship.request_to.username}">
+                    [[${friendship.requested_by.username != authenticated.username ? friendship.requested_by.username :
+                    friendship.request_to.username}]]
+                </option>
+            </select>
+            <div class="multiselect-selected"><!-- Content inserted by multiselect.js --></div>
+            <button type="submit" th:disabled="${userFriendships.isEmpty()}">Load Friends Freezer</button>
+        </form>
+    </section>
+
     <section class="card">
         <form th:action="@{/user/freezer/update}" method="post" th:each="freezerItem : ${freezer}">
             <span>[[${freezerItem.user.name}]]: [[${freezerItem.ingredient.name}]] -> amount: [[${freezerItem.amount}]]</span>
@@ -41,22 +63,25 @@ includeHeaderFragment = ${'freezer-header'})"></head>
             [[${recipeSuggestion.recipe.title}]] with [[${recipeSuggestion.ingredientMatchingCount}]] matching
             ingredients
             <div class="suggestions-ingredients">
-                <div class="suggestions-ingredient"
-                     th:each="recipeIngredient: ${recipeSuggestion.recipe.recipeIngredients}">
-                    <span th:each="freezerItem : ${freezer.?[ingredient.id == __${recipeIngredient.ingredient.id}__]}"
-                          th:class="${freezerItem.amount < recipeIngredient.amount ? 'not-enough' : 'enough'}">
+                <th:block
+                        th:each="recipeIngredient: ${recipeSuggestion.recipe.recipeIngredients}">
+                    <div th:each="freezerItem : ${freezer.?[ingredient.id == __${recipeIngredient.ingredient.id}__]}"
+                         th:class="${freezerItem.amount < recipeIngredient.amount ? 'not-enough' : 'enough'}">
                         ([[${recipeIngredient.ingredient.name}]]) -> [[${freezerItem.amount}]] of
                         [[${recipeIngredient.amount}]]
-                    </span>
+                    </div>
 
-                    <span th:if="${freezer.?[ingredient.id == __${recipeIngredient.ingredient.id}__].isEmpty()}"
-                          class="missing">
+                    <div th:if="${freezer.?[ingredient.id == __${recipeIngredient.ingredient.id}__].isEmpty()}"
+                         class="missing">
                         ([[${recipeIngredient.ingredient.name}]]) -> 0 of [[${recipeIngredient.amount}]]
-                    </span>
-                </div>
+                    </div>
+                </th:block>
             </div>
         </div>
     </section>
 </div>
+
+<!-- Scripts -->
+<script type="text/javascript" th:src="@{/js/multiselect.js}"></script>
 </body>
 </html>
