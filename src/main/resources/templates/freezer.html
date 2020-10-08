@@ -29,30 +29,33 @@ includeHeaderFragment = ${'freezer-header'})"></head>
     </section>
 
     <section class="card">
-        <form th:action="@{/user/freezer/update}" method="post" th:each="freezerItem : ${freezer}">
-            <span>[[${freezerItem.user.name}]]: [[${freezerItem.ingredient.name}]] -> amount: [[${freezerItem.amount}]]</span>
-
-            <input type="hidden" name="freezerIngredientId" th:value="${freezerItem.ingredient.id}">
-            <button type="submit">+Add</button>
-            <button type="submit" name="subtract" value="true" th:disabled="${freezerItem.amount == 0}">-Sub
-            </button>
-            <button type="submit" name="delete" value="true">Delete</button>
-        </form>
+        <div th:each="freezerItem : ${freezer}" class="freezer-item">
+            <span>[[${freezerItem.user.username}]]: [[${freezerItem.ingredient.name}]] -> amount: [[${freezerItem.amount}]]</span>
+            <form th:action="@{/user/freezer/update}" method="post" th:if="${authenticated.id == freezerItem.user.id}">
+                <input th:each="queryFriend : ${queryFriends}" type="hidden" name="friends" th:value="${queryFriend}">
+                <input type="hidden" name="freezerIngredientId" th:value="${freezerItem.ingredient.id}">
+                <button type="submit">+Add</button>
+                <button type="submit" name="subtract" value="true" th:disabled="${freezerItem.amount == 0}">-Sub
+                </button>
+                <button type="submit" name="delete" value="true">Delete</button>
+            </form>
+        </div>
 
         <form th:action="@{/user/freezer}" method="post">
             <label>
                 Amount:
-                <input type="number" id="amount" name="amount">
+                <input type="number" id="amount" name="amount" required>
             </label>
 
             <label>
                 Ingredient Name:
-                <input list="ingredientNames" name="ingredientName" id="ingredientName">
+                <input list="ingredientNames" name="ingredientName" id="ingredientName" required>
                 <datalist id="ingredientNames">
                     <option th:each="ingredient : ${ingredients}" th:value="${ingredient.name}"></option>
                 </datalist>
             </label>
 
+            <input th:each="queryFriend : ${queryFriends}" type="hidden" name="friends" th:value="${queryFriend}">
             <button type="submit">Add to Freezer</button>
         </form>
     </section>
@@ -61,7 +64,10 @@ includeHeaderFragment = ${'freezer-header'})"></head>
         Freezer Suggestions:
         <div class="freezer-suggestion" th:each="recipeSuggestion : ${freezerSuggestions}">
             [[${recipeSuggestion.recipe.title}]] with [[${recipeSuggestion.ingredientMatchingCount}]] matching
-            ingredients
+            ingredients:
+            TODO: ADD RECIPE OVERVIEW:
+            <button>TODO: Go to recipe</button>
+            <button>TODO: Invite Friends to Cook this recipe (also with selector in recipe page)</button>
             <div class="suggestions-ingredients">
                 <th:block
                         th:each="recipeIngredient: ${recipeSuggestion.recipe.recipeIngredients}">

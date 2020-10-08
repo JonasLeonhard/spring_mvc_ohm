@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import pojos.AddIngredientForm
 import services.FreezerService
+import services.JsoupService
 import services.UserService
 import validators.AddIngredientFormValidator
 import java.security.Principal
@@ -16,7 +17,10 @@ import javax.validation.Valid
 
 @Controller
 @RequestMapping("/user")
-class UserController(val userService: UserService, val freezerService: FreezerService, val addIngredientFormValidator: AddIngredientFormValidator) {
+class UserController(val userService: UserService,
+                     val freezerService: FreezerService,
+                     val addIngredientFormValidator: AddIngredientFormValidator,
+                     val jsoupService: JsoupService) {
 
     @GetMapping("/profile/{username}")
     fun userProfile(principal: Principal?, model: Model, @PathVariable username: String): String {
@@ -61,21 +65,25 @@ class UserController(val userService: UserService, val freezerService: FreezerSe
     fun freezer(principal: Principal, model: Model, @RequestParam(value = "friends") friends: MutableList<String>?): String {
         val user = userService.findByUsername(principal.name)
         model["authenticated"] = user
-        model["freezer"] = freezerService.getFreezer(user)
+        model["freezer"] = freezerService.getFreezer(user, friends)
         model["ingredients"] = freezerService.getIngredients()
         model["freezerSuggestions"] = freezerService.getSuggestions(user, friends)
         model["userFriendships"] = userService.getFriendships(user)
+        if (friends != null) {
+            model["queryFriends"] = friends
+        }
 
         return "freezer"
     }
 
     @GetMapping("/freezer/add/ingredient")
-    fun addIngredient(principal: Principal, @RequestParam ingredientName: String, @RequestParam amount: Int, model: Model): String {
-        println("get /freezer/add/ingredient")
+    fun addIngredient(principal: Principal, @RequestParam ingredientName: String, @RequestParam amount: Int, @RequestParam friends: MutableList<String>?, model: Model): String {
         userService.addAuthenticatedUserToModel(principal, model)
         model["addIngredientForm"] = AddIngredientForm(name = ingredientName)
         model["amount"] = amount
-
+        if (friends != null) {
+            model["queryFriends"] = friends
+        }
         return "addIngredient"
     }
 
@@ -111,17 +119,17 @@ class UserController(val userService: UserService, val freezerService: FreezerSe
     }
 
     @PostMapping("/freezer")
-    fun freezer(principal: Principal, @RequestParam(value = "ingredientName") ingredientName: String, @RequestParam(value = "amount") amount: Int): String {
+    fun freezer(principal: Principal, @RequestParam(value = "ingredientName") ingredientName: String, @RequestParam(value = "amount") amount: Int, @RequestParam(value = "friends") friends: MutableList<String>?): String {
         val ingredientInFreezer = freezerService.addIngredientToFreezer(principal, ingredientName, amount)
         return if (!ingredientInFreezer) {
-            "redirect:/user/freezer/add/ingredient?ingredientName=$ingredientName&amount=$amount"
+            "redirect:/user/freezer/add/ingredient?ingredientName=$ingredientName&amount=$amount${userService.getFriendQueryParams(friends, true)}"
         } else {
-            "redirect:/user/freezer"
+            "redirect:/user/freezer${userService.getFriendQueryParams(friends, false)}"
         }
     }
 
     @PostMapping("/freezer/update")
-    fun changeFreezerItem(principal: Principal, @RequestParam freezerIngredientId: Long, @RequestParam subtract: Boolean?, @RequestParam delete: Boolean?): String {
+    fun changeFreezerItem(principal: Principal, @RequestParam freezerIngredientId: Long, @RequestParam subtract: Boolean?, @RequestParam delete: Boolean?, @RequestParam friends: MutableList<String>?): String {
         val user = userService.findByUsername(principal.name)
 
         if (delete != null && delete) {
@@ -130,11 +138,11 @@ class UserController(val userService: UserService, val freezerService: FreezerSe
             freezerService.incrementAmount(user, freezerIngredientId, subtract)
         }
 
-        return "redirect:/user/freezer"
+        return "redirect:/user/freezer${userService.getFriendQueryParams(friends, false)}"
     }
 
     @PostMapping("/freezer/add/ingredient")
-    fun addIngredient(principal: Principal, @Valid addIngredientForm: AddIngredientForm, bindingResult: BindingResult, @RequestParam formFile: MultipartFile?, @RequestParam amount: Int, model: Model): String {
+    fun addIngredient(principal: Principal, @Valid addIngredientForm: AddIngredientForm, bindingResult: BindingResult, @RequestParam formFile: MultipartFile?, @RequestParam amount: Int, @RequestParam friends: MutableList<String>?, model: Model): String {
         println("post /freezer/add/ingredient inAddIngredient $addIngredientForm")
         userService.addAuthenticatedUserToModel(principal, model)
 
@@ -144,10 +152,13 @@ class UserController(val userService: UserService, val freezerService: FreezerSe
             model["errors"] = bindingResult
             model["addIngredientForm"] = addIngredientForm
             model["amount"] = amount
+            if (friends != null) {
+                model["queryFriends"] = friends
+            }
             return "addIngredient"
         }
 
         freezerService.addIngredientFormToFreezer(principal, addIngredientForm, amount)
-        return "redirect:/user/freezer"
+        return "redirect:/user/freezer${userService.getFriendQueryParams(friends, false)}"
     }
 }

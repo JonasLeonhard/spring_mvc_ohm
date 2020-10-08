@@ -49,6 +49,7 @@ includeHeaderFragment = ${'addIngredient-header'})"></head>
         <span th:errors="*{file}" class="error"></span>
 
         <br/>
+        <input th:each="queryFriend : ${queryFriends}" type="hidden" name="friends" th:value="${queryFriend}">
         <button type="submit" name="amount" th:value="${amount}">+Add ingredient</button>
     </form>
 

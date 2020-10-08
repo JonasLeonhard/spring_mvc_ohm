@@ -201,6 +201,19 @@ class UserService(
                 message = message
         ))
     }
+
+    fun getFriendQueryParams(friends: MutableList<String>?, queryParamsExist: Boolean): String {
+        var queryParams = ""
+        friends?.forEachIndexed { index, friend ->
+            if (index == 0 && !queryParamsExist) {
+                queryParams += "?"
+            } else if (index == 0 && queryParamsExist || index != 0) {
+                queryParams += "&"
+            }
+            queryParams += "friends=$friend"
+        }
+        return queryParams
+    }
 }
 
 class FriendshipAlreadyExistException(message: String) : Exception(message)

@@ -35,3 +35,8 @@
 .multiselect-selected div:hover {
     background: var(--primary-light);
 }
+
+.freezer-item {
+    display: flex;
+    justify-content: space-between;
+}

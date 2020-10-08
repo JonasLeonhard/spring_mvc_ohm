@@ -64,39 +64,55 @@ class FreezerService(val freezerRepository: FreezerRepository,
         return ingredientRepository.findAll(sort)
     }
 
-    fun getFreezer(user: User): MutableList<Freezer> {
-        return try {
-            freezerRepository.findByUserId(user.id).get()
-        } catch (e: NoSuchElementException) {
-            mutableListOf()
+    fun getFreezer(user: User, friends: MutableList<String>?): MutableList<Freezer> {
+        val users = createUserAndFriendsList(user, friends)
+
+        val freezers = mutableListOf<Freezer>()
+        users.forEach { freezerUser ->
+            val freezer = freezerRepository.findByUserId(freezerUser.id)
+            if (freezer.isPresent) {
+                freezers.addAll(freezer.get())
+            }
         }
+
+        return freezers
     }
 
     fun getSuggestions(user: User, friends: MutableList<String>?): MutableList<RecipeSuggestions> {
-
-        if (friends != null) {
-            try {
-                val friendFreezers = friends.map { friend ->
-                    userService.findByUsername(friend)
-                }
-                // TODO: loop each  listOf(user) + friendFreezer
-                // TODO: combine ingredients of freezers -> then findSuggestion
-                // TODO: how can is still seperate suggestions by which freezer they belong to?
-                val freezerOptional = freezerRepository.findByUserId(user.id)
-
-                if (freezerOptional.isPresent) {
-                    val freezer = freezerOptional.get()
-                    val ingredients = freezer.map { row ->
-                        row.ingredient
-                    }.toMutableList()
-
-                    return freezerRepository.findSuggestions(ingredients)
-                }
-            } catch (e: Exception) {
-                println("freezerService Exception: $e")
+        val users = createUserAndFriendsList(user, friends)
+        // gets the freezer for each user and add up all the freezer ingredients to a list
+        val ingredients: MutableList<Ingredient> = mutableListOf()
+        users.forEach { freezerUser ->
+            val freezerOptional = freezerRepository.findByUserId(freezerUser.id)
+            if (freezerOptional.isPresent) {
+                val freezer = freezerOptional.get()
+                val userIngredients = freezer.map { row ->
+                    row.ingredient
+                }.toMutableList()
+                ingredients.addAll(userIngredients)
             }
         }
-        return mutableListOf()
+        return freezerRepository.findSuggestions(ingredients)
+    }
+
+    /**
+     * find users for friends usernames & add them to users list if a friendship exists and is accepted
+     * @return list of existing friendship users between user and friends list where friendship.accepted
+     * */
+    fun createUserAndFriendsList(user: User, friends: MutableList<String>?): MutableList<User> {
+        val users = mutableListOf(user)
+
+        friends?.forEach { username ->
+            try {
+                val friend = userService.findByUsername(username)
+                val friendship = userService.findFriendshipBetween(user, friend)
+                if (friendship != null && friendship.accepted) {
+                    users.add(friend)
+                }
+            } catch (e: Exception) {
+            }
+        }
+        return users
     }
 
     @Throws(NoSuchElementException::class)
