@@ -1,9 +1,10 @@
 // Globals
-const selected = {}; // format: { USERNAME: { usernameOptionEl, cancelEl, hiddenInputEl } }
+const selected = {}; // format: { USERNAME: { usernameOptionEl: Node, cancelEl: Node, hiddenInputEl: NodeList } }
 const multiselect = document.querySelector('.multiselect');
 const form = document.querySelector('.multiselect-form');
 const selectedWrapper = document.querySelector('.multiselect-selected');
 const options = form.querySelectorAll('.friend-option');
+const inviteFriendsForms = document.querySelectorAll('.invite-friends-form');
 
 onLoad();
 
@@ -43,19 +44,40 @@ function onSelectedCancel(selectedUserName) {
         const {usernameOptionEl, cancelEl, hiddenInputEl} = selectElement;
         usernameOptionEl.removeAttribute('disabled');
         cancelEl.remove();
-        hiddenInputEl.remove();
+        hiddenInputEl.forEach(node => {
+            node.remove();
+        });
         delete selected[selectedUserName];
         multiselect.removeAttribute('disabled');
     }
 }
 
 function createHiddenInput(username) {
-    const hiddenInputEl = document.createElement('input');
-    hiddenInputEl.setAttribute('type', 'hidden');
-    hiddenInputEl.setAttribute('name', 'friends');
-    hiddenInputEl.setAttribute('value', username);
-    form.insertAdjacentElement('beforeend', hiddenInputEl);
-    return hiddenInputEl;
+    const inputElements = [];
+
+    const createHiddenInputEl = (inputUsername) => {
+        const hiddenInputEl = document.createElement('input');
+        hiddenInputEl.setAttribute('type', 'hidden');
+        hiddenInputEl.setAttribute('name', 'friends');
+        hiddenInputEl.setAttribute('value', inputUsername);
+        return hiddenInputEl;
+    };
+
+    const formInput = createHiddenInputEl(username);
+    inputElements.push(formInput);
+    form.insertAdjacentElement('beforeend', formInput);
+
+    inviteFriendsForms.forEach(node => {
+        const hiddenInputExisting = node.querySelector(`input[value="${username}"]`);
+        if (!hiddenInputExisting) {
+            const inviteFormInput = createHiddenInputEl(username);
+            inputElements.push(inviteFormInput);
+            node.insertAdjacentElement('beforeend', inviteFormInput);
+        } else {
+            inputElements.push(hiddenInputExisting)
+        }
+    });
+    return inputElements;
 }
 
 function createCancelElement(username) {

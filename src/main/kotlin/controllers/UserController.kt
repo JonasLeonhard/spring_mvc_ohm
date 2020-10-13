@@ -87,6 +87,18 @@ class UserController(val userService: UserService,
         return "addIngredient"
     }
 
+    @GetMapping("/invite/{recipeId}")
+    fun inviteFriends(principal: Principal, @PathVariable recipeId: Long, @RequestParam friends: MutableList<String>?, model: Model): String {
+        println("invite friends! $recipeId : $friends")
+        val user = userService.findByUsername(principal.name)
+        model["authenticated"] = user
+        model["userFriendships"] = userService.getFriendships(user)
+        if (friends != null) {
+            model["queryFriends"] = friends
+        }
+        return "invitation"
+    }
+
     @PostMapping("/friendship")
     fun friendship(principal: Principal, @RequestParam(value = "userId", required = true) userId: Long, model: Model): String {
         val authenticated = userService.findByUsername(principal.name)

@@ -63,11 +63,48 @@ includeHeaderFragment = ${'freezer-header'})"></head>
     <section class="card">
         Freezer Suggestions:
         <div class="freezer-suggestion" th:each="recipeSuggestion : ${freezerSuggestions}">
-            [[${recipeSuggestion.recipe.title}]] with [[${recipeSuggestion.ingredientMatchingCount}]] matching
-            ingredients:
-            TODO: ADD RECIPE OVERVIEW:
-            <button>TODO: Go to recipe</button>
-            <button>TODO: Invite Friends to Cook this recipe (also with selector in recipe page)</button>
+            TODO: <br/>
+            -escpape summary th:utext:<br/>
+            <div class="recipe-card recipe-id-[[${recipe.id}]]">
+                <div class="recipe-card-image-container">
+                    <div class="rating">
+                        <span th:text="${recipeSuggestion.recipe.likes}">likes</span>
+                    </div>
+                    <img class="recipe-card-img"
+                         alt="recipe image"
+                         th:src="${recipeSuggestion.recipe.picture != null ? '/resource/' + recipeSuggestion.recipe.picture.id : (recipeSuggestion.recipe.recipeImageUrl != null ? recipeSuggestion.recipe.recipeImageUrl : '/unsecured_files/logo_placeholder.png')}">
+                </div>
+                <div class="recipe-card-info">
+
+                    <span class="recipe-card-info-title">[[${recipeSuggestion.recipe.title}]] with [[${recipeSuggestion.ingredientMatchingCount}]] matching ingredients:</span>
+
+                    <div>
+                        <span th:text="${recipeSuggestion.recipe.summary}">Summary</span>
+                        <a th:href="'/recipe/'+ ${recipeSuggestion.recipe.id}">Read
+                            more ...</a>
+                    </div>
+
+                    <div class="recipe-card-info-flex">
+                        <span>Ready in [[${recipeSuggestion.recipe.readyInMinutes}]] Minutes</span>
+                        <span>Likes: 0</span>
+                        <span>isSpoonacularRecipe: [[${recipeSuggestion.recipe.spoonacularId}]]</span>
+                    </div>
+
+                    <div>
+                        <a th:href="'/recipe/'+ ${recipeSuggestion.recipe.id}">
+                            <button>Go to recipe</button>
+                        </a>
+                        <form th:action="@{/user/invite/{id}(id= ${recipeSuggestion.recipe.id})}" method="get"
+                              class="invite-friends-form">
+                            <input th:each="queryFriend : ${queryFriends}" type="hidden" name="friends"
+                                   th:value="${queryFriend}">
+                            <button type="submit">Invite Friends</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
             <div class="suggestions-ingredients">
                 <th:block
                         th:each="recipeIngredient: ${recipeSuggestion.recipe.recipeIngredients}">

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header(title = ${pageTitle},
+includeHeaderFragment = ${'invitation-header'})"></head>
+
+<body>
+<nav th:replace="fragments/navigation :: navigation"></nav>
+<br class="page-content">
+<h1>Invitation page:</h1>
+<span th:if="${authenticated}">Logged in as [[${authenticated.username}]]</span>
+<span th:each="queryFriend: ${queryFriends}" th:text="${queryFriend}">queryFriend</span>
+<form>
+    <section>
+        <label for="freezerFriendList">Friends</label>
+        <select id="freezerFriendList" class="multiselect" name="friends"
+                th:disabled="${userFriendships.isEmpty()}">
+            <option value="" disabled selected>
+                [[${userFriendships.isEmpty() ? 'You have no Friends yet' : 'Select Friends'}]]
+            </option>
+
+            <option class="friend-option" th:if="${!userFriendships.isEmpty()}"
+                    th:each="friendship : ${userFriendships}"
+                    th:value="${friendship.requested_by.username != authenticated.username ? friendship.requested_by.username : friendship.request_to.username}">
+                [[${friendship.requested_by.username != authenticated.username ? friendship.requested_by.username :
+                friendship.request_to.username}]]
+            </option>
+        </select>
+    </section>
+    <div class="multiselect-selected">
+        // TODO: make onclick work
+        <div th:each="queryFriend: ${queryFriends}" th:text="${queryFriend + ' x'}"
+             th:onclick="[[${'onSelectedCancel(' + queryFriend + ')')}]]">username x
+        </div>
+    </div>
+
+    <input th:each="queryFriend : ${queryFriends}" type="hidden" th:value="${queryFriend}">
+    <button type="submit" th:disabled="${userFriendships.isEmpty()}">Add Friends</button>
+</form>
+
+<button>Delete Invitation</button>
+
+// this page should also be the edit invitation page in the calendar<br/>
+TODO: add date selection<br/>
+TODO: add message<br/>
+TODO: add select friends dropdown<br/>
+TODO: add divide ingredients or change to friends select what to bring<br/>
+TODO: add multiple recipe's to invitation<br/>
+TODO: change recipe's of this invitation<br/>
+TODO: change route from recipe id is path to just invitation by id or invitation for new invitaiton<br/>
+
+<button>Save</button>
+
+</div>
+</body>
+</html>
