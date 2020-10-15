@@ -23,8 +23,8 @@ includeHeaderFragment = ${'freezer-header'})"></head>
                     friendship.request_to.username}]]
                 </option>
             </select>
+            <button type="submit" th:disabled="${userFriendships.isEmpty()}">Add</button>
             <div class="multiselect-selected"><!-- Content inserted by multiselect.js --></div>
-            <button type="submit" th:disabled="${userFriendships.isEmpty()}">Load Friends Freezer</button>
         </form>
     </section>
 
@@ -94,8 +94,9 @@ includeHeaderFragment = ${'freezer-header'})"></head>
                         <a th:href="'/recipe/'+ ${recipeSuggestion.recipe.id}">
                             <button>Go to recipe</button>
                         </a>
-                        <form th:action="@{/user/invite/{id}(id= ${recipeSuggestion.recipe.id})}" method="get"
+                        <form th:action="@{/user/invite}" method="get"
                               class="invite-friends-form">
+                            <input type="hidden" name="recipeId" th:value="${recipeSuggestion.recipe.id}">
                             <input th:each="queryFriend : ${queryFriends}" type="hidden" name="friends"
                                    th:value="${queryFriend}">
                             <button type="submit">Invite Friends</button>

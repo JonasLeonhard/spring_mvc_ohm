@@ -280,4 +280,8 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
     fun getComments(recipe: Recipe): MutableList<UserRecipeComment> {
         return userRecipeCommentRepository.findAllCommentsForRecipe(recipe.id)
     }
+
+    fun getRecipesById(recipeIds: MutableList<Long>): MutableList<Recipe> {
+        return recipeRepository.findAllById(recipeIds)
+    }
 }

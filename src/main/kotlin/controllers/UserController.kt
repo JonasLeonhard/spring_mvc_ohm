@@ -8,10 +8,12 @@ import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import pojos.AddIngredientForm
+import pojos.InvitationForm
 import services.FreezerService
-import services.JsoupService
+import services.InvitationService
 import services.UserService
 import validators.AddIngredientFormValidator
+import validators.InvitationFormValidator
 import java.security.Principal
 import javax.validation.Valid
 
@@ -19,8 +21,9 @@ import javax.validation.Valid
 @RequestMapping("/user")
 class UserController(val userService: UserService,
                      val freezerService: FreezerService,
+                     val invitationService: InvitationService,
                      val addIngredientFormValidator: AddIngredientFormValidator,
-                     val jsoupService: JsoupService) {
+                     val invitationFormValidator: InvitationFormValidator) {
 
     @GetMapping("/profile/{username}")
     fun userProfile(principal: Principal?, model: Model, @PathVariable username: String): String {
@@ -87,15 +90,13 @@ class UserController(val userService: UserService,
         return "addIngredient"
     }
 
-    @GetMapping("/invite/{recipeId}")
-    fun inviteFriends(principal: Principal, @PathVariable recipeId: Long, @RequestParam friends: MutableList<String>?, model: Model): String {
-        println("invite friends! $recipeId : $friends")
+    @GetMapping("/invite")
+    fun inviteFriends(principal: Principal, invitationForm: InvitationForm, model: Model): String {
+        println("invite friends! $invitationForm")
         val user = userService.findByUsername(principal.name)
         model["authenticated"] = user
         model["userFriendships"] = userService.getFriendships(user)
-        if (friends != null) {
-            model["queryFriends"] = friends
-        }
+        model["invitationForm"] = invitationForm
         return "invitation"
     }
 
@@ -172,5 +173,23 @@ class UserController(val userService: UserService,
 
         freezerService.addIngredientFormToFreezer(principal, addIngredientForm, amount)
         return "redirect:/user/freezer${userService.getFriendQueryParams(friends, false)}"
+    }
+
+    @PostMapping("/invite")
+    fun invitation(principal: Principal, @Valid invitationForm: InvitationForm, bindingResult: BindingResult, model: Model): String {
+        // TODO: add invitationForm
+        println("in /invitation $invitationForm")
+        val user = userService.findByUsername(principal.name)
+        invitationFormValidator.validate(principal, invitationForm, bindingResult)
+        if (bindingResult.hasErrors()) {
+            model["errors"] = bindingResult
+            model["userFriendships"] = userService.getFriendships(user)
+            model["invitationForm"] = invitationForm
+            model["authenticated"] = user
+            return "invitation"
+        }
+        println("in post invitation create... $invitationForm")
+        invitationService.createInvitation(principal, invitationForm)
+        return "invitation"
     }
 }
