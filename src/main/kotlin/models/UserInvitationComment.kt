@@ -6,8 +6,8 @@ import java.util.*
 import javax.persistence.*
 
 @Entity
-@Table(name = "user_recipe_comments")
-data class UserRecipeComment(
+@Table(name = "user_invitation_comments")
+data class UserInvitationComment(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         var id: Long = -1,
@@ -17,8 +17,8 @@ data class UserRecipeComment(
         var user: User,
 
         @ManyToOne(fetch = FetchType.LAZY)
-        @JoinColumn(name = "recipe_id")
-        var recipe: Recipe,
+        @JoinColumn(name = "invitation_id")
+        var invitation: Invitation,
 
         var message: String,
 

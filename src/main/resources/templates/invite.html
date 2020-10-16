@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header(title = ${pageTitle},
+includeHeaderFragment = ${'invite-header'})"></head>
+
+<body>
+<nav th:replace="fragments/navigation :: navigation"></nav>
+<div class="page-content">
+    <h1>Invite page:</h1>
+
+    <form class="multiselect-form" th:action="@{/user/invite}" method="post" th:object="${invitationForm}">
+        <section>
+            <label for="freezerFriendList">Friends</label>
+            <select id="freezerFriendList" class="multiselect" name="friends"
+                    th:disabled="${userFriendships.isEmpty()}">
+                <option value="" disabled selected>
+                    [[${userFriendships.isEmpty() ? 'You have no Friends yet' : 'Select Friends'}]]
+                </option>
+
+                <option class="friend-option" th:if="${!userFriendships.isEmpty()}"
+                        th:each="friendship : ${userFriendships}"
+                        th:value="${friendship.requested_by.username != authenticated.username ? friendship.requested_by.username : friendship.request_to.username}">
+                    [[${friendship.requested_by.username != authenticated.username ? friendship.requested_by.username :
+                    friendship.request_to.username}]]
+                </option>
+            </select>
+            <button type="submit" th:disabled="${userFriendships.isEmpty()}">Add</button>
+            <span th:errors="*{friends}" class="error"></span>
+        </section>
+        // TODO: make selection work without js
+        <div class="multiselect-selected">
+            <!--        <div th:each="queryFriend: ${queryFriends}" th:text="${queryFriend + ' x'}"-->
+            <!--             th:attr="onclick=${'onSelectedCancel(' + queryFriend + ')'}">username x-->
+            <!--        </div>-->
+        </div>
+        <!--    <input th:each="queryFriend : ${queryFriends}" type="hidden" name="friends" th:value="${queryFriend}">-->
+        <input type="hidden" name="recipeId" th:value="*{recipeId}">
+        <span th:errors="*{recipeId}" class="error"></span>
+
+        <div>
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date" placeholder="dd-MM-yyyy"
+                   th:value="${invitationForm.date != null ? invitationForm.date : ''}">
+            <span th:errors="*{date}" class="error"></span>
+        </div>
+
+        <div>
+            <label for="message">Message:</label>
+            <textarea id="message"
+                      name="message"
+                      rows="6"
+                      placeholder="invitation message...">[[${invitationForm.message != null ? invitationForm.message : ''}]]</textarea>
+            <span th:errors="*{message}" class="error"></span>
+        </div>
+
+        <button type="submit">Submit</button>
+
+
+        // this page should also be the edit invitation page in the calendar<br/>
+        // TODO: add divide ingredients or change to friends select what to bring<br/>
+        // TODO: add multiple recipe's to invitation<br/>
+
+        // TODO: DELETE
+        // -if invitationId is specified -> show button
+        <button>Delete</button>
+    </form>
+</div>
+
+<!-- Scripts -->
+<script type="text/javascript" th:src="@{/js/multiselect.js}"></script>
+</body>
+</html>

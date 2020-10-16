@@ -16,6 +16,8 @@ class UserService(
         val userRepository: UserRepository,
         val roleRepository: RoleRepository,
         val recipeRepository: RecipeRepository,
+        val invitationRepository: InvitationRepository,
+        val userInvitationCommentRepository: UserInvitationCommentRepository,
         val userLikedRecipeRepository: UserLikedRecipeRepository,
         val userRecipeBuyListRepository: UserRecipeBuyListRepository,
         val userRecipeCommentRepository: UserRecipeCommentRepository,
@@ -42,6 +44,10 @@ class UserService(
     @Throws(UsernameNotFoundException::class)
     fun findByUsername(username: String): User {
         return userRepository.findByUsername(username) ?: throw UsernameNotFoundException(username)
+    }
+
+    fun findByUsernames(usernames: MutableList<String>): MutableList<User> {
+        return userRepository.findByUsernames(usernames)
     }
 
     fun findAllByUsername(username: String): Set<User> {
@@ -198,6 +204,18 @@ class UserService(
         userRecipeCommentRepository.save(UserRecipeComment(
                 user = user,
                 recipe = recipe,
+                message = message
+        ))
+    }
+
+    @Transactional
+    fun commentInvitation(invitationId: Long, principal: Principal, message: String) {
+        val invitation = invitationRepository.findById(invitationId).get()
+        val user = findByUsername(principal.name)
+
+        userInvitationCommentRepository.save(UserInvitationComment(
+                user = user,
+                invitation = invitation,
                 message = message
         ))
     }

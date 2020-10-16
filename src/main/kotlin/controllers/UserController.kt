@@ -92,11 +92,26 @@ class UserController(val userService: UserService,
 
     @GetMapping("/invite")
     fun inviteFriends(principal: Principal, invitationForm: InvitationForm, model: Model): String {
-        println("invite friends! $invitationForm")
         val user = userService.findByUsername(principal.name)
         model["authenticated"] = user
         model["userFriendships"] = userService.getFriendships(user)
         model["invitationForm"] = invitationForm
+        return "invite"
+    }
+
+    @GetMapping("/invitation/{id}")
+    fun invitation(principal: Principal, @PathVariable(value = "id") invitationId: Long, model: Model): String {
+        val user = userService.findByUsername(principal.name)
+        model["authenticated"] = user
+        val invitation = invitationService.getInvitationById(invitationId).get()
+
+        if (!invitation.containsUser(user)) {
+            throw Exception("InvitationException: invitation does not contain user")
+        }
+
+        model["invitation"] = invitation
+
+        model["invitationComments"] = invitationService.getInvitationComments(invitationId)
         return "invitation"
     }
 
@@ -115,8 +130,7 @@ class UserController(val userService: UserService,
     fun friendshipAccept(principal: Principal, @RequestParam(value = "userId", required = true) userId: Long, model: Model): String {
         val authenticated = userService.findByUsername(principal.name)
         val toUser = userService.findById(userId)
-        val accept = userService.friendRequestAccept(authenticated, toUser)
-        println("friendrequest accept: $accept")
+        userService.friendRequestAccept(authenticated, toUser)
         return "redirect:/user/profile/${toUser.username}"
     }
 
@@ -177,8 +191,6 @@ class UserController(val userService: UserService,
 
     @PostMapping("/invite")
     fun invitation(principal: Principal, @Valid invitationForm: InvitationForm, bindingResult: BindingResult, model: Model): String {
-        // TODO: add invitationForm
-        println("in /invitation $invitationForm")
         val user = userService.findByUsername(principal.name)
         invitationFormValidator.validate(principal, invitationForm, bindingResult)
         if (bindingResult.hasErrors()) {
@@ -186,10 +198,15 @@ class UserController(val userService: UserService,
             model["userFriendships"] = userService.getFriendships(user)
             model["invitationForm"] = invitationForm
             model["authenticated"] = user
-            return "invitation"
+            return "invite"
         }
-        println("in post invitation create... $invitationForm")
-        invitationService.createInvitation(principal, invitationForm)
-        return "invitation"
+        val invitation = invitationService.createInvitation(user, invitationForm)
+        return "redirect:invitation/${invitation.id}"
+    }
+
+    @PostMapping("/invitation/{id}/comment")
+    fun commentOn(principal: Principal, @PathVariable("id") invitationId: Long, @RequestParam(name = "message") message: String): String {
+        userService.commentInvitation(invitationId, principal, message)
+        return "redirect:/user/invitation/$invitationId"
     }
 }

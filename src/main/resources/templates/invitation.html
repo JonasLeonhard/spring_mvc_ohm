@@ -7,69 +7,41 @@ includeHeaderFragment = ${'invitation-header'})"></head>
 <nav th:replace="fragments/navigation :: navigation"></nav>
 <div class="page-content">
     <h1>Invitation page:</h1>
-    <span th:if="${authenticated}">Logged in as [[${authenticated.username}]]</span>
 
-    <form class="multiselect-form" th:action="@{/user/invite}" method="post" th:object="${invitationForm}">
-        <section>
-            <label for="freezerFriendList">Friends</label>
-            <select id="freezerFriendList" class="multiselect" name="friends"
-                    th:disabled="${userFriendships.isEmpty()}">
-                <option value="" disabled selected>
-                    [[${userFriendships.isEmpty() ? 'You have no Friends yet' : 'Select Friends'}]]
-                </option>
+    [[${invitation.message}]]</br>
 
-                <option class="friend-option" th:if="${!userFriendships.isEmpty()}"
-                        th:each="friendship : ${userFriendships}"
-                        th:value="${friendship.requested_by.username != authenticated.username ? friendship.requested_by.username : friendship.request_to.username}">
-                    [[${friendship.requested_by.username != authenticated.username ? friendship.requested_by.username :
-                    friendship.request_to.username}]]
-                </option>
-            </select>
-            <button type="submit" th:disabled="${userFriendships.isEmpty()}">Add</button>
-            <span th:errors="*{friends}" class="error"></span>
-        </section>
-        // TODO: make selection work without js
-        <div class="multiselect-selected">
-            <!--        <div th:each="queryFriend: ${queryFriends}" th:text="${queryFriend + ' x'}"-->
-            <!--             th:attr="onclick=${'onSelectedCancel(' + queryFriend + ')'}">username x-->
-            <!--        </div>-->
-        </div>
-        <!--    <input th:each="queryFriend : ${queryFriends}" type="hidden" name="friends" th:value="${queryFriend}">-->
-        <input type="hidden" name="recipeId" th:value="*{recipeId}">
-        <span th:errors="*{recipeId}" class="error"></span>
+    // this page should also be the edit invitation page in the calendar<br/>
+    // TODO: comment section
+    // TODO: delete
 
+    // TODO: Edit
+    // if user created recipe: add edit button:
+    // -> goes to invite page with invitation id specified
+    // has invitationForm prefilled with invitationParams
+    <button>TODO: Edit</button>
+
+
+    <div>
+        comment section:
         <div>
-            <label for="date">Date:</label>
-            <input type="date" id="date" name="date" placeholder="dd/mm/yyyy"
-                   th:value="${invitationForm.date != null ? invitationForm.date : ''}">
-            <span th:errors="*{date}" class="error"></span>
+            <div th:each="comment, iter : ${invitationComments}">
+                [[${comment.message}]] by user: [[${comment.user.name}]]
+            </div>
         </div>
-
-        <div>
-            <label for="message">Message:</label>
-            <textarea id="message"
-                      name="message"
-                      rows="6"
-                      placeholder="invitation message...">[[${invitationForm.message != null ? invitationForm.message : ''}]]</textarea>
-            <span th:errors="*{message}" class="error"></span>
-        </div>
-        <div>
-            <button type="submit">Save</button>
-            <button type="submit" name="delete" value="true">Delete Invitation (If exists)</button>
-        </div>
-
-        // this page should also be the edit invitation page in the calendar<br/>
-        TODO: add date selection<br/>
-        TODO: add message<br/>
-        TODO: add select friends dropdown<br/>
-        TODO: add divide ingredients or change to friends select what to bring<br/>
-        TODO: add multiple recipe's to invitation<br/>
-        TODO: change recipe's of this invitation<br/>
-        TODO: change route from recipe id is path to just invitation by id or invitation for new invitaiton<br/>
-    </form>
+        <form th:action="@{/user/invitation/{id}/comment(id=${invitation.id})}" method="post">
+            <label>
+                Comment:
+                <textarea rows="4" name="message" th:disabled="${authenticated == null}"
+                          th:placeholder="${(authenticated == null ? 'Login to comment on ' : 'Comment on ')  + 'invitation'}"></textarea>
+            </label>
+            <button type="submit" th:title="${authenticated == null ? 'Login to Comment' : 'Submit Comment'}"
+                    th:disabled="${authenticated == null}">Comment
+            </button>
+        </form>
+    </div>
 </div>
 
-<!-- Scripts -->
-<script type="text/javascript" th:src="@{/js/multiselect.js}"></script>
+<!--&lt;!&ndash; Scripts &ndash;&gt;-->
+<!--<script type="text/javascript" th:src="@{/js/multiselect.js}"></script>-->
 </body>
 </html>

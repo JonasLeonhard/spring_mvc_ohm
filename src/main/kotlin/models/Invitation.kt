@@ -18,8 +18,10 @@ data class Invitation(
         @OneToOne(targetEntity = User::class)
         val user: User,
 
-        @OneToMany(targetEntity = User::class)
+        @ManyToMany(targetEntity = User::class)
         val friends: MutableList<User>,
+
+        val message: String,
 
         @Temporal(TemporalType.DATE)
         val date: Date,
@@ -31,4 +33,18 @@ data class Invitation(
         @UpdateTimestamp
         @Temporal(TemporalType.TIMESTAMP)
         var updatedAt: Date = Date.from(Instant.now())
-)
+) {
+        fun containsUser(user: User): Boolean {
+                var containUser = this.user.id == user.id
+                if (!containUser) {
+                        this.friends.forEach loop@{ friend ->
+                                if (friend.id == user.id) {
+                                        containUser = true
+                                        return@loop
+                                }
+                        }
+                }
+
+                return containUser
+        }
+}

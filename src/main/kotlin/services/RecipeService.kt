@@ -19,7 +19,9 @@ import repositories.RecipeIngredientsRepository
 import repositories.RecipeRepository
 import repositories.UserRecipeCommentRepository
 import java.security.Principal
+import java.util.*
 import javax.transaction.Transactional
+import kotlin.NoSuchElementException
 
 @Service
 class RecipeService(val props: ApplicationPropertiesConfiguration,
@@ -283,5 +285,9 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
 
     fun getRecipesById(recipeIds: MutableList<Long>): MutableList<Recipe> {
         return recipeRepository.findAllById(recipeIds)
+    }
+
+    fun getRecipeById(recipeId: Long): Optional<Recipe> {
+        return recipeRepository.findById(recipeId)
     }
 }
