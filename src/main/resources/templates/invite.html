@@ -17,7 +17,8 @@ includeHeaderFragment = ${'invite-header'})"></head>
                     [[${userFriendships.isEmpty() ? 'You have no Friends yet' : 'Select Friends'}]]
                 </option>
 
-                <option class="friend-option" th:if="${!userFriendships.isEmpty()}"
+                <option class="friend-option"
+                        th:if="${!userFriendships.isEmpty()}"
                         th:each="friendship : ${userFriendships}"
                         th:value="${friendship.requested_by.username != authenticated.username ? friendship.requested_by.username : friendship.request_to.username}">
                     [[${friendship.requested_by.username != authenticated.username ? friendship.requested_by.username :
@@ -27,19 +28,24 @@ includeHeaderFragment = ${'invite-header'})"></head>
             <button type="submit" th:disabled="${userFriendships.isEmpty()}">Add</button>
             <span th:errors="*{friends}" class="error"></span>
         </section>
-        // TODO: make selection work without js
+        // TODO: make selection work without js TEst
         <div class="multiselect-selected">
-            <!--        <div th:each="queryFriend: ${queryFriends}" th:text="${queryFriend + ' x'}"-->
-            <!--             th:attr="onclick=${'onSelectedCancel(' + queryFriend + ')'}">username x-->
-            <!--        </div>-->
+            <div th:each="friendUsername: ${invitationForm.friends}"
+                 th:attr="onclick=${'onSelectedCancel(''' + friendUsername + ''')'}">
+                <button type="submit"
+                        name="removeUsername"
+                        th:value="${friendUsername}">
+                    [[${friendUsername}]] x
+                </button>
+                <input type="hidden" name="friends" th:value="${friendUsername}">
+            </div>
         </div>
-        <!--    <input th:each="queryFriend : ${queryFriends}" type="hidden" name="friends" th:value="${queryFriend}">-->
         <input type="hidden" name="recipeId" th:value="*{recipeId}">
         <span th:errors="*{recipeId}" class="error"></span>
 
         <div>
             <label for="date">Date:</label>
-            <input type="date" id="date" name="date" placeholder="dd-MM-yyyy"
+            <input type="date" id="date" name="date" placeholder="yyyy-MM-dd"
                    th:value="${invitationForm.date != null ? invitationForm.date : ''}">
             <span th:errors="*{date}" class="error"></span>
         </div>
@@ -53,20 +59,18 @@ includeHeaderFragment = ${'invite-header'})"></head>
             <span th:errors="*{message}" class="error"></span>
         </div>
 
-        <button type="submit">Submit</button>
-
+        <button type="submit" th:if="${invitationId == null}">Submit</button>
+        <button type="submit" th:if="${invitationId != null}">Edit</button>
+        <button type="submit" th:if="${invitationId != null}">Delete</button>
 
         // this page should also be the edit invitation page in the calendar<br/>
         // TODO: add divide ingredients or change to friends select what to bring<br/>
         // TODO: add multiple recipe's to invitation<br/>
-
         // TODO: DELETE
-        // -if invitationId is specified -> show button
-        <button>Delete</button>
     </form>
 </div>
 
-<!-- Scripts -->
-<script type="text/javascript" th:src="@{/js/multiselect.js}"></script>
+<!--&lt;!&ndash; Scripts &ndash;&gt;-->
+<!--<script type="text/javascript" th:src="@{/js/multiselect.js}"></script>-->
 </body>
 </html>

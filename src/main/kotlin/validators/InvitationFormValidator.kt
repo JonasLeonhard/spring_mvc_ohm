@@ -30,16 +30,20 @@ class InvitationFormValidator(val userService: UserService, val recipeService: R
     }
 
     fun recipeValidation(target: InvitationForm, errors: Errors) {
-        val recipeOptional = recipeService.getRecipeById(target.recipeId)
-        if (!recipeOptional.isPresent) {
-            errors.rejectValue("recipeId", "RecipePresentException", "Please Try again. Recipe could not be found")
+        if (target.recipeId != null) {
+            val recipeOptional = recipeService.getRecipeById(target.recipeId)
+            if (!recipeOptional.isPresent) {
+                errors.rejectValue("recipeId", "RecipePresentException", "Please Try again. Recipe could not be found")
+            }
+        } else {
+            errors.rejectValue("recipeId", "RecipeIdException", "Please Try again. Recipe id is missing")
         }
     }
 
     fun dateValidation(target: InvitationForm, errors: Errors) {
         try {
             println("dateValidation of: ${target.date}")
-            SimpleDateFormat("dd-MM-yyyy").parse(target.date)
+            SimpleDateFormat("yyyy-MM-dd").parse(target.date)
         } catch (exception: Exception) {
             println("exception: $exception")
             errors.rejectValue("date", "DateException", "Date format is wrong: Try dd/MM/yyyy")

@@ -17,7 +17,12 @@ class InvitationService(val recipeService: RecipeService,
                         val invitationCommentRepository: UserInvitationCommentRepository) {
 
     fun createInvitation(user: User, invitationForm: InvitationForm): Invitation {
-        val recipe = recipeService.getRecipeById(invitationForm.recipeId).get()
+
+        val recipe = if (invitationForm.recipeId != null) {
+            recipeService.getRecipeById(invitationForm.recipeId).get()
+        } else {
+            throw Exception("{createInvitation()}: Recipe Id Exception, invitationForm.recipeId is null. This should have been validated at this point")
+        }
 
 
         val friends = if (invitationForm.friends != null) {
@@ -25,25 +30,13 @@ class InvitationService(val recipeService: RecipeService,
         } else {
             mutableListOf()
         }
-//        // Gets all friendships for the given user and filters all accepted friendships contained in invitationForm.friends usernames
-//        val userFriendships = if (invitationForm.friends != null) {
-//            userService.getFriendships(user).filter { friendship ->
-//                if (friendship.requested_by.id == user.id) {
-//                    friendship.accepted && invitationForm.friends.contains(friendship.request_to.username)
-//                } else {
-//                    friendship.accepted && invitationForm.friends.contains(friendship.requested_by.username)
-//                }
-//            }
-//        } else {
-//            mutableListOf()
-//        }.toMutableList()
-
 
         val date = if (invitationForm.date != null) {
-            SimpleDateFormat("dd-MM-yyyy").parse(invitationForm.date)
+            SimpleDateFormat("yyyy-MM-dd").parse(invitationForm.date)
         } else {
             throw Exception("{createInvitation()}: Date parsing Exception: Date has to be validated at this point")
         }
+        println("create Invitation: invitationForm.date: ${invitationForm.date}, parsedDate: $date")
 
         val invitation = Invitation(
                 recipe = recipe,
@@ -62,5 +55,20 @@ class InvitationService(val recipeService: RecipeService,
 
     fun getInvitationComments(invitationId: Long): MutableList<UserInvitationComment> {
         return invitationCommentRepository.findAllCommentsForInvitation(invitationId)
+    }
+
+    /**
+     * Gets the invitationForm for a given invitationId.
+     * Throws Exception if the user is not the user that created the Invitation
+     * */
+    fun getUserInvitationFormByInvitationId(user: User, invitationId: Long): InvitationForm {
+        val invitation = getInvitationById(invitationId).get()
+        if (invitation.user.id != user.id) {
+            throw Exception("403: getUserInvitationFormByInvitationId(), User has not Created the Invitation")
+        }
+        val invitationFriends = invitation.friends.map { friend -> friend.username }.toMutableList()
+        println("GetInvittaionFromByInvitationId() -> toString: ${invitation.date}")
+        return InvitationForm(
+                invitation.recipe.id, invitation.message, invitationFriends, invitation.date.toString())
     }
 }

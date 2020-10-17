@@ -91,11 +91,17 @@ class UserController(val userService: UserService,
     }
 
     @GetMapping("/invite")
-    fun inviteFriends(principal: Principal, invitationForm: InvitationForm, model: Model): String {
+    fun inviteFriends(principal: Principal, invitationForm: InvitationForm, @RequestParam invitationId: Long?, model: Model): String {
         val user = userService.findByUsername(principal.name)
         model["authenticated"] = user
         model["userFriendships"] = userService.getFriendships(user)
-        model["invitationForm"] = invitationForm
+
+        if (invitationId != null) {
+            model["invitationId"] = invitationId
+            model["invitationForm"] = invitationService.getUserInvitationFormByInvitationId(user, invitationId)
+        } else {
+            model["invitationForm"] = invitationForm
+        }
         return "invite"
     }
 
@@ -190,8 +196,15 @@ class UserController(val userService: UserService,
     }
 
     @PostMapping("/invite")
-    fun invitation(principal: Principal, @Valid invitationForm: InvitationForm, bindingResult: BindingResult, model: Model): String {
+    fun invitation(principal: Principal, @Valid invitationForm: InvitationForm, bindingResult: BindingResult, @RequestParam(name = "invitationId") invitationId: Long?, model: Model): String {
+        println("POST: /invite -> invitationId: $invitationId")
         val user = userService.findByUsername(principal.name)
+
+        if (invitationId != null) {
+            // Edit the invitation based on invitationForm?
+            return "redirect:invitation/${invitationId}"
+        }
+
         invitationFormValidator.validate(principal, invitationForm, bindingResult)
         if (bindingResult.hasErrors()) {
             model["errors"] = bindingResult

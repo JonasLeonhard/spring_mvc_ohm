@@ -6,8 +6,9 @@ import javax.validation.constraints.Pattern
 import javax.validation.constraints.Positive
 
 data class InvitationForm(
+        @field:NotNull(message = "Recipe Id has to be specified")
         @field:Positive(message = "Recipe Id has to be positive")
-        val recipeId: Long,
+        val recipeId: Long?,
 
         @field:NotNull(message = "Invitation message has to be specified")
         @field:NotBlank(message = "Invitation message cannot be empty")

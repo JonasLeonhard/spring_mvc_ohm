@@ -18,7 +18,9 @@ includeHeaderFragment = ${'invitation-header'})"></head>
     // if user created recipe: add edit button:
     // -> goes to invite page with invitation id specified
     // has invitationForm prefilled with invitationParams
-    <button>TODO: Edit</button>
+    <form th:action="@{/user/invite}">
+        <button type="submit" name="invitationId" th:value="${invitation.id}">Edit</button>
+    </form>
 
 
     <div>
