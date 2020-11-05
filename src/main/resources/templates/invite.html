@@ -20,12 +20,14 @@ includeHeaderFragment = ${'invite-header'})"></head>
                 <option class="friend-option"
                         th:if="${!userFriendships.isEmpty()}"
                         th:each="friendship : ${userFriendships}"
-                        th:value="${friendship.requested_by.username != authenticated.username ? friendship.requested_by.username : friendship.request_to.username}">
+                        th:value="${friendship.requested_by.username != authenticated.username ? friendship.requested_by.username : friendship.request_to.username}"
+                        th:disabled="${invitationForm.friends != null ? (#lists.contains(invitationForm.friends, friendship.requested_by.username) || #lists.contains(invitationForm.friends, friendship.request_to.username)) : false}">
                     [[${friendship.requested_by.username != authenticated.username ? friendship.requested_by.username :
                     friendship.request_to.username}]]
                 </option>
             </select>
-            <button type="submit" th:disabled="${userFriendships.isEmpty()}">Add</button>
+            <button type="submit" th:disabled="${userFriendships.isEmpty()}" name="reloadWithFriend" value="true">Add
+            </button>
             <span th:errors="*{friends}" class="error"></span>
         </section>
         // TODO: make selection work without js TEst
@@ -60,13 +62,13 @@ includeHeaderFragment = ${'invite-header'})"></head>
         </div>
 
         <button type="submit" th:if="${invitationId == null}">Submit</button>
-        <button type="submit" th:if="${invitationId != null}">Edit</button>
-        <button type="submit" th:if="${invitationId != null}">Delete</button>
+        <input type="hidden" th:if="${invitationId != null}" name="invitationId" th:value="${invitationId}">
+        <button type="submit" th:if="${invitationId != null}" name="save" value="true">Save</button>
+        <button type="submit" th:if="${invitationId != null}" name="delete" value="true">Delete</button>
 
         // this page should also be the edit invitation page in the calendar<br/>
         // TODO: add divide ingredients or change to friends select what to bring<br/>
         // TODO: add multiple recipe's to invitation<br/>
-        // TODO: DELETE
     </form>
 </div>
 

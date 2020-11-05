@@ -13,18 +13,18 @@ data class Invitation(
         val id: Long = -1,
 
         @OneToOne(targetEntity = Recipe::class)
-        val recipe: Recipe,
+        var recipe: Recipe,
 
         @OneToOne(targetEntity = User::class)
         val user: User,
 
         @ManyToMany(targetEntity = User::class)
-        val friends: MutableList<User>,
+        var friends: MutableList<User>,
 
-        val message: String,
+        var message: String,
 
         @Temporal(TemporalType.DATE)
-        val date: Date,
+        var date: Date,
 
         @CreationTimestamp
         @Temporal(TemporalType.TIMESTAMP)

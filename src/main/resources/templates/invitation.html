@@ -10,15 +10,7 @@ includeHeaderFragment = ${'invitation-header'})"></head>
 
     [[${invitation.message}]]</br>
 
-    // this page should also be the edit invitation page in the calendar<br/>
-    // TODO: comment section
-    // TODO: delete
-
-    // TODO: Edit
-    // if user created recipe: add edit button:
-    // -> goes to invite page with invitation id specified
-    // has invitationForm prefilled with invitationParams
-    <form th:action="@{/user/invite}">
+    <form th:action="@{/user/invite}" th:if="${authenticated.id == invitation.user.id}">
         <button type="submit" name="invitationId" th:value="${invitation.id}">Edit</button>
     </form>
 

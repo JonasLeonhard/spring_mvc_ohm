@@ -1,6 +1,7 @@
 package services
 
 import models.Invitation
+import models.Recipe
 import models.User
 import models.UserInvitationComment
 import org.springframework.stereotype.Service
@@ -16,28 +17,34 @@ class InvitationService(val recipeService: RecipeService,
                         val invitationRepository: InvitationRepository,
                         val invitationCommentRepository: UserInvitationCommentRepository) {
 
+    fun deleteInvitation(user: User, invitationForm: InvitationForm, invitationId: Long) {
+        val invitation = invitationRepository.findById(invitationId).get()
+        if (invitation.user.id != user.id) {
+            throw Exception("Delete Invitation Exception at (deleteInvitation): User has no rights to delete invitation")
+        }
+        invitationCommentRepository.deleteAll(getInvitationComments(invitationId))
+        invitationRepository.delete(invitation)
+    }
+
+    fun editInvitation(user: User, invitationForm: InvitationForm, invitationId: Long): Invitation {
+        val invitation = invitationRepository.findById(invitationId).get()
+        if (invitation.user.id != user.id) {
+            throw Exception("Edit Invitation Exception at (editInvitation): User has no rights to edit invitation!")
+        }
+        val recipe = invitationFormGetRecipe(invitationForm)
+        val friends = invitationFormGetFriends(invitationForm)
+        val date = invitationFormGetDate(invitationForm)
+        invitation.recipe = recipe
+        invitation.friends = friends
+        invitation.date = date
+        invitation.message = invitationForm.message ?: ""
+        return invitationRepository.save(invitation)
+    }
+
     fun createInvitation(user: User, invitationForm: InvitationForm): Invitation {
-
-        val recipe = if (invitationForm.recipeId != null) {
-            recipeService.getRecipeById(invitationForm.recipeId).get()
-        } else {
-            throw Exception("{createInvitation()}: Recipe Id Exception, invitationForm.recipeId is null. This should have been validated at this point")
-        }
-
-
-        val friends = if (invitationForm.friends != null) {
-            userService.findByUsernames(invitationForm.friends)
-        } else {
-            mutableListOf()
-        }
-
-        val date = if (invitationForm.date != null) {
-            SimpleDateFormat("yyyy-MM-dd").parse(invitationForm.date)
-        } else {
-            throw Exception("{createInvitation()}: Date parsing Exception: Date has to be validated at this point")
-        }
-        println("create Invitation: invitationForm.date: ${invitationForm.date}, parsedDate: $date")
-
+        val recipe = invitationFormGetRecipe(invitationForm)
+        val friends = invitationFormGetFriends(invitationForm)
+        val date = invitationFormGetDate(invitationForm)
         val invitation = Invitation(
                 recipe = recipe,
                 user = user,
@@ -45,7 +52,6 @@ class InvitationService(val recipeService: RecipeService,
                 date = date,
                 message = invitationForm.message ?: ""
         )
-        println("CREATE INVITATION: $invitation")
         return invitationRepository.save(invitation)
     }
 
@@ -55,6 +61,32 @@ class InvitationService(val recipeService: RecipeService,
 
     fun getInvitationComments(invitationId: Long): MutableList<UserInvitationComment> {
         return invitationCommentRepository.findAllCommentsForInvitation(invitationId)
+    }
+
+    @Throws(Exception::class)
+    fun invitationFormGetRecipe(invitationForm: InvitationForm): Recipe {
+        return if (invitationForm.recipeId != null) {
+            recipeService.getRecipeById(invitationForm.recipeId).get()
+        } else {
+            throw Exception("{createInvitation()}: Recipe Id Exception, invitationForm.recipeId is null. This should have been validated at this point")
+        }
+    }
+
+    fun invitationFormGetFriends(invitationForm: InvitationForm): MutableList<User> {
+        return if (invitationForm.friends != null) {
+            userService.findByUsernames(invitationForm.friends)
+        } else {
+            mutableListOf()
+        }
+    }
+
+    @Throws(Exception::class)
+    fun invitationFormGetDate(invitationForm: InvitationForm): Date {
+        return if (invitationForm.date != null) {
+            SimpleDateFormat("yyyy-MM-dd").parse(invitationForm.date)
+        } else {
+            throw Exception("{createInvitation()}: Date parsing Exception: Date has to be validated at this point")
+        }
     }
 
     /**

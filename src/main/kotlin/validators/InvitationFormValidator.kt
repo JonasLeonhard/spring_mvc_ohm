@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat
 
 @Component
 class InvitationFormValidator(val userService: UserService, val recipeService: RecipeService) {
+
     fun validate(principal: Principal, target: InvitationForm, errors: Errors) {
         val user = userService.findByUsername(principal.name)
 

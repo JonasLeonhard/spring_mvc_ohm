@@ -196,30 +196,106 @@ class UserController(val userService: UserService,
     }
 
     @PostMapping("/invite")
-    fun invitation(principal: Principal, @Valid invitationForm: InvitationForm, bindingResult: BindingResult, @RequestParam(name = "invitationId") invitationId: Long?, model: Model): String {
-        println("POST: /invite -> invitationId: $invitationId")
+    fun invitation(principal: Principal,
+                   @Valid invitationForm: InvitationForm,
+                   bindingResult: BindingResult,
+                   @RequestParam(name = "invitationId") invitationId: Long?,
+                   @RequestParam(name = "save") save: Boolean?,
+                   @RequestParam(name = "delete") delete: Boolean?,
+                   @RequestParam(name = "reloadWithFriend") reloadWithFriend: Boolean?,
+                   @RequestParam(name = "removeUsername") removeUsername: String?,
+                   model: Model): String {
         val user = userService.findByUsername(principal.name)
-
+        model["userFriendships"] = userService.getFriendships(user)
+        model["authenticated"] = user
+        model["invitationForm"] = invitationForm
         if (invitationId != null) {
-            // Edit the invitation based on invitationForm?
-            return "redirect:invitation/${invitationId}"
+            model["invitationId"] = invitationId
         }
 
-        invitationFormValidator.validate(principal, invitationForm, bindingResult)
-        if (bindingResult.hasErrors()) {
-            model["errors"] = bindingResult
-            model["userFriendships"] = userService.getFriendships(user)
-            model["invitationForm"] = invitationForm
-            model["authenticated"] = user
-            return "invite"
+        val addOrRemovePage = invitationAddOrRemoveUsernamePage(reloadWithFriend, removeUsername, invitationForm, model)
+        if (addOrRemovePage != null) {
+            return addOrRemovePage
         }
-        val invitation = invitationService.createInvitation(user, invitationForm)
-        return "redirect:invitation/${invitation.id}"
+        val editOrDeletePage = invitationEditOrDeletePage(invitationId, save, delete, user, invitationForm)
+        if (editOrDeletePage != null) {
+            return editOrDeletePage
+        }
+        val errorPage = invitationErrorPage(principal, invitationForm, bindingResult, model)
+        if (errorPage != null) {
+            return errorPage
+        }
+
+        return invitationSavePage(user, invitationForm)
     }
 
     @PostMapping("/invitation/{id}/comment")
     fun commentOn(principal: Principal, @PathVariable("id") invitationId: Long, @RequestParam(name = "message") message: String): String {
         userService.commentInvitation(invitationId, principal, message)
         return "redirect:/user/invitation/$invitationId"
+    }
+
+
+    /**
+     * - Reloads the page if reloadWithFriend is set (returns "invite")
+     * - Reloads the page with the removeUsername filtered out of the invitationForm (returns "invite")
+     * */
+    fun invitationAddOrRemoveUsernamePage(reloadWithFriend: Boolean?,
+                                          removeUsername: String?,
+                                          invitationForm: InvitationForm,
+                                          model: Model): String? {
+        // Add Username / Remove Username
+        if (reloadWithFriend != null && reloadWithFriend) {
+            return "invite"
+        } else if (removeUsername != null) {
+            val filteredFriends = invitationForm.friends?.filter { friend ->
+                println("filter friends $friend")
+                friend != removeUsername
+            }?.toMutableList()
+            val deleteInvitationForm = InvitationForm(friends = filteredFriends,
+                    message = invitationForm.message,
+                    date = invitationForm.date,
+                    recipeId = invitationForm.recipeId)
+            model["invitationForm"] = deleteInvitationForm
+            return "invite"
+        }
+        return null
+    }
+
+    /**
+     * - Redirects to "redirect:invitation/${invitationId} for save == true
+     * - Redirects to "redirect:/" for delete == true
+     * */
+    fun invitationEditOrDeletePage(invitationId: Long?, save: Boolean?, delete: Boolean?, user: User, invitationForm: InvitationForm): String? {
+        // Edit / Delete Invitation with invitationId
+        if (invitationId != null && save != null && save) {
+            invitationService.editInvitation(user, invitationForm, invitationId)
+            return "redirect:invitation/${invitationId}"
+        } else if (invitationId != null && delete != null && delete) {
+            invitationService.deleteInvitation(user, invitationForm, invitationId)
+            return "redirect:/"
+        }
+        return null
+    }
+
+    /**
+     * - Reloads validated "invite" page with model["errors"] set by invitationFormValidator.validate
+     * */
+    fun invitationErrorPage(principal: Principal, invitationForm: InvitationForm, bindingResult: BindingResult, model: Model): String? {
+        invitationFormValidator.validate(principal, invitationForm, bindingResult)
+        if (bindingResult.hasErrors()) {
+            model["errors"] = bindingResult
+            return "invite"
+        }
+        return null
+    }
+
+    /**
+     * - Creates a new Invitation from the given invitation form
+     * and returns "redirect:invitation/${invitation.id}
+     * */
+    fun invitationSavePage(user: User, invitationForm: InvitationForm): String {
+        val invitation = invitationService.createInvitation(user, invitationForm)
+        return "redirect:invitation/${invitation.id}"
     }
 }
