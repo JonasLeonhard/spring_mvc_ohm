@@ -75,9 +75,9 @@ includeIonicons = ${true})"></head>
                     th:attr="disabled=${authenticated == null}"
                     th:title="${authenticated == null ? 'Login to like the recipe' : (userLikedRecipe != null && userLikedRecipe == true ? 'Unlike the Recipe' : 'Like the Recipe')}"
                     name="recipeId" th:value="${recipe.id}">
-                <ion-icon th:if="${userLikedRecipe != null && userLikedRecipe == true}"
+                <ion-icon th:if="${(userLikedRecipe != null && userLikedRecipe == true) || authenticated == null}"
                           name="arrow-up-circle"></ion-icon>
-                <ion-icon th:if="${userLikedRecipe != null && userLikedRecipe == false}"
+                <ion-icon th:if="${(userLikedRecipe != null && userLikedRecipe == false)}"
                           name="arrow-up-circle-outline"></ion-icon>
                 [[${(userLikedRecipe != null && userLikedRecipe == true) ? 'Unlike the Recipe' : 'Like the Recipe'}]]
             </button>
@@ -87,8 +87,10 @@ includeIonicons = ${true})"></head>
                     th:formaction="@{/recipe/{id}/favorite(id=${recipe.id})}"
                     th:attr="disabled=${authenticated == null}"
                     th:title="${authenticated == null ? 'Login to favorite the Recipe': (userFavoritedRecipe != null && userFavoritedRecipe == true ? 'Unfavorite the Recipe' : 'Favorite the Recipe')}">
-                <ion-icon th:if="${userFavoritedRecipe != null && userFavoritedRecipe == true}" name="star"></ion-icon>
-                <ion-icon th:if="${userFavoritedRecipe != null && userFavoritedRecipe == false}"
+                <ion-icon
+                        th:if="${(userFavoritedRecipe != null && userFavoritedRecipe == true) || authenticated == null}"
+                        name="star"></ion-icon>
+                <ion-icon th:if="${(userFavoritedRecipe != null && userFavoritedRecipe == false)}"
                           name="star-outline"></ion-icon>
                 [[${(userFavoritedRecipe!= null && userFavoritedRecipe == true) ? 'Unfavorite the Recipe' : 'Favorite
                 the Recipe'}]]
@@ -100,7 +102,7 @@ includeIonicons = ${true})"></head>
                     th:attr="disabled=${authenticated == null}"
                     th:title="${authenticated == null ? 'Login to add the Recipe to the List': (userBuyListedRecipe != null && userBuyListedRecipe == true ? 'Remove from Buylist' : 'Add to Buylist')}">
                 <ion-icon name="cart"
-                          th:if="${(userBuyListedRecipe != null && userBuyListedRecipe == true)}"></ion-icon>
+                          th:if="${(userBuyListedRecipe != null && userBuyListedRecipe == true) || authenticated == null}"></ion-icon>
                 <ion-icon name="cart-outline"
                           th:if="${(userBuyListedRecipe != null && userBuyListedRecipe == false)}"></ion-icon>
                 [[${(userBuyListedRecipe != null && userBuyListedRecipe == true) ? 'Remove from Buylist' : 'Add to
@@ -108,9 +110,18 @@ includeIonicons = ${true})"></head>
             </button>
         </form>
 
-
-        -- TODO() -> Show this recipe to a friend / invite a friend to cook this recipe with you
+        <form th:action="@{/user/invite}" method="get"
+              class="invite-friends-form">
+            <input type="hidden" name="recipeId" th:value="${recipe.id}">
+            <button type="submit"
+                    th:disabled="${authenticated == null}"
+                    th:title="${authenticated == null ? 'Login to invite Friends' : 'Invite Friends'}">
+                <ion-icon name="mail"></ion-icon>
+                Invite Friends
+            </button>
+        </form>
         -- TODO() -> have instructions seperated, maybe analyzed instructions?
+        -- TODO() -> images for ingredients?
     </div>
 
     <div>

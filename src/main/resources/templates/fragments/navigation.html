@@ -26,6 +26,12 @@
                 </div>
             </div>
             <div class="nav-items">
+                <a th:if="${authenticated}" th:href="@{/calendar}">
+                    <img class="nav-item" th:src="@{/unsecured_files/calendar.svg}"
+                         alt="Calender"
+                         title="Calender">
+                </a>
+
                 <a th:if="${authenticated}" th:href="@{/user/freezer}">
                     <img class="nav-item" th:src="@{/unsecured_files/fast-food-outline.svg}"
                          alt="Freezer"

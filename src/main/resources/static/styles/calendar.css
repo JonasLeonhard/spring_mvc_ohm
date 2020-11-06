@@ -1,0 +1,81 @@
+.calendar {
+    width: 14rem;
+    margin: auto;
+}
+
+.calendar-dates {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.calendar-date {
+    background: white;
+    color: black;
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
+    width: 2rem;
+    height: 2rem;
+}
+
+.calendar-title-mm-yyyy {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--secondary);
+    border-radius: 3px 3px 0 0;
+    padding: 0.1rem 1rem;
+}
+
+.calendar-title {
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--secondary);
+    border-top: 1px solid black;
+}
+
+.calendar-date.selected {
+    border: 1px solid var(--grey);
+    background: var(--primary);
+    color: white;
+}
+
+.calendar-date:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.date-out-of-range {
+    opacity: 0.5;
+}
+
+.MONDAY {
+    grid-column: 1;
+}
+
+.TUESDAY {
+    grid-column: 2;
+}
+
+.WEDNESDAY {
+    grid-column: 3;
+}
+
+.THURSDAY {
+    grid-column: 4;
+}
+
+.FRIDAY {
+    grid-column: 5;
+}
+
+.SATURDAY {
+    grid-column: 6;
+}
+
+.SUNDAY {
+    grid-column: 7;
+}
