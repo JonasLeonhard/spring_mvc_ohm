@@ -27,7 +27,9 @@ class CalendarController(val userService: UserService,
         }
 
         model["calendarDates"] = calendarService.getCalendarFor(selectionDate)
+        model["calendarTimelines"] = calendarService.getTimeLineFor(user, selectionDate)
         model["selectedDate"] = selectionDate
+        model["todayDate"] = LocalDate.now()
 
         return "calendar"
     }

@@ -37,6 +37,7 @@ class InvitationService(val recipeService: RecipeService,
         invitation.recipe = recipe
         invitation.friends = friends
         invitation.date = date
+        invitation.title = invitationForm.title ?: ""
         invitation.message = invitationForm.message ?: ""
         return invitationRepository.save(invitation)
     }
@@ -50,6 +51,7 @@ class InvitationService(val recipeService: RecipeService,
                 user = user,
                 friends = friends,
                 date = date,
+                title = invitationForm.title ?: "",
                 message = invitationForm.message ?: ""
         )
         return invitationRepository.save(invitation)
@@ -101,6 +103,10 @@ class InvitationService(val recipeService: RecipeService,
         val invitationFriends = invitation.friends.map { friend -> friend.username }.toMutableList()
         println("GetInvittaionFromByInvitationId() -> toString: ${invitation.date}")
         return InvitationForm(
-                invitation.recipe.id, invitation.message, invitationFriends, invitation.date.toString())
+                invitation.recipe.id,
+                invitation.title,
+                invitation.message,
+                invitationFriends,
+                invitation.date.toString())
     }
 }

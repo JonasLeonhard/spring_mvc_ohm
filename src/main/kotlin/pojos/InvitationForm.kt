@@ -10,6 +10,10 @@ data class InvitationForm(
         @field:Positive(message = "Recipe Id has to be positive")
         val recipeId: Long?,
 
+        @field:NotNull(message = "Invitation title has to be specified")
+        @field:NotBlank(message = "Invitation title cannot be empty")
+        val title: String?,
+
         @field:NotNull(message = "Invitation message has to be specified")
         @field:NotBlank(message = "Invitation message cannot be empty")
         val message: String?,

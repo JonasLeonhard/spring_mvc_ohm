@@ -253,6 +253,7 @@ class UserController(val userService: UserService,
                 friend != removeUsername
             }?.toMutableList()
             val deleteInvitationForm = InvitationForm(friends = filteredFriends,
+                    title = invitationForm.title,
                     message = invitationForm.message,
                     date = invitationForm.date,
                     recipeId = invitationForm.recipeId)

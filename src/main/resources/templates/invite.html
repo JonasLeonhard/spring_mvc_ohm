@@ -53,6 +53,15 @@ includeHeaderFragment = ${'invite-header'})"></head>
         </div>
 
         <div>
+            <label for="title">Title:</label>
+            <input id="title" type="text"
+                   name="title"
+                   placeholder="invitation title..."
+                   th:value="${invitationForm.title != null ? invitationForm.title : ''}">
+            <span th:errors="*{title}" class="error"></span>
+        </div>
+
+        <div>
             <label for="message">Message:</label>
             <textarea id="message"
                       name="message"

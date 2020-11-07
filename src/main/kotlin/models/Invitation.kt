@@ -21,6 +21,8 @@ data class Invitation(
         @ManyToMany(targetEntity = User::class)
         var friends: MutableList<User>,
 
+        var title: String,
+
         var message: String,
 
         @Temporal(TemporalType.DATE)

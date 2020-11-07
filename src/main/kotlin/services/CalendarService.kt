@@ -1,11 +1,17 @@
 package services
 
+import models.User
 import org.springframework.stereotype.Service
+import pojos.CalendarTimeline
+import pojos.CalendarTimelineAnnotation
+import repositories.InvitationRepository
 import java.time.LocalDate
+import java.time.ZoneId
+import java.util.*
 
 
 @Service
-class CalendarService {
+class CalendarService(val invitationRepository: InvitationRepository) {
 
     /**
      * @return Gets a MutableList<LocalDate> for the selectionDate.
@@ -33,6 +39,60 @@ class CalendarService {
         }
 
         return dateList
+    }
+
+    fun getTimeLineFor(user: User, selectionDate: LocalDate): MutableList<CalendarTimeline> {
+        val timeLineWeekDays = getDatesBetween(
+                selectionDate.minusDays(selectionDate.dayOfWeek.value.toLong() - 1),
+                selectionDate.plusDays(7 - selectionDate.dayOfWeek.value.toLong()))
+
+        val invitationsBetween = invitationRepository.findInvitationsBetween(
+                user.id,
+                getDateFromLocalDate(timeLineWeekDays[0]),
+                getDateFromLocalDate(timeLineWeekDays[timeLineWeekDays.size - 1]))
+
+        var minutes = 0
+        var hours = 0
+        val timelineAnnotations = mutableListOf(
+                CalendarTimeline(
+                        annotations = (0..96).toList().map map@{ timeStep ->
+                            if (minutes == 60) {
+                                minutes = 0
+                                hours += 1
+                            }
+
+                            val annotation = CalendarTimelineAnnotation(
+                                    display = (minutes == 0 || minutes == 60),
+                                    annotation = "$hours:${if (minutes == 0 || minutes == 60) "00" else "$minutes"} ${if (timeStep <= 47) "AM" else "PM"}",
+                                    htmlClass = "time-step-$timeStep")
+                            minutes += 15
+
+                            return@map annotation
+                        }.toMutableList()
+                )
+        )
+
+        val timelineEvents = timeLineWeekDays.map { localDate ->
+            CalendarTimeline(
+                    localDate = localDate,
+                    invitations = invitationsBetween.filter { invitation ->
+                        getLocalDateFromDate(invitation.date) == localDate
+                    }.toMutableList())
+        }.toMutableList()
+
+        timelineAnnotations.addAll(timelineEvents)
+        return timelineAnnotations
+    }
+
+    /**
+     * @return Date at midnight from localDate conversion of the current system default timezone
+     * */
+    fun getDateFromLocalDate(localDate: LocalDate): Date {
+        return Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())
+    }
+
+    fun getLocalDateFromDate(date: Date): LocalDate {
+        return LocalDate.parse(date.toString())
     }
 
     /**

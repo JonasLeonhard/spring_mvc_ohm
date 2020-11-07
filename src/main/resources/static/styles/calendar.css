@@ -43,6 +43,12 @@
     color: white;
 }
 
+.calendar-date-is-today {
+    border: 1px solid var(--grey);
+    background: var(--primary-light);
+    color: white;
+}
+
 .calendar-date:hover {
     background: var(--primary);
     color: white;
@@ -52,30 +58,70 @@
     opacity: 0.5;
 }
 
-.MONDAY {
+.timeline {
+    height: 20rem;
+}
+
+.timeline-dates {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    height: 100%;
+}
+
+.timeline-date {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 4rem repeat(96, 1rem);
+}
+
+.timeline-title {
+    background: var(--secondary);
+}
+
+.timeline-title-selected {
+    background: var(--primary);
+}
+
+.timeline-row-annotation.hidden {
+    opacity: 0;
+}
+
+.timeline-row-item {
+    grid-row-start: 2; /*RANGE IS 2-96*/
+    background: var(--primary-light);
+    grid-row-end: 15;
+}
+
+/*GENERAL DEFINITIONS*/
+
+.ANNOTATION {
     grid-column: 1;
 }
 
-.TUESDAY {
+.MONDAY {
     grid-column: 2;
 }
 
-.WEDNESDAY {
+.TUESDAY {
     grid-column: 3;
 }
 
-.THURSDAY {
+.WEDNESDAY {
     grid-column: 4;
 }
 
-.FRIDAY {
+.THURSDAY {
     grid-column: 5;
 }
 
-.SATURDAY {
+.FRIDAY {
     grid-column: 6;
 }
 
-.SUNDAY {
+.SATURDAY {
     grid-column: 7;
+}
+
+.SUNDAY {
+    grid-column: 8;
 }

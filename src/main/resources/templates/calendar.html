@@ -40,6 +40,7 @@
                      calendarDate.dayOfWeek +
                      (calendarDate == selectedDate ? ' selected' : '') +
                      (calendarDate.month != selectedDate.month ? ' date-out-of-range' : '') +
+                     (calendarDate == todayDate ? ' calendar-date-is-today' : '') +
                      ' calendar-date' }"
                     type="submit"
                     name="selectedDate"
@@ -47,6 +48,38 @@
                 [[${calendarDate.dayOfMonth}]]
             </button>
         </form>
+    </div>
+
+    <div class="timeline">
+        <div class="timeline-dates timeline-columns">
+            <div th:each="calendarTimeline : ${calendarTimelines}"
+                 th:class="${'timeline-date ' + (calendarTimeline.localDate != null ? calendarTimeline.localDate.dayOfWeek : 'ANNOTATION')}">
+
+                <th:block th:if="${calendarTimeline.localDate != null && calendarTimeline.invitations != null}">
+                    <div th:class="${'timeline-title' + (calendarTimeline.localDate == selectedDate ? ' timeline-title-selected' : '')}">
+                        <span>[[${calendarTimeline.localDate.dayOfWeek}]]</span>
+                        <h2>[[${calendarTimeline.localDate.dayOfMonth}]]</h2>
+                    </div>
+
+                    <div class="timeline-row-item" th:each="invitation : ${calendarTimeline.invitations}">
+                        <span>([[${invitation.title}]])</span></br>
+                        <span>?12:00AM to 12:30AM</span>
+                    </div>
+                </th:block>
+
+                <th:block th:if="${calendarTimeline.annotations != null}">
+                    <div class="timeline-title">
+                        <span>Time</span>
+                        <h2>Annotation</h2>
+                    </div>
+
+                    <div th:each="annotation : ${calendarTimeline.annotations}"
+                         th:class="${'timeline-row-annotation ' + (annotation.display == true ? 'display' : 'hidden')}">
+                        <span>([[${annotation.annotation}]])</span></br>
+                    </div>
+                </th:block>
+            </div>
+        </div>
     </div>
 </div>
 </body>
