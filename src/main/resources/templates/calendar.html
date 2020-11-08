@@ -5,72 +5,74 @@
 <body>
 <nav th:replace="fragments/navigation :: navigation"></nav>
 
-<div class="page-content">
-    <h1>CALENDAR:</h1>
-    <span th:if="${authenticated}">Logged in as [[${authenticated.username}]]</span>
-
-    <div class="calendar">
-        <div class="calendar-title-mm-yyyy">
-            [[${selectedDate.month}]] [[${selectedDate.year}]]
-            <form th:action="@{/calendar}">
-                <button type="submit"
-                        title="Month Backwards"
-                        name="selectedDate"
-                        th:value="${selectedDate.minusMonths(1)}"><
-                </button>
-                <button type="submit"
-                        name="selectedDate"
-                        title="Month Forwards"
-                        th:value="${selectedDate.plusMonths(1)}">>
-                </button>
-            </form>
-        </div>
-        <div class="calendar-dates">
-            <div class="calendar-title" title="Monday">M</div>
-            <div class="calendar-title" title="Tuesday">T</div>
-            <div class="calendar-title" title="Wednesday">W</div>
-            <div class="calendar-title" title="Thursday">T</div>
-            <div class="calendar-title" title="Friday">F</div>
-            <div class="calendar-title" title="Saturday">S</div>
-            <div class="calendar-title" title="Sunday">S</div>
-        </div>
-        <form class="calendar-dates">
-            <button th:each="calendarDate : ${calendarDates}"
-                    th:class="${
+<div class="page-content page-divided">
+    <div class="left-side">
+        <div class="calendar">
+            <div class="calendar-title-mm-yyyy">
+                [[${selectedDate.month}]] [[${selectedDate.year}]]
+                <form th:action="@{/calendar}">
+                    <button type="submit"
+                            title="Month Backwards"
+                            name="selectedDate"
+                            th:value="${selectedDate.minusMonths(1)}"><
+                    </button>
+                    <button type="submit"
+                            name="selectedDate"
+                            title="Month Forwards"
+                            th:value="${selectedDate.plusMonths(1)}">>
+                    </button>
+                </form>
+            </div>
+            <div class="calendar-dates">
+                <div class="calendar-title" title="Monday">M</div>
+                <div class="calendar-title" title="Tuesday">T</div>
+                <div class="calendar-title" title="Wednesday">W</div>
+                <div class="calendar-title" title="Thursday">T</div>
+                <div class="calendar-title" title="Friday">F</div>
+                <div class="calendar-title" title="Saturday">S</div>
+                <div class="calendar-title" title="Sunday">S</div>
+            </div>
+            <form class="calendar-dates">
+                <button th:each="calendarDate : ${calendarDates}"
+                        th:class="${
                      calendarDate.dayOfWeek +
                      (calendarDate == selectedDate ? ' selected' : '') +
                      (calendarDate.month != selectedDate.month ? ' date-out-of-range' : '') +
                      (calendarDate == todayDate ? ' calendar-date-is-today' : '') +
                      ' calendar-date' }"
-                    type="submit"
-                    name="selectedDate"
-                    th:value="${calendarDate}">
-                [[${calendarDate.dayOfMonth}]]
-            </button>
-        </form>
+                        type="submit"
+                        name="selectedDate"
+                        th:value="${calendarDate}">
+                    [[${calendarDate.dayOfMonth}]]
+                </button>
+            </form>
+        </div>
     </div>
 
-    <div class="timeline">
+    <div class="right-side timeline">
         <div class="timeline-dates timeline-columns">
             <div th:each="calendarTimeline : ${calendarTimelines}"
                  th:class="${'timeline-date ' + (calendarTimeline.localDate != null ? calendarTimeline.localDate.dayOfWeek : 'ANNOTATION')}">
 
-                <th:block th:if="${calendarTimeline.localDate != null && calendarTimeline.invitations != null}">
+                <th:block th:if="${calendarTimeline.localDate != null && calendarTimeline.timelineEvents != null}">
                     <div th:class="${'timeline-title' + (calendarTimeline.localDate == selectedDate ? ' timeline-title-selected' : '')}">
                         <span>[[${calendarTimeline.localDate.dayOfWeek}]]</span>
                         <h2>[[${calendarTimeline.localDate.dayOfMonth}]]</h2>
                     </div>
 
-                    <div class="timeline-row-item" th:each="invitation : ${calendarTimeline.invitations}">
-                        <span>([[${invitation.title}]])</span></br>
-                        <span>?12:00AM to 12:30AM</span>
-                    </div>
+                    <a class="timeline-row-item"
+                       th:each="event : ${calendarTimeline.timelineEvents}"
+                       th:href="@{/user/invitation/{id}(id=${event.invitation.id})}"
+                       th:style="${event.gridRowStart != null && event.gridRowEnd != null ? ('grid-row-start: ' + (event.gridRowStart + 2) + '; grid-row-end: ' + (event.gridRowEnd + 2)) : ''}">
+                        <span>([[${event.invitation.title}]])</span></br>
+                        <span>[[${event.gridRowStart}]] to [[${event.gridRowEnd}]]</span>
+                    </a>
                 </th:block>
 
                 <th:block th:if="${calendarTimeline.annotations != null}">
                     <div class="timeline-title">
                         <span>Time</span>
-                        <h2>Annotation</h2>
+                        <h2></h2>
                     </div>
 
                     <div th:each="annotation : ${calendarTimeline.annotations}"

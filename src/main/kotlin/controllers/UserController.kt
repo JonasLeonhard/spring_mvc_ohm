@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import pojos.AddIngredientForm
 import pojos.InvitationForm
+import services.CalendarService
 import services.FreezerService
 import services.InvitationService
 import services.UserService
@@ -22,6 +23,7 @@ import javax.validation.Valid
 class UserController(val userService: UserService,
                      val freezerService: FreezerService,
                      val invitationService: InvitationService,
+                     val calendarService: CalendarService,
                      val addIngredientFormValidator: AddIngredientFormValidator,
                      val invitationFormValidator: InvitationFormValidator) {
 
@@ -95,6 +97,7 @@ class UserController(val userService: UserService,
         val user = userService.findByUsername(principal.name)
         model["authenticated"] = user
         model["userFriendships"] = userService.getFriendships(user)
+        model["timelineAnnotations"] = calendarService.getTimelineAnnotations()
 
         if (invitationId != null) {
             model["invitationId"] = invitationId
@@ -209,6 +212,8 @@ class UserController(val userService: UserService,
         model["userFriendships"] = userService.getFriendships(user)
         model["authenticated"] = user
         model["invitationForm"] = invitationForm
+        model["timelineAnnotations"] = calendarService.getTimelineAnnotations()
+
         if (invitationId != null) {
             model["invitationId"] = invitationId
         }
@@ -256,7 +261,9 @@ class UserController(val userService: UserService,
                     title = invitationForm.title,
                     message = invitationForm.message,
                     date = invitationForm.date,
-                    recipeId = invitationForm.recipeId)
+                    recipeId = invitationForm.recipeId,
+                    gridRowStart = invitationForm.gridRowStart,
+                    gridRowEnd = invitationForm.gridRowEnd)
             model["invitationForm"] = deleteInvitationForm
             return "invite"
         }

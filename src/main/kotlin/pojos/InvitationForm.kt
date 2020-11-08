@@ -18,6 +18,12 @@ data class InvitationForm(
         @field:NotBlank(message = "Invitation message cannot be empty")
         val message: String?,
 
+        @field:NotNull(message = "Invitation start time has to be specified")
+        val gridRowStart: Int?,
+
+        @field:NotNull(message = "Invitation end time has to be specified")
+        val gridRowEnd: Int?,
+
         @field:NotNull(message = "Friends to be invited have to be specified")
         val friends: MutableList<String>?,
 

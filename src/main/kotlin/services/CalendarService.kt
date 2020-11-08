@@ -4,6 +4,7 @@ import models.User
 import org.springframework.stereotype.Service
 import pojos.CalendarTimeline
 import pojos.CalendarTimelineAnnotation
+import pojos.CalendarTimelineEvent
 import repositories.InvitationRepository
 import java.time.LocalDate
 import java.time.ZoneId
@@ -51,37 +52,51 @@ class CalendarService(val invitationRepository: InvitationRepository) {
                 getDateFromLocalDate(timeLineWeekDays[0]),
                 getDateFromLocalDate(timeLineWeekDays[timeLineWeekDays.size - 1]))
 
-        var minutes = 0
-        var hours = 0
         val timelineAnnotations = mutableListOf(
                 CalendarTimeline(
-                        annotations = (0..96).toList().map map@{ timeStep ->
-                            if (minutes == 60) {
-                                minutes = 0
-                                hours += 1
-                            }
-
-                            val annotation = CalendarTimelineAnnotation(
-                                    display = (minutes == 0 || minutes == 60),
-                                    annotation = "$hours:${if (minutes == 0 || minutes == 60) "00" else "$minutes"} ${if (timeStep <= 47) "AM" else "PM"}",
-                                    htmlClass = "time-step-$timeStep")
-                            minutes += 15
-
-                            return@map annotation
-                        }.toMutableList()
+                        annotations = getTimelineAnnotations()
                 )
         )
 
         val timelineEvents = timeLineWeekDays.map { localDate ->
             CalendarTimeline(
                     localDate = localDate,
-                    invitations = invitationsBetween.filter { invitation ->
+                    timelineEvents = invitationsBetween.filter { invitation ->
                         getLocalDateFromDate(invitation.date) == localDate
+                    }.map { invitation ->
+                        CalendarTimelineEvent(
+                                invitation = invitation,
+                                gridRowStart = invitation.gridRowStart,
+                                gridRowEnd = invitation.gridRowEnd
+                        )
                     }.toMutableList())
         }.toMutableList()
 
         timelineAnnotations.addAll(timelineEvents)
         return timelineAnnotations
+    }
+
+    /**
+     * Get a list of timeline annotations from 0:00 to 24:00 in 15min steps
+     * */
+    fun getTimelineAnnotations(): MutableList<CalendarTimelineAnnotation> {
+        var minutes = 0
+        var hours = 0
+        return (0..96).toList().map map@{ timeStep ->
+            if (minutes == 60) {
+                minutes = 0
+                hours += 1
+            }
+
+            val annotation = CalendarTimelineAnnotation(
+                    display = (minutes == 0 || minutes == 60),
+                    annotation = "$hours:${if (minutes == 0 || minutes == 60) "00" else "$minutes"} ${if (timeStep <= 47) "AM" else "PM"}",
+                    gridRowStart = timeStep)
+
+            minutes += 15
+
+            return@map annotation
+        }.toMutableList()
     }
 
     /**

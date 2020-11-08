@@ -25,6 +25,10 @@ data class Invitation(
 
         var message: String,
 
+        var gridRowStart: Int,
+
+        var gridRowEnd: Int,
+
         @Temporal(TemporalType.DATE)
         var date: Date,
 

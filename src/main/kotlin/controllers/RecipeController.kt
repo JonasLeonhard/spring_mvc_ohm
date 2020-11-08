@@ -103,7 +103,7 @@ class RecipeController(val recipeService: RecipeService,
     }
 
     @PostMapping("/create")
-    fun createRecipe(principal: Principal, @Valid @RequestParam recipeForm: RecipeForm, @RequestParam formFile: MultipartFile?, bindingResult: BindingResult, model: Model): String {
+    fun createRecipe(principal: Principal, @Valid recipeForm: RecipeForm, @RequestParam formFile: MultipartFile?, bindingResult: BindingResult, model: Model): String {
         println("create a recipe from: $recipeForm $formFile")
         recipeForm.file = formFile
         recipeFormValidator.validate(recipeForm, bindingResult)

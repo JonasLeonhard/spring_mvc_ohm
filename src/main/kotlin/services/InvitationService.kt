@@ -39,6 +39,8 @@ class InvitationService(val recipeService: RecipeService,
         invitation.date = date
         invitation.title = invitationForm.title ?: ""
         invitation.message = invitationForm.message ?: ""
+        invitation.gridRowStart = invitationForm.gridRowStart ?: 0
+        invitation.gridRowEnd = invitationForm.gridRowEnd ?: 0
         return invitationRepository.save(invitation)
     }
 
@@ -52,7 +54,9 @@ class InvitationService(val recipeService: RecipeService,
                 friends = friends,
                 date = date,
                 title = invitationForm.title ?: "",
-                message = invitationForm.message ?: ""
+                message = invitationForm.message ?: "",
+                gridRowStart = invitationForm.gridRowStart ?: 0,
+                gridRowEnd = invitationForm.gridRowEnd ?: 0
         )
         return invitationRepository.save(invitation)
     }
@@ -106,6 +110,8 @@ class InvitationService(val recipeService: RecipeService,
                 invitation.recipe.id,
                 invitation.title,
                 invitation.message,
+                invitation.gridRowStart,
+                invitation.gridRowEnd,
                 invitationFriends,
                 invitation.date.toString())
     }

@@ -70,6 +70,40 @@ includeHeaderFragment = ${'invite-header'})"></head>
             <span th:errors="*{message}" class="error"></span>
         </div>
 
+        <div>
+            <label for="gridRowStart">Event Start</label>
+            <select id="gridRowStart" name="gridRowStart">
+                <option value=""
+                        disabled
+                        th:selected="${invitationForm.gridRowStart == null || invitationForm.gridRowStart == ''}">
+                    Select a Start Time...
+                </option>
+                <option th:each="timelineAnnotation : ${timelineAnnotations}"
+                        th:value="${timelineAnnotation.gridRowStart}"
+                        th:selected="${timelineAnnotation.gridRowStart == invitationForm.gridRowStart}">
+                    [[${timelineAnnotation.annotation}]]
+                </option>
+            </select>
+            <span th:errors="*{gridRowStart}" class="error"></span>
+        </div>
+
+        <div>
+            <label for="gridRowEnd">Event End</label>
+            <select id="gridRowEnd" name="gridRowEnd">
+                <option value=""
+                        disabled
+                        th:selected="${invitationForm.gridRowEnd == null || invitationForm.gridRowEnd == ''}">
+                    Select a End Time...
+                </option>
+                <option th:each="timelineAnnotation : ${timelineAnnotations}"
+                        th:value="${timelineAnnotation.gridRowStart}"
+                        th:selected="${timelineAnnotation.gridRowStart == invitationForm.gridRowEnd}">
+                    [[${timelineAnnotation.annotation}]]
+                </option>
+            </select>
+            <span th:errors="*{gridRowEnd}" class="error"></span>
+        </div>
+
         <button type="submit" th:if="${invitationId == null}">Submit</button>
         <input type="hidden" th:if="${invitationId != null}" name="invitationId" th:value="${invitationId}">
         <button type="submit" th:if="${invitationId != null}" name="save" value="true">Save</button>

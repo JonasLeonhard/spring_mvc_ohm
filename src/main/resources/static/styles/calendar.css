@@ -1,3 +1,8 @@
+.page-divided {
+    display: grid;
+    grid-template-columns: 14rem 1fr;
+}
+
 .calendar {
     width: 14rem;
     margin: auto;
@@ -58,10 +63,6 @@
     opacity: 0.5;
 }
 
-.timeline {
-    height: 20rem;
-}
-
 .timeline-dates {
     display: grid;
     grid-template-columns: repeat(8, 1fr);
@@ -72,6 +73,9 @@
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: 4rem repeat(96, 1rem);
+
+    /*Stripe gradient*/
+    background-image: repeating-linear-gradient(180deg, #fff, #fff 1rem, #fafafe 0.5rem, #fafafe 2rem);
 }
 
 .timeline-title {
@@ -82,19 +86,27 @@
     background: var(--primary);
 }
 
-.timeline-row-annotation.hidden {
+.timeline-row-annotation {
+    border-right: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.timeline-row-annotation.hidden span {
     opacity: 0;
 }
 
 .timeline-row-item {
     grid-row-start: 2; /*RANGE IS 2-96*/
-    background: var(--primary-light);
+    background: var(--primary);
     grid-row-end: 15;
 }
 
 /*GENERAL DEFINITIONS*/
 
 .ANNOTATION {
+    background: white;
     grid-column: 1;
 }
 
