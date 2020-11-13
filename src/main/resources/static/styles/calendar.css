@@ -1,11 +1,16 @@
 .page-divided {
     display: grid;
     grid-template-columns: 14rem 1fr;
+    padding-top: 3.5rem;
+}
+
+.page-divided .left-side, .page-divided .right-side {
+    height: calc(100vh - 3.5rem);
 }
 
 .calendar {
     width: 14rem;
-    margin: auto;
+    margin-top: 4rem;
 }
 
 .calendar-dates {
@@ -67,6 +72,7 @@
     display: grid;
     grid-template-columns: repeat(8, 1fr);
     height: 100%;
+    overflow-y: scroll;
 }
 
 .timeline-date {
@@ -79,7 +85,10 @@
 }
 
 .timeline-title {
+    position: sticky;
+    top: 0;
     background: var(--secondary);
+    z-index: 1;
 }
 
 .timeline-title-selected {
@@ -99,8 +108,78 @@
 
 .timeline-row-item {
     grid-row-start: 2; /*RANGE IS 2-96*/
-    background: var(--primary);
     grid-row-end: 15;
+    border-radius: 0;
+    position: relative;
+    font-size: 0.75rem;
+}
+
+.timeline-row-item__inner {
+    background: var(--primary);
+    color: white;
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.timeline-row-item__hover-info {
+    opacity: 0;
+    transition: transform 0.5s ease;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    transform: translateX(-10px);
+}
+
+.timeline-row-item__hover-info.FRIDAY,
+.timeline-row-item__hover-info.SATURDAY,
+.timeline-row-item__hover-info.SUNDAY {
+    left: unset;
+    right: 100%;
+}
+
+.timeline-row-item__hover-info.FRIDAY::before,
+.timeline-row-item__hover-info.SATURDAY::before,
+.timeline-row-item__hover-info.SUNDAY::before {
+    left: unset;
+    right: 0;
+    border-right: unset;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 10px solid rgba(0, 0, 0, 0.5);
+}
+
+.timeline-row-item__hover-info.FRIDAY .timeline-row-item__hover-mouse-buffer,
+.timeline-row-item__hover-info.SATURDAY .timeline-row-item__hover-mouse-buffer,
+.timeline-row-item__hover-info.SUNDAY .timeline-row-item__hover-mouse-buffer {
+    transform: translateX(-10px);
+    border-radius: 3px 0 3px 3px;
+}
+
+.timeline-row-item__hover-mouse-buffer {
+    border-radius: 0 3px 3px 3px;
+    color: white;
+    background: rgba(0, 0, 0, 0.5);
+    transform: translateX(10px);
+    padding: 0.7rem;
+    width: max-content;
+}
+
+.timeline-row-item__hover-info::before {
+    content: "";
+    display: block;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right: 10px solid rgba(0, 0, 0, 0.5);
+    left: 0;
+    position: absolute;
+}
+
+.timeline-row-item:hover > .timeline-row-item__hover-info {
+    opacity: 1;
+    transform: translateX(0);
 }
 
 /*GENERAL DEFINITIONS*/

@@ -1,7 +1,10 @@
 package models
+import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.LazyCollection
 import org.hibernate.annotations.LazyCollectionOption
 import org.springframework.lang.Nullable
+import java.time.Instant
+import java.util.*
 import javax.persistence.*
 
 @Entity
@@ -63,5 +66,9 @@ data class Recipe(
 
         var spoonacularId: Long? = null,
 
-        var recipeImageUrl: String? = null
+        var recipeImageUrl: String? = null,
+
+        @CreationTimestamp
+        @Temporal(TemporalType.TIMESTAMP)
+        var createdAt: Date = Date.from(Instant.now())
 )

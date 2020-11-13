@@ -4,13 +4,16 @@ import models.User
 import org.springframework.stereotype.Component
 import org.springframework.validation.Errors
 import pojos.InvitationForm
+import services.CalendarService
 import services.RecipeService
 import services.UserService
 import java.security.Principal
 import java.text.SimpleDateFormat
 
 @Component
-class InvitationFormValidator(val userService: UserService, val recipeService: RecipeService) {
+class InvitationFormValidator(val userService: UserService,
+                              val recipeService: RecipeService,
+                              val calendarService: CalendarService) {
 
     fun validate(principal: Principal, target: InvitationForm, errors: Errors) {
         val user = userService.findByUsername(principal.name)
@@ -18,6 +21,7 @@ class InvitationFormValidator(val userService: UserService, val recipeService: R
         friendshipValidation(user, target, errors)
         recipeValidation(target, errors)
         dateValidation(target, errors)
+        timeValidation(target, errors)
     }
 
     fun friendshipValidation(user: User, target: InvitationForm, errors: Errors) {
@@ -48,6 +52,12 @@ class InvitationFormValidator(val userService: UserService, val recipeService: R
         } catch (exception: Exception) {
             println("exception: $exception")
             errors.rejectValue("date", "DateException", "Date format is wrong: Try dd/MM/yyyy")
+        }
+    }
+
+    fun timeValidation(target: InvitationForm, errors: Errors) {
+        if (target.gridRowStart != null && target.gridRowEnd != null && target.gridRowStart >= target.gridRowEnd) {
+            errors.rejectValue("gridRowStart", "EventTimeException", "The invitation start time has to be before the end time")
         }
     }
 }

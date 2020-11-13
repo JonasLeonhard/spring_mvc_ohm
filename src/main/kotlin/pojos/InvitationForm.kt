@@ -1,9 +1,6 @@
 package pojos
 
-import javax.validation.constraints.NotBlank
-import javax.validation.constraints.NotNull
-import javax.validation.constraints.Pattern
-import javax.validation.constraints.Positive
+import javax.validation.constraints.*
 
 data class InvitationForm(
         @field:NotNull(message = "Recipe Id has to be specified")
@@ -19,9 +16,13 @@ data class InvitationForm(
         val message: String?,
 
         @field:NotNull(message = "Invitation start time has to be specified")
+        @field:PositiveOrZero(message = "Invitation start time has to be positive or zero")
+        @field:Max(96, message = "Invitation start time has to be below 96 (24h * 1/4)")
         val gridRowStart: Int?,
 
         @field:NotNull(message = "Invitation end time has to be specified")
+        @field:PositiveOrZero(message = "Invitation end time has to be positive or zero")
+        @field:Max(96, message = "Invitation end time has to be below 96 (24h * 1/4)")
         val gridRowEnd: Int?,
 
         @field:NotNull(message = "Friends to be invited have to be specified")

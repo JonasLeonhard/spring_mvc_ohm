@@ -5,7 +5,7 @@
 <body>
 <nav th:replace="fragments/navigation :: navigation"></nav>
 
-<div class="page-content page-divided">
+<div class="page-divided">
     <div class="left-side">
         <div class="calendar">
             <div class="calendar-title-mm-yyyy">
@@ -60,13 +60,28 @@
                         <h2>[[${calendarTimeline.localDate.dayOfMonth}]]</h2>
                     </div>
 
-                    <a class="timeline-row-item"
-                       th:each="event : ${calendarTimeline.timelineEvents}"
-                       th:href="@{/user/invitation/{id}(id=${event.invitation.id})}"
-                       th:style="${event.gridRowStart != null && event.gridRowEnd != null ? ('grid-row-start: ' + (event.gridRowStart + 2) + '; grid-row-end: ' + (event.gridRowEnd + 2)) : ''}">
-                        <span>([[${event.invitation.title}]])</span></br>
-                        <span>[[${event.gridRowStart}]] to [[${event.gridRowEnd}]]</span>
-                    </a>
+                    <form class="timeline-row-item"
+                          th:each="event : ${calendarTimeline.timelineEvents}"
+                          th:action="@{/user/invitation/{id}(id=${event.invitation.id})}"
+                          th:style="${event.gridRowStart != null && event.gridRowEnd != null ? ('grid-row-start: ' + (event.gridRowStart + 2) + '; grid-row-end: ' + (event.gridRowEnd + 3)) : ''}">
+                        <button class="timeline-row-item__inner"
+                                type="submit">
+                            <span>([[${event.invitation.title}]])</span></br>
+                            <span>[[${calendarService.getTimelineAnnotationFrom(event.gridRowStart)}]] to [[${calendarService.getTimelineAnnotationFrom(event.gridRowEnd)}]]</span>
+                        </button>
+                        <div th:class="${'timeline-row-item__hover-info ' + (calendarTimeline.localDate != null ? calendarTimeline.localDate.dayOfWeek : '')}">
+                            <div class="timeline-row-item__hover-mouse-buffer">
+                                <span>([[${event.invitation.title}]])</span></br>
+                                <span>[[${calendarService.getTimelineAnnotationFrom(event.gridRowStart)}]] to [[${calendarService.getTimelineAnnotationFrom(event.gridRowEnd)}]]</span>
+                                <div>
+                                    <button type="submit"
+                                            th:formaction="@{/user/invitation/{id}(id=${event.invitation.id})}">
+                                        Show
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </th:block>
 
                 <th:block th:if="${calendarTimeline.annotations != null}">

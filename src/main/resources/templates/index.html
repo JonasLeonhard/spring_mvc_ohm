@@ -1,12 +1,25 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header(title = ${pageTitle})"></head>
+<head th:replace="fragments/header :: header(title = ${pageTitle},
+includeHeaderFragment = ${'index-header'})"></head>
 
 <body>
 <nav th:replace="fragments/navigation :: navigation"></nav>
 <div class="page-content">
-    <h1>Rendered from Controller:</h1>
-    <span th:if="${authenticated}">Logged in as [[${authenticated.username}]]</span>
+    <div class="page-grid">
+        <div>
+            recipe des Tages 01
+        </div>
+        <div>
+            recipe Beliebte Rezepte / Suchwörter 02
+        </div>
+        <div class="recipe-suggestion" th:each="recipe : ${suggestions}">
+            <a th:href="'/recipe/'+ ${recipe.id}">
+                <img class="recipe-card-img"
+                     th:src="${recipe.picture != null ? '/resource/' + recipe.picture.id : (recipe.recipeImageUrl != null ? recipe.recipeImageUrl : '/unsecured_files/logo_placeholder.png')}">
+            </a>
+        </div>
+    </div>
 </div>
 </body>
 </html>

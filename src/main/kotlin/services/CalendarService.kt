@@ -100,6 +100,20 @@ class CalendarService(val invitationRepository: InvitationRepository) {
     }
 
     /**
+     * @return String HH:MM AM or HH:MM PM
+     * */
+    fun getTimelineAnnotationFrom(gridRow: Int): String {
+        val minutes = gridRow * 15
+        val minRest = minutes % 60
+        val hours = (minutes - minRest) / 60
+
+        return "$hours:${
+            if (minRest == 0 || minRest == 60) "00"
+            else "$minRest"
+        } ${if (gridRow <= 47) "AM" else "PM"}"
+    }
+
+    /**
      * @return Date at midnight from localDate conversion of the current system default timezone
      * */
     fun getDateFromLocalDate(localDate: LocalDate): Date {

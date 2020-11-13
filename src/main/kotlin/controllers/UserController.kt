@@ -222,13 +222,15 @@ class UserController(val userService: UserService,
         if (addOrRemovePage != null) {
             return addOrRemovePage
         }
-        val editOrDeletePage = invitationEditOrDeletePage(invitationId, save, delete, user, invitationForm)
-        if (editOrDeletePage != null) {
-            return editOrDeletePage
-        }
+
         val errorPage = invitationErrorPage(principal, invitationForm, bindingResult, model)
         if (errorPage != null) {
             return errorPage
+        }
+
+        val editOrDeletePage = invitationEditOrDeletePage(invitationId, save, delete, user, invitationForm)
+        if (editOrDeletePage != null) {
+            return editOrDeletePage
         }
 
         return invitationSavePage(user, invitationForm)

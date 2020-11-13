@@ -1,0 +1,8 @@
+.page-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+}
+
+.page-grid .recipe-suggestion img {
+    width: 100%;
+}
