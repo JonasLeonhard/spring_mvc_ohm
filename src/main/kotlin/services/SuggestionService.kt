@@ -25,4 +25,10 @@ class SuggestionService(val recipeRepository: RecipeRepository) {
         randomizedUniqueSuggestions.shuffle()
         return randomizedUniqueSuggestions
     }
+
+    fun getRecipeOfTheDaySuggestion(): Recipe {
+        val recipeIds = recipeRepository.getRecipeIds()
+        val randomId = recipeIds[Random.nextInt(recipeIds.size)]
+        return recipeRepository.findById(randomId).get()
+    }
 }

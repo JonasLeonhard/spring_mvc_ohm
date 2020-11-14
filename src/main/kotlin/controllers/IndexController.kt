@@ -17,6 +17,8 @@ class IndexController(val userService: UserService, val suggestionService: Sugge
     fun index(model: Model, principal: Principal?): String {
         model["pageTitle"] = "INDEXPAGETITLE"
         model["suggestions"] = suggestionService.getIndexSuggestions()
+        model["recipeOfTheDay"] = suggestionService.getRecipeOfTheDaySuggestion()
+
         userService.addAuthenticatedUserToModel(principal, model)
 
         return "index"

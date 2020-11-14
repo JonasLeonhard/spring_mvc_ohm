@@ -6,20 +6,112 @@ includeHeaderFragment = ${'index-header'})"></head>
 <body>
 <nav th:replace="fragments/navigation :: navigation"></nav>
 <div class="page-content">
-    <div class="page-grid">
-        <div>
-            recipe des Tages 01
-        </div>
-        <div>
-            recipe Beliebte Rezepte / Suchwörter 02
-        </div>
-        <div class="recipe-suggestion" th:each="recipe : ${suggestions}">
-            <a th:href="'/recipe/'+ ${recipe.id}">
+
+    <div class="recipe-of-the-day">
+        <h1>[[${recipeOfTheDay.title}]]</h1>
+        <div class="recipe-of-the-day__divider">
+            <a th:href="${'/recipe/'+ recipeOfTheDay.id}">
                 <img class="recipe-card-img"
-                     th:src="${recipe.picture != null ? '/resource/' + recipe.picture.id : (recipe.recipeImageUrl != null ? recipe.recipeImageUrl : '/unsecured_files/logo_placeholder.png')}">
+                     th:src="${recipeOfTheDay.picture != null ? '/resource/' + recipeOfTheDay.picture.id : (recipeOfTheDay.recipeImageUrl != null ? recipeOfTheDay.recipeImageUrl : '/unsecured_files/logo_placeholder.png')}">
             </a>
+            <div class="recipe-of-the-day__content">
+
+                <div class="recipe-description__user-image-title-container">
+                    <div class="recipe-user-image-container">
+                        <a th:if="${recipeOfTheDay.user != null && recipeOfTheDay.user.picture != null}"
+                           th:href="@{/user/profile/{username}(username=${recipeOfTheDay.user.username})}">
+                            <img class="profile-image"
+                                 alt="profile picture"
+                                 th:title="${recipeOfTheDay.user.username} + '\'s Profilepicture'"
+                                 th:src="${'/resource/' + recipeOfTheDay.user.picture.id}"/>
+                        </a>
+                        <img th:if="${recipeOfTheDay.user != null && recipeOfTheDay.user.picture == null || recipeOfTheDay.user == null}"
+                             class="profile-image"
+                             alt="profile picture"
+                             title="No Profilepicture picture"
+                             src="/unsecured_files/placeholder_profile_image.png"/>
+                    </div>
+                    <div class="recipe-title-user-container">
+                        <p>
+                            <a th:if="${recipeOfTheDay.user != null}"
+                               th:href="@{/user/profile/{name}(name=${recipeOfTheDay.user.username})}">
+                                [[${recipeOfTheDay.user.username}]]
+                            </a>
+                            <a th:if="${recipeOfTheDay.user == null}">
+                                Unknown
+                            </a>
+                        </p>
+                    </div>
+                </div>
+                <div class="recipe-likes-container">
+                    <p>[[${recipeOfTheDay.likes}]]</p>
+                    <img class="like-icon" th:src="@{/unsecured_files/calendar.svg}"
+                         alt="Likes Icon"
+                         title="Likes">
+                </div>
+                <p>[[${recipeOfTheDay.summary}]]...</p>
+            </div>
         </div>
     </div>
+
+    <div class="masonry">
+        <div class="item" th:each="recipe : ${suggestions}">
+            <div class="item-inner">
+                <a th:href="${'/recipe/'+ recipe.id}">
+                    <img class="recipe-card-img"
+                         th:src="${recipe.picture != null ? '/resource/' + recipe.picture.id : (recipe.recipeImageUrl != null ? recipe.recipeImageUrl : '/unsecured_files/logo_placeholder.png')}">
+                </a>
+                <div class="recipe-description">
+                    <div class="recipe-description__user-image-title-container">
+                        <div class="recipe-user-image-container">
+                            <a th:if="${recipe.user != null && recipe.user.picture != null}"
+                               th:href="@{/user/profile/{username}(username=${recipe.user.username})}">
+                                <img class="profile-image"
+                                     alt="profile picture"
+                                     th:title="${recipe.user.username} + '\'s Profilepicture'"
+                                     th:src="${'/resource/' + recipe.user.picture.id}"/>
+                            </a>
+                            <img th:if="${recipe.user != null && recipe.user.picture == null || recipe.user == null}"
+                                 class="profile-image"
+                                 alt="profile picture"
+                                 title="No Profilepicture picture"
+                                 src="/unsecured_files/placeholder_profile_image.png"/>
+                        </div>
+                        <div class="recipe-title-user-container">
+                            <a th:href="${'/recipe/'+ recipe.id}">
+                                <h1>[[${recipe.title}]]</h1>
+                            </a>
+                            <p>
+                                <a th:if="${recipe.user != null}"
+                                   th:href="@{/user/profile/{name}(name=${recipe.user.username})}">
+                                    [[${recipe.user.username}]]
+                                </a>
+                                <a th:if="${recipe.user == null}">
+                                    Unknown
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="recipe-likes-container">
+                        <p>[[${recipe.likes}]]</p>
+                        <img class="like-icon" th:src="@{/unsecured_files/calendar.svg}"
+                             alt="Likes Icon"
+                             title="Likes">
+                    </div>
+                    <div class="recipe-user-description">
+                        <p>[[${recipe.summary}]]...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        recipe Beliebte Rezepte / Suchwörter 02
+    </div>
 </div>
+
+<!-- Scripts -->
+<script type="text/javascript" th:src="@{/js/masonry.js}"></script>
 </body>
 </html>
