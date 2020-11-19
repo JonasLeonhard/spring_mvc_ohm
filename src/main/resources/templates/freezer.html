@@ -6,29 +6,63 @@ includeHeaderFragment = ${{'freezer-header'}})"></head>
 <body>
 <nav th:replace="fragments/navigation :: navigation"></nav>
 <div class="page-content">
-    <section>
-        add a friends freezer
-        <form th:action="@{/user/freezer}" method="get" class="multiselect-form">
-            <label for="freezerFriendList">Friends</label>
-            <select id="freezerFriendList" class="multiselect" name="friends"
-                    th:disabled="${userFriendships.isEmpty()}">
-                <option value="" disabled selected>
-                    [[${userFriendships.isEmpty() ? 'You have no Friends yet' : 'Select Friends'}]]
-                </option>
-
-                <option class="friend-option" th:if="${!userFriendships.isEmpty()}"
-                        th:each="friendship : ${userFriendships}"
-                        th:value="${friendship.requested_by.username != authenticated.username ? friendship.requested_by.username : friendship.request_to.username}">
-                    [[${friendship.requested_by.username != authenticated.username ? friendship.requested_by.username :
-                    friendship.request_to.username}]]
-                </option>
-            </select>
-            <button type="submit" th:disabled="${userFriendships.isEmpty()}">Add</button>
-            <div class="multiselect-selected"><!-- Content inserted by multiselect.js --></div>
-        </form>
-    </section>
-
     <section class="card">
+        <div class="freezer__forms">
+            <form th:action="@{/user/freezer}" method="get" class="multiselect-form">
+                <label for="freezerFriendList">Friends</label>
+                <select id="freezerFriendList" class="multiselect" name="friends"
+                        th:disabled="${userFriendships.isEmpty()}">
+                    <option value="" disabled selected>
+                        [[${userFriendships.isEmpty() ? 'You have no Friends yet' : 'Select Friends'}]]
+                    </option>
+
+                    <option class="friend-option" th:if="${!userFriendships.isEmpty()}"
+                            th:each="friendship : ${userFriendships}"
+                            th:value="${friendship.requested_by.username != authenticated.username ? friendship.requested_by.username : friendship.request_to.username}">
+                        [[${friendship.requested_by.username != authenticated.username ?
+                        friendship.requested_by.username :
+                        friendship.request_to.username}]]
+                    </option>
+                </select>
+                <button type="submit" th:disabled="${userFriendships.isEmpty()}">Add</button>
+                <div class="multiselect-selected"><!-- Content inserted by multiselect.js --></div>
+            </form>
+
+            <form th:action="@{/user/freezer}"
+                  method="post"
+                  class="freezer__ingredient-form">
+                <div>
+                    <label for="amount">
+                        Amount:
+                    </label>
+                    <input type="number"
+                           id="amount"
+                           name="amount"
+                           value="1"
+                           placeholder="amount..."
+                           required>
+                </div>
+                <div>
+                    <label for="ingredientName">
+                        Ingredient Name:
+                    </label>
+                    <input list="ingredientNames"
+                           name="ingredientName"
+                           id="ingredientName"
+                           required
+                           placeholder="ingredient...">
+                    <button type="submit" class="freezer__add-to-button">Add to Freezer</button>
+                    <input th:each="queryFriend : ${queryFriends}"
+                           th:value="${queryFriend}"
+                           type="hidden"
+                           name="friends">
+                    <datalist id="ingredientNames">
+                        <option th:each="ingredient : ${ingredients}" th:value="${ingredient.name}"></option>
+                    </datalist>
+                </div>
+            </form>
+        </div>
+
         <div th:each="freezerItem : ${freezer}" class="freezer-item">
             <span>[[${freezerItem.user.username}]]: [[${freezerItem.ingredient.name}]] -> amount: [[${freezerItem.amount}]]</span>
             <form th:action="@{/user/freezer/update}" method="post" th:if="${authenticated.id == freezerItem.user.id}">
@@ -40,24 +74,6 @@ includeHeaderFragment = ${{'freezer-header'}})"></head>
                 <button type="submit" name="delete" value="true">Delete</button>
             </form>
         </div>
-
-        <form th:action="@{/user/freezer}" method="post">
-            <label>
-                Amount:
-                <input type="number" id="amount" name="amount" required>
-            </label>
-
-            <label>
-                Ingredient Name:
-                <input list="ingredientNames" name="ingredientName" id="ingredientName" required>
-                <datalist id="ingredientNames">
-                    <option th:each="ingredient : ${ingredients}" th:value="${ingredient.name}"></option>
-                </datalist>
-            </label>
-
-            <input th:each="queryFriend : ${queryFriends}" type="hidden" name="friends" th:value="${queryFriend}">
-            <button type="submit">Add to Freezer</button>
-        </form>
     </section>
 
     <section class="card">

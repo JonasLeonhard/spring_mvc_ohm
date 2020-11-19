@@ -16,7 +16,6 @@
 }
 
 .multiselect-selected {
-    margin: 1rem 0;
     display: flex;
 }
 
@@ -29,7 +28,21 @@
     cursor: pointer;
     font-size: 0.5rem;
     transition: all 0.25s ease;
-    margin: 0 0.5rem;
+    margin: 0.5rem;
+}
+
+.freezer__add-to-button {
+    border-radius: 0 3px 3px 0;
+    height: 2rem;
+}
+
+.freezer__ingredient-form {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.freezer__ingredient-form div {
+    margin: 0 0.25rem;
 }
 
 .multiselect-selected div:hover {

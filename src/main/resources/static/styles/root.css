@@ -24,6 +24,9 @@
     --navbar-padding-top-bottom: 0.5rem;
 
     --recipe-card-height: 15em;
+
+    --color-input-background: #e8f3f5;
+    --label-color: #c1c6c8;
 }
 
 * {
@@ -62,6 +65,18 @@ button[disabled] {
 
 button:not([disabled]):hover {
     background: var(--primary);
+}
+
+label {
+    display: block;
+    color: var(--label-color);
+}
+
+input {
+    background: var(--color-input-background);
+    padding: 0 0.5rem;
+    border: none;
+    height: 2rem;
 }
 
 .warning {
