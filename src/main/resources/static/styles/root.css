@@ -11,6 +11,7 @@
     --third: #e78f00;
     --fourth: #5a189a;
     --fifth: #7b2cbf;
+    --linkColor: #0366d6;
     --success: #1b861b;
     --warning: #f6c213;
     --error: #ff4e4e;
@@ -38,6 +39,11 @@ body {
 a {
     text-decoration: none;
     cursor: pointer;
+    color: var(--linkColor);
+}
+
+a:visited {
+    color: var(--linkColor);
 }
 
 button {
@@ -203,6 +209,10 @@ nav .profile-container {
     position: relative;
 }
 
+nav .profile-container a {
+    margin: 0 0.5rem;
+}
+
 nav .profile-container .nav-profile-image {
     height: 2em;
     width: 2em;
@@ -288,6 +298,7 @@ div.page-content {
     margin: auto;
     position: relative;
     min-height: calc(100vh - var(--navbar-height) - (var(--navbar-padding-top-bottom) * 2));
+    height: max-content;
 }
 
 div.page-content.full {
@@ -385,4 +396,20 @@ select#type option {
 .card {
     background: var(--main-bg-color-bright);
     margin: 1rem;
+}
+
+.footer {
+    background: white;
+    height: 2.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    position: relative;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .1), 0 1px 2px 0 rgba(0, 0, 0, .06);
+}
+
+.footer div, .footer a {
+    margin: 0.5rem;
+    font-size: 0.7rem;
 }

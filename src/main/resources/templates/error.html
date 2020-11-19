@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header(title = ${pageTitle}, includeHeaderFragment = ${'err-header'})"></head>
+<head th:replace="fragments/header :: header(title = ${pageTitle},
+includeHeaderFragment = ${{'err-header'}})"></head>
 
 <body>
 <nav th:replace="fragments/navigation :: navigation"></nav>
@@ -8,5 +9,7 @@
 <div class="errorWrapper">
     <span>[[${errorMsg != null ? errorMsg : 'An Error occurred, please try again!'}]]</span>
 </div>
+
+<footer th:replace="fragments/footer :: footer()"></footer>
 </body>
 </html>

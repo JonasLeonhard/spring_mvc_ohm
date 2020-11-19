@@ -5,6 +5,7 @@ import org.springframework.ui.Model
 import org.springframework.ui.set
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import services.SearchService
 import services.SuggestionService
 import services.UserService
 import java.security.Principal
@@ -12,12 +13,16 @@ import java.security.Principal
 
 @Controller
 @RequestMapping("/")
-class IndexController(val userService: UserService, val suggestionService: SuggestionService) {
+class IndexController(val userService: UserService,
+                      val suggestionService: SuggestionService,
+                      val searchService: SearchService) {
     @GetMapping
     fun index(model: Model, principal: Principal?): String {
         model["pageTitle"] = "INDEXPAGETITLE"
         model["suggestions"] = suggestionService.getIndexSuggestions()
         model["recipeOfTheDay"] = suggestionService.getRecipeOfTheDaySuggestion()
+        model["mostPopularSearch"] = searchService.getMostPopularSearchTerms(10)
+        model["mostRecentSearch"] = searchService.getRecentSearchTerms(10)
 
         userService.addAuthenticatedUserToModel(principal, model)
 

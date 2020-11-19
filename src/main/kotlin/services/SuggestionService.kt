@@ -12,7 +12,7 @@ class SuggestionService(val recipeRepository: RecipeRepository) {
         val suggestions = mutableListOf<Recipe>()
 
         suggestions.addAll(recipeRepository.getNewestRecipes(PageRequest.of(0, 10)))
-        suggestions.addAll(recipeRepository.getMostLikedRecipes(PageRequest.of(0, 25)))
+        suggestions.addAll(recipeRepository.getMostLikedRecipes(PageRequest.of(0, 25)).map { it.recipe })
         val recipeIds = recipeRepository.getRecipeIds()
         val randomRecipeIds = (0..25).map {
             recipeIds[Random.nextInt(recipeIds.size)]

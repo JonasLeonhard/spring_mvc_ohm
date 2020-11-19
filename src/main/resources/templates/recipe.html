@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: header(title = ${pageTitle},
-includeHeaderFragment = ${'recipe-header'},
+includeHeaderFragment = ${{'recipe-header'}},
 includeIonicons = ${true})"></head>
 
 <body>
@@ -10,7 +10,7 @@ includeIonicons = ${true})"></head>
     <div class="recipe-card recipe-id-[[${recipe.id}]]">
         <div class="recipe-card-image-container">
             <div class="rating">
-                <span th:text="${recipe.likes}">likes</span>
+                <span th:text="${#lists.size(recipe.userLikes)}">likes</span>
             </div>
             <img class="recipe-card-img"
                  th:src="${recipe.picture != null ? '/resource/' + recipe.picture.id : (recipe.recipeImageUrl != null ? recipe.recipeImageUrl : '/unsecured_files/logo_placeholder.png')}">
@@ -20,13 +20,12 @@ includeIonicons = ${true})"></head>
             <span class="recipe-card-info-title">[[${recipe.title}]]</span>
 
             <div>
-                <span th:utext="${escapedRecipeSummary}">Escaped recipe summary in unsafe text</span>
+                <span th:text="${recipe.summary}">Summary</span>
             </div>
 
             <div class="recipe-card-info-flex">
                 <span>Ready in [[${recipe.readyInMinutes}]] Minutes</span>
-                <span>Likes: 0</span>
-                <span>isSpoonacularRecipe: [[${recipe.spoonacularId}]]</span>
+                <span>Likes: [[${#lists.size(recipe.userLikes)}]]</span>
             </div>
         </div>
     </div>

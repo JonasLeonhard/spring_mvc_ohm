@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header(title = ${pageTitle}, includeHeaderFragment = ${'search-header'})"></head>
+<head th:replace="fragments/header :: header(title = ${pageTitle},
+includeHeaderFragment = ${{'search-header'}})"></head>
 
 <body>
 <nav th:replace="fragments/navigation :: navigation"></nav>
@@ -102,5 +103,7 @@
         </th:block>
     </div>
 </div>
+
+<footer th:replace="fragments/footer :: footer()"></footer>
 </body>
 </html>

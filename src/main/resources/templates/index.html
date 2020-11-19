@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: header(title = ${pageTitle},
-includeHeaderFragment = ${'index-header'})"></head>
+includeHeaderFragment = ${{'index-header'}})"></head>
 
 <body>
 <nav th:replace="fragments/navigation :: navigation"></nav>
@@ -44,7 +44,7 @@ includeHeaderFragment = ${'index-header'})"></head>
                     </div>
                 </div>
                 <div class="recipe-likes-container">
-                    <p>[[${recipeOfTheDay.likes}]]</p>
+                    <p>[[${#lists.size(recipeOfTheDay.userLikes)}]]</p>
                     <img class="like-icon" th:src="@{/unsecured_files/calendar.svg}"
                          alt="Likes Icon"
                          title="Likes">
@@ -93,7 +93,7 @@ includeHeaderFragment = ${'index-header'})"></head>
                         </div>
                     </div>
                     <div class="recipe-likes-container">
-                        <p>[[${recipe.likes}]]</p>
+                        <p>[[${#lists.size(recipe.userLikes)}]]</p>
                         <img class="like-icon" th:src="@{/unsecured_files/calendar.svg}"
                              alt="Likes Icon"
                              title="Likes">
@@ -107,10 +107,34 @@ includeHeaderFragment = ${'index-header'})"></head>
     </div>
 
     <div>
-        recipe Beliebte Rezepte / Suchwörter 02
+
+        <div class="recipe-search">
+            <h3>
+                Most Popular Search Terms
+            </h3>
+            <div class="recipe-search__wrapper">
+                <a class="recipe-search__item"
+                   th:each="search : ${mostPopularSearch}"
+                   th:href="${'/search?q=' + search.query + '&type=everywhere'}">
+                    [[${search.query}]]
+                </a>
+            </div>
+
+            <h3>
+                Most Recent Search Terms
+            </h3>
+            <div class="recipe-search__wrapper">
+                <a class="recipe-search__item"
+                   th:each="search : ${mostRecentSearch}"
+                   th:href="${'/search?q=' + search.query + '&type=everywhere'}">
+                    [[${search.query}]]
+                </a>
+            </div>
+        </div>
     </div>
 </div>
 
+<footer th:replace="fragments/footer :: footer()"></footer>
 <!-- Scripts -->
 <script type="text/javascript" th:src="@{/js/masonry.js}"></script>
 </body>

@@ -32,7 +32,6 @@ class RecipeController(val recipeService: RecipeService,
 
         model["pageTitle"] = recipe.title
         model["recipe"] = recipe
-        model["escapedRecipeSummary"] = jsoupService.escapeUserText(recipe.summary)
         model["recipeComments"] = recipeService.getComments(recipe)
 
         if (user != null) {

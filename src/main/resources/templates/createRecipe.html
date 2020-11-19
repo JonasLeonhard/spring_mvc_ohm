@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header(title = ${pageTitle}, includeHeaderFragment = ${'createRecipe-header'})"></head>
+<head th:replace="fragments/header :: header(title = ${pageTitle},
+includeHeaderFragment = ${{'createRecipe-header'}})"></head>
 
 <body>
 <nav th:replace="fragments/navigation :: navigation"></nav>
@@ -220,6 +221,7 @@
     </form>
 </div>
 
+<footer th:replace="fragments/footer :: footer()"></footer>
 <!-- Scripts -->
 <script type="text/javascript" th:src="@{/js/previewImage.js}"></script>
 </body>

@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
+import pojos.MostLikedRecipeProjection
 
 @Repository
 interface RecipeRepository : JpaRepository<Recipe, Long> {
@@ -20,8 +21,14 @@ interface RecipeRepository : JpaRepository<Recipe, Long> {
     @Query("SELECT recipe FROM Recipe recipe WHERE lower(recipe.summary) LIKE lower(concat('%', ?1, '%'))")
     fun searchForRecipe(q: String): MutableList<Recipe>
 
-    @Query("SELECT recipe FROM Recipe recipe ORDER BY recipe.likes ASC")
-    fun getMostLikedRecipes(pageable: Pageable): MutableList<Recipe>
+    @Query("""
+        SELECT NEW pojos.MostLikedRecipeProjection(recipe, COUNT(userLikes.embeddedKey.recipe.id)) 
+        FROM Recipe recipe 
+        JOIN recipe.userLikes userLikes 
+        GROUP BY recipe 
+        ORDER BY COUNT(userLikes.embeddedKey.recipe.id) ASC
+    """)
+    fun getMostLikedRecipes(pageable: Pageable): MutableList<MostLikedRecipeProjection>
 
     @Query("SELECT recipe FROM Recipe recipe ORDER BY recipe.createdAt ASC")
     fun getNewestRecipes(pageable: Pageable): MutableList<Recipe>

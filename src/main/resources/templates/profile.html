@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: header(
 title = ${pageTitle},
-includeHeaderFragment = ${'profile-header'},
+includeHeaderFragment = ${{'profile-header'}},
 includeIonicons = ${true})"></head>
 
 <body>
@@ -238,5 +238,7 @@ includeIonicons = ${true})"></head>
       </span>
     </th:block>
 </div>
+
+<footer th:replace="fragments/footer :: footer()"></footer>
 </body>
 </html>

@@ -31,7 +31,9 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
                     val recipeIngredientsRepository: RecipeIngredientsRepository,
                     val userRecipeCommentRepository: UserRecipeCommentRepository,
                     val userService: UserService,
-                    val fileService: FileService) {
+                    val fileService: FileService,
+                    val jsoupService: JsoupService,
+                    val searchService: SearchService) {
 
     private val spoonacularWebClient: WebClient = WebClient.builder()
             .baseUrl("https://api.spoonacular.com")
@@ -42,6 +44,7 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
      * Returns a List of *Recipe* model objects. By calling the spoonacular
      * /recipes/search endpoint with the specified query.
      * The returning list contains Recipes matching the query in the database aswell as newly recieved ones.
+     * Also Caches recipe searches that return results in *Search table
      * @param q Query string to search the api & database for
      */
     fun search(q: String): MutableList<Recipe> {
@@ -51,16 +54,14 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
         val recipesFromSummaries = bulkSearchRecipesFromSummaries(recipeSummaries, exclude = dbRecipes)
         val savedRecipes = saveBulkSearchRecipes(recipesFromSummaries)
         dbRecipes.addAll(savedRecipes)
+
+        searchService.addSearch(q, dbRecipes.size)
         return dbRecipes
     }
 
     @Throws(NoSuchElementException::class)
     fun getIndexedRecipeById(recipeSummaryId: Long): Recipe {
         return this.recipeRepository.findById(recipeSummaryId).get()
-    }
-
-    fun getUsersThatLikedRecipe(recipeId: Long) {
-
     }
 
     fun saveRecipe(recipe: Recipe): Recipe {
@@ -150,7 +151,7 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
     @Transactional
     fun saveRecipeJson(json: JsonNode): Recipe {
         val parsedRecipe = Recipe(
-                instructions = json.get("instructions")?.asText() ?: "",
+                instructions = jsoupService.escapeUserText(json.get("instructions")?.asText() ?: ""),
                 readyInMinutes = json.get("readyInMinutes")?.asInt() ?: 0,
                 preparationMinutes = json.get("preparationMinutes")?.asInt() ?: 0,
                 servings = json.get("servings")?.asInt() ?: 0,
@@ -165,7 +166,17 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
                 likes = json.get("aggregateLikes")?.asInt() ?: 0,
                 pricePerServing = json.get("pricePerServing")?.asDouble() ?: 0.0,
                 spoonacularId = json.get("id").asLong(),
-                summary = trimToMaxCharNum(json.get("summary")?.asText() ?: "", 255),
+                summary = (jsoupService.escapeUserText(json.get("summary")?.asText() ?: "")).split(". ").filter {
+                    !(it.contains("spoonacular", ignoreCase = true) ||
+                            it.contains("href=\"https://spoonacular.com", ignoreCase = true) ||
+                            it.contains("score", ignoreCase = true) ||
+                            it.contains("SmartPoints", ignoreCase = true) ||
+                            it.contains("made this recipe", ignoreCase = true) ||
+                            it.contains("liked", ignoreCase = true) ||
+                            it.contains("calories", ignoreCase = true) ||
+                            it.contains("people found", ignoreCase = true) ||
+                            it.contains("daily requirements", ignoreCase = true))
+                }.joinToString(),
                 title = json.get("title").asText(),
                 recipeImageUrl = json.get("image")?.asText()
         )
@@ -183,18 +194,18 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
     fun saveRecipeJsonIngredients(json: JsonNode, recipe: Recipe) {
         json.get("extendedIngredients").forEach { ingredient ->
             val parsedIngredient = Ingredient(
-                    aisle = trimToMaxCharNum(ingredient.get("aisle").asText(), 255),
-                    consistency = trimToMaxCharNum(ingredient.get("consistency").asText(), 255),
-                    meta = trimToMaxCharNum(ingredient.get("meta").asText(), 255),
-                    name = trimToMaxCharNum(ingredient.get("name").asText(), 255),
-                    unit = ingredient.get("unit").asText()
+                    aisle = jsoupService.escapeUserText(trimToMaxCharNum(ingredient.get("aisle").asText(), 255)),
+                    consistency = jsoupService.escapeUserText(trimToMaxCharNum(ingredient.get("consistency").asText(), 255)),
+                    meta = jsoupService.escapeUserText(ingredient.get("meta").asText()),
+                    name = jsoupService.escapeUserText(trimToMaxCharNum(ingredient.get("name").asText(), 255)),
+                    unit = jsoupService.escapeUserText(ingredient.get("unit").asText())
             )
 
             val savedIngredient = saveIngredient(parsedIngredient)
             val recipeIngredients = RecipeIngredients(
                     amount = ingredient.get("amount").asDouble(),
                     ingredient = savedIngredient,
-                    summary = trimToMaxCharNum(ingredient.get("original").asText(), 255),
+                    summary = jsoupService.escapeUserText(ingredient.get("original").asText()),
                     recipe = recipe
             )
             recipe.recipeIngredients.add(saveRecipeIngredients(recipeIngredients))
@@ -240,11 +251,11 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
             val recipe = Recipe(
                     user = user,
                     picture = file,
-                    title = recipeForm.title!!,
+                    title = jsoupService.escapeUserText(recipeForm.title!!),
                     servings = recipeForm.servings!!,
                     dairyFree = recipeForm.dairyFree!!,
-                    summary = recipeForm.summary!!,
-                    instructions = recipeForm.instructions!!,
+                    summary = jsoupService.escapeUserText(recipeForm.summary!!),
+                    instructions = jsoupService.escapeUserText(recipeForm.instructions!!),
                     sustainable = recipeForm.sustainable!!,
                     veryHealthy = recipeForm.veryHealthy!!,
                     vegetarian = recipeForm.vegetarian!!,
@@ -257,18 +268,18 @@ class RecipeService(val props: ApplicationPropertiesConfiguration,
             val savedRecipe = recipeRepository.save(recipe)
             recipeForm.ingredientsName!!.forEachIndexed { index: Int, name: String? ->
                 val ingredient = Ingredient(
-                        aisle = recipeForm.ingredientsAisle!![index]?.let { trimToMaxCharNum(it, 255) },
-                        consistency = recipeForm.ingredientsConsistency!![index]?.let { trimToMaxCharNum(it, 255) },
-                        meta = recipeForm.ingredientsMeta!![index]?.let { trimToMaxCharNum(it, 255) },
-                        name = trimToMaxCharNum(name!!, 255),
-                        unit = recipeForm.ingredientsUnit!![index]?.let { trimToMaxCharNum(it, 255) }!!
+                        aisle = recipeForm.ingredientsAisle!![index]?.let { jsoupService.escapeUserText(trimToMaxCharNum(it, 255)) },
+                        consistency = recipeForm.ingredientsConsistency!![index]?.let { jsoupService.escapeUserText(trimToMaxCharNum(it, 255)) },
+                        meta = recipeForm.ingredientsMeta!![index],
+                        name = jsoupService.escapeUserText(trimToMaxCharNum(name!!, 255)),
+                        unit = recipeForm.ingredientsUnit!![index]?.let { jsoupService.escapeUserText(trimToMaxCharNum(it, 255)) }!!
                 )
 
                 val savedIngredient = saveIngredient(ingredient)
                 val recipeIngredients = RecipeIngredients(
                         amount = recipeForm.ingredientsAmount!![index]!!,
                         ingredient = savedIngredient,
-                        summary = recipeForm.ingredientsSummary!![index]?.let { trimToMaxCharNum(it, 255) },
+                        summary = recipeForm.ingredientsSummary!![index]?.let { jsoupService.escapeUserText(it) },
                         recipe = savedRecipe
                 )
                 recipe.recipeIngredients.add(saveRecipeIngredients(recipeIngredients))

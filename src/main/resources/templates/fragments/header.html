@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!--/*@thymesVar id="includeHeaderFragment" type=""*/-->
 <!--/*@thymesVar id="includeIonicons" type=""*/-->
-<head th:fragment="header(title)">
+<head th:fragment="header(title, includeHeaderFragment)">
     <title th:text="${title != null ? title : 'UNDEFINED'}">Title</title>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
     <!-- X-CSRF-TOKEN authentication to invalidate csrf attacks, add values of [_csrf_header]=[_csrf_token] to header req, or [_csrf_header]=[_csrf_parameter] to body req-->
@@ -14,8 +14,9 @@
 
     <link th:href="@{/styles/root.css}" rel="stylesheet"/>
 
-    <th:block th:if="${includeHeaderFragment}">
-        <link th:replace="fragments/header :: ${includeHeaderFragment}">
+    <th:block th:if="${includeHeaderFragment}"
+              th:each="fragment : ${includeHeaderFragment}">
+        <link th:replace="fragments/header :: ${fragment}">
     </th:block>
 
     <th:block th:if="${includeIonicons}">

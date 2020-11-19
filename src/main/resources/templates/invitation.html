@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: header(title = ${pageTitle},
-includeHeaderFragment = ${'invitation-header'})"></head>
+includeHeaderFragment = ${{'invitation-header'}})"></head>
 
 <body>
 <nav th:replace="fragments/navigation :: navigation"></nav>
@@ -35,6 +35,7 @@ includeHeaderFragment = ${'invitation-header'})"></head>
     </div>
 </div>
 
+<footer th:replace="fragments/footer :: footer()"></footer>
 <!--&lt;!&ndash; Scripts &ndash;&gt;-->
 <!--<script type="text/javascript" th:src="@{/js/multiselect.js}"></script>-->
 </body>

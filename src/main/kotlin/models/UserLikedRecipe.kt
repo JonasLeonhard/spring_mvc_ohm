@@ -1,13 +1,20 @@
 package models
 
+import org.hibernate.annotations.CreationTimestamp
 import java.io.Serializable
+import java.time.Instant
+import java.util.*
 import javax.persistence.*
 
 @Entity
 @Table(name = "user_profile_liked_recipe")
 class UserLikedRecipe(
         user: User,
-        recipe: Recipe
+        recipe: Recipe,
+
+        @CreationTimestamp
+        @Temporal(TemporalType.TIMESTAMP)
+        var createdAt: Date = Date.from(Instant.now())
 ) {
     var user: User
         get() = this.embeddedKey.user
