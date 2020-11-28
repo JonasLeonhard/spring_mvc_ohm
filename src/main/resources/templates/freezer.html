@@ -24,7 +24,7 @@ includeHeaderFragment = ${{'freezer-header'}})"></head>
                         friendship.request_to.username}]]
                     </option>
                 </select>
-                <button type="submit" th:disabled="${userFriendships.isEmpty()}">Add</button>
+                <button type="submit" class="next-to-input" th:disabled="${userFriendships.isEmpty()}">Add</button>
                 <div class="multiselect-selected"><!-- Content inserted by multiselect.js --></div>
             </form>
 
@@ -51,7 +51,7 @@ includeHeaderFragment = ${{'freezer-header'}})"></head>
                            id="ingredientName"
                            required
                            placeholder="ingredient...">
-                    <button type="submit" class="freezer__add-to-button">Add to Freezer</button>
+                    <button type="submit" class="next-to-input">Add to Freezer</button>
                     <input th:each="queryFriend : ${queryFriends}"
                            th:value="${queryFriend}"
                            type="hidden"

@@ -58,6 +58,11 @@ button {
     cursor: pointer;
 }
 
+button.next-to-input {
+    border-radius: 0 3px 3px 0;
+    height: 2rem;
+}
+
 button[disabled] {
     background: var(--grey);
     cursor: default;
@@ -72,11 +77,58 @@ label {
     color: var(--label-color);
 }
 
-input {
+input, textarea {
+    box-sizing: border-box;
     background: var(--color-input-background);
     padding: 0 0.5rem;
+    height: 2rem;
+    cursor: pointer;
+    min-width: 1rem;
+    min-height: 1rem;
+    border: 1px solid var(--primary-light);
+}
+
+input[type="select"] {
+    appearance: none;
+}
+
+.file-wrapper input[type="file"] {
+    font-size: 17px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    -webkit-tap-highlight-color: transparent;
+    opacity: 0;
+    z-index: 1;
+}
+
+.file-wrapper {
+    position: relative;
+    width: max-content;
+    background: var(--secondary);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 3px;
+    margin: 0.5rem 0;
+}
+
+.file-wrapper:hover {
+    background: var(--primary);
+}
+
+select {
+    background: var(--color-input-background);
+    padding: 0 1rem 0 0.5rem;
     border: none;
     height: 2rem;
+    background-image: url('/unsecured_files/down-arrow.svg');
+    background-repeat: no-repeat;
+    background-position: right .7em top 50%;
+    background-size: .65em auto;
+    appearance: none;
 }
 
 .warning {
@@ -144,6 +196,45 @@ input {
 .input-wrapper:focus-within::after {
     transform: scaleX(1);
     height: 3px;
+    position: relative;
+}
+
+.form-grid {
+    display: flex;
+    grid-gap: 1rem;
+}
+
+.grid-fill {
+    width: 100%;
+}
+
+.form-annotation {
+    display: flex;
+    align-items: center;
+    font-size: 1.6rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--grey);
+    margin-bottom: 1rem;
+}
+
+.form-annotation div {
+    border-radius: 50%;
+    width: 1rem;
+    height: 1rem;
+    padding: 0.5rem;
+    background: var(--primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+}
+
+.form-annotation span {
+    margin-left: 1rem;
+}
+
+.form-input-wrapper {
+    margin-bottom: 1rem;
     position: relative;
 }
 
@@ -394,11 +485,9 @@ div.page-content.full {
 /* SELECT */
 
 select#type {
-    background: var(--main-bg-color);
     position: absolute;
     height: 100%;
     top: 0;
-    border: none;
     transition: 0.25s background linear;
     border: 1px solid var(--navbar-border);
     border-radius: 0 3px 3px 0;
@@ -411,6 +500,8 @@ select#type option {
 .card {
     background: var(--main-bg-color-bright);
     margin: 1rem;
+    padding: 1rem;
+    border-radius: 3px;
 }
 
 .footer {
