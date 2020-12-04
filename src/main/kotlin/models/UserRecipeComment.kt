@@ -20,6 +20,7 @@ data class UserRecipeComment(
         @JoinColumn(name = "recipe_id")
         var recipe: Recipe,
 
+        @Column(length = 2000)
         var message: String,
 
         @CreationTimestamp

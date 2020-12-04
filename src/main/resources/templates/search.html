@@ -23,8 +23,8 @@ includeHeaderFragment = ${{'search-header'}})"></head>
                           th:object="${recipe}">
                     <div class="recipe-card recipe-id-[[*{id}]]">
                         <div class="recipe-card-image-container">
-                            <div class="rating">
-                                <span th:text="${recipe.likes}">likes</span>
+                            <div class="rating">1
+                                <span th:text="${#lists.size(recipe.userLikes)}">likes</span>
                             </div>
                             <a th:href="'/recipe/'+ ${recipe.id}">
                                 <img class="recipe-card-img"

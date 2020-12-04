@@ -8,141 +8,207 @@ includeIonicons = ${true})"></head>
 <nav th:replace="fragments/navigation :: navigation"></nav>
 <div class="page-content">
     <div class="recipe-card recipe-id-[[${recipe.id}]]">
-        <div class="recipe-card-image-container">
-            <div class="rating">
-                <span th:text="${#lists.size(recipe.userLikes)}">likes</span>
+        <div class="recipe__teaser">
+            <div class="recipe-card-image-container">
+                <div class="rating">
+                    <span th:text="${#lists.size(recipe.userLikes)}">likes</span>
+                </div>
+                <img class="recipe-card-img"
+                     th:src="${recipe.picture != null ? '/resource/' + recipe.picture.id : (recipe.recipeImageUrl != null ? recipe.recipeImageUrl : '/unsecured_files/logo_placeholder.png')}">
             </div>
-            <img class="recipe-card-img"
-                 th:src="${recipe.picture != null ? '/resource/' + recipe.picture.id : (recipe.recipeImageUrl != null ? recipe.recipeImageUrl : '/unsecured_files/logo_placeholder.png')}">
-        </div>
-        <div class="recipe-card-info">
+            <div class="recipe-card-info">
 
-            <span class="recipe-card-info-title">[[${recipe.title}]]</span>
+                <span class="recipe-card-info-title">[[${recipe.title}]]</span>
+
+                <div>
+                    <span th:text="${recipe.summary}">Summary</span>
+                </div>
+
+                <div class="recipe-card-info-flex">
+                    <span>Ready in [[${recipe.readyInMinutes}]] Minutes</span>
+                    <span>Likes: [[${#lists.size(recipe.userLikes)}]]</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-annotation">
+            <div>1</div>
+            <span>
+                    Overview
+            </span>
+        </div>
+
+        <div class="recipe__overview-container">
+            servings: <span th:text="${recipe.servings}">servings</span> <br>
+            pricePerServing: <span th:text="${recipe.pricePerServing}">pricePerServing</span> <br>
+            glutenFree: <span th:text="${recipe.glutenFree}">glutenFree</span> <br>
+            vegan: <span th:text="${recipe.vegan}">vegan</span> <br>
+            vegetarian: <span th:text="${recipe.vegetarian}">vegetarian</span> <br>
+
+            recipeImageUrl:: [[${recipe.recipeImageUrl != null ? recipe.recipeImageUrl : "notset!"}]]
+        </div>
+
+        <div class="form-annotation">
+            <div>2</div>
+            <span>
+                    Ingredients
+            </span>
+        </div>
+
+        <div id="recipe-card-container">
+            <div id="ingredients-container">
+                <th:block th:if="${recipe.recipeIngredients != null && #lists.size(recipe.recipeIngredients) > 0}"
+                          th:each="recipeIngredient, iter : ${recipe.recipeIngredients}">
+                    <div class="ingredient">
+                        <div class="ingredient-img-wrapper">
+                            <img class="ingredient-img"
+                                 th:src="${recipeIngredient.ingredient.picture != null ? '/resource/' + recipe.picture.id : (recipeIngredient.ingredient.imageUrl != null ? recipeIngredient.ingredient.imageUrl : '/unsecured_files/leaf.png')}">
+                        </div>
+                        <div>
+                            <div class="ingredient-stats">
+                                [[${iter.index}]]: [[${recipeIngredient.amount}]]
+                                [[${recipeIngredient.ingredient.unit}]]
+                                [[${recipeIngredient.ingredient.name}]]:
+                            </div>
+
+                            <p class="ingredient-meta" th:if="${recipeIngredient.ingredient.meta != null}">
+                                [[${recipeIngredient.ingredient.meta}]]
+                            <p>
+
+                            <span class="ingredient-summary" th:if="${recipeIngredient.summary != null}">
+                                [[${recipeIngredient.summary}]]
+                            </span>
+                        </div>
+                    </div>
+                </th:block>
+            </div>
+        </div>
+
+        <div class="form-annotation">
+            <div>3</div>
+            <span>
+                    Instructions
+            </span>
+        </div>
+
+        <div class="recipe__instructions">
+            <span th:text="${recipe.instructions}">instructions</span>
+        </div>
+
+        <div class="recipe__actions-wrapper">
+            <form th:action="@{/recipe/like}" method="post">
+                <button class="like-button"
+                        type="submit"
+                        th:attr="disabled=${authenticated == null}"
+                        th:title="${authenticated == null ? 'Login to like the recipe' : (userLikedRecipe != null && userLikedRecipe == true ? 'Unlike the Recipe' : 'Like the Recipe')}"
+                        name="recipeId" th:value="${recipe.id}">
+                    <ion-icon th:if="${(userLikedRecipe != null && userLikedRecipe == true) || authenticated == null}"
+                              name="arrow-up-circle"></ion-icon>
+                    <ion-icon th:if="${(userLikedRecipe != null && userLikedRecipe == false)}"
+                              name="arrow-up-circle-outline"></ion-icon>
+                    [[${(userLikedRecipe != null && userLikedRecipe == true) ? 'Unlike the Recipe' : 'Like the
+                    Recipe'}]]
+                </button>
+            </form>
+
+            <form th:action="@{/recipe/{id}/favorite(id=${recipe.id})}" method="post">
+                <button class="favorite-button"
+                        type="submit"
+                        th:attr="disabled=${authenticated == null}"
+                        th:title="${authenticated == null ? 'Login to favorite the Recipe': (userFavoritedRecipe != null && userFavoritedRecipe == true ? 'Unfavorite the Recipe' : 'Favorite the Recipe')}">
+                    <ion-icon
+                            th:if="${(userFavoritedRecipe != null && userFavoritedRecipe == true) || authenticated == null}"
+                            name="star"></ion-icon>
+                    <ion-icon th:if="${(userFavoritedRecipe != null && userFavoritedRecipe == false)}"
+                              name="star-outline"></ion-icon>
+                    [[${(userFavoritedRecipe!= null && userFavoritedRecipe == true) ? 'Unfavorite the Recipe' :
+                    'Favorite
+                    the Recipe'}]]
+                </button>
+            </form>
+
+            <form th:action="@{/recipe/{id}/toList(id=${recipe.id})}" method="post">
+                <button class="add-to-list-button"
+                        type="submit"
+                        th:attr="disabled=${authenticated == null}"
+                        th:title="${authenticated == null ? 'Login to add the Recipe to the List': (userBuyListedRecipe != null && userBuyListedRecipe == true ? 'Remove from Buylist' : 'Add to Buylist')}">
+                    <ion-icon name="cart"
+                              th:if="${(userBuyListedRecipe != null && userBuyListedRecipe == true) || authenticated == null}"></ion-icon>
+                    <ion-icon name="cart-outline"
+                              th:if="${(userBuyListedRecipe != null && userBuyListedRecipe == false)}"></ion-icon>
+                    [[${(userBuyListedRecipe != null && userBuyListedRecipe == true) ? 'Remove from Buylist' : 'Add to
+                    Buylist'}]]
+                </button>
+            </form>
+
+            <form th:action="@{/user/invite}" method="get"
+                  class="invite-friends-form">
+                <input type="hidden" name="recipeId" th:value="${recipe.id}">
+                <button type="submit"
+                        th:disabled="${authenticated == null}"
+                        th:title="${authenticated == null ? 'Login to invite Friends' : 'Invite Friends'}">
+                    <ion-icon name="mail"></ion-icon>
+                    Invite Friends
+                </button>
+            </form>
+        </div>
+
+
+        <div class="form-annotation">
+            <div>4</div>
+            <span>
+                    Comment Section
+            </span>
+        </div>
+
+        <div>
+            <div class="comment__overview">
+                [[${#lists.size(recipeComments)}]] [[${#lists.size(recipeComments) > 1 ? 'Comments' : 'Comment'}]]
+            </div>
+            <form th:action="@{/recipe/{id}/comment(id=${recipe.id})}"
+                  method="post"
+                  id="comments">
+                <label>
+                <textarea class="comment__user-textarea"
+                          name="message"
+                          th:disabled="${authenticated == null}"
+                          th:placeholder="${(authenticated == null ? 'Login to publicly comment on ' : 'Comment publicly on ')  + recipe.title}"></textarea>
+                </label>
+                <button type="submit"
+                        class="comment__user-button"
+                        th:title="${authenticated == null ? 'Login to public comment' : 'Submit public comment'}"
+                        th:disabled="${authenticated == null}">Comment
+                </button>
+            </form>
 
             <div>
-                <span th:text="${recipe.summary}">Summary</span>
-            </div>
-
-            <div class="recipe-card-info-flex">
-                <span>Ready in [[${recipe.readyInMinutes}]] Minutes</span>
-                <span>Likes: [[${#lists.size(recipe.userLikes)}]]</span>
-            </div>
-        </div>
-    </div>
-
-    <div class="sub-recipe-card">
-        servings: <span th:text="${recipe.servings}">servings</span> <br>
-        pricePerServing: <span th:text="${recipe.pricePerServing}">pricePerServing</span> <br>
-        glutenFree: <span th:text="${recipe.glutenFree}">glutenFree</span> <br>
-        vegan: <span th:text="${recipe.vegan}">vegan</span> <br>
-        vegetarian: <span th:text="${recipe.vegetarian}">vegetarian</span> <br>
-
-        recipeImageUrl:: [[${recipe.recipeImageUrl != null ? recipe.recipeImageUrl : "notset!"}]]
-    </div>
-    <div class="sub-recipe-card" id="recipe-card-container">
-        <div id="ingredients-container">
-            <th:block th:if="${recipe.recipeIngredients != null && #lists.size(recipe.recipeIngredients) > 0}"
-                      th:each="recipeIngredient, iter : ${recipe.recipeIngredients}">
-                <div class="ingredient">
-                    <div class="ingredient-stats">
-                        [[${iter.index}]]: [[${recipeIngredient.amount}]] [[${recipeIngredient.ingredient.unit}]]
-                        [[${recipeIngredient.ingredient.name}]]:
+                <div th:each="comment, iter : ${recipeComments}" class="comment__container">
+                    <div class="comment__profile-image-container">
+                        <img class="profile-image"
+                             alt="profile picture"
+                             th:title="${comment.user.username} + '\'s Profilepicture'"
+                             th:src="${comment.user.picture != null ? '/resource/' + comment.user.picture.id : '/unsecured_files/placeholder_profile_image.png'}"/>
                     </div>
-                    <p class="ingredient-meta" th:if="${recipeIngredient.ingredient.meta != null}">
-                        [[${recipeIngredient.ingredient.meta}]]
-                    <p>
-                    <span class="ingredient-summary" th:if="${recipeIngredient.summary != null}">
-                        [[${recipeIngredient.summary}]]
-                    </span>
-                    <div>
-                        TODO: show recipe image if exists
+                    <div class="comment__content">
+                        <div class="comment__header">
+                            <a th:href="@{/user/profile/{username}(username=${comment.user.username})}">
+                                [[${comment.user.name}]]
+                            </a>
+                            <span>
+                            at [[${dateFormatter.format(comment.createdAt)}]]
+                        </span>
+                        </div>
+                        <div class="comment__message">
+                            [[${comment.message}]]
+                        </div>
                     </div>
                 </div>
-            </th:block>
-        </div>
-    </div>
-
-    <div class="sub-recipe-card">
-        instructions: <span th:text="${recipe.instructions}">instructions</span> <br>
-    </div>
-
-    <div class="sub-recipe-card">
-        Actions:
-        <form th:action="@{/recipe/like}" method="post">
-            <button class="like-button"
-                    type="submit"
-                    th:attr="disabled=${authenticated == null}"
-                    th:title="${authenticated == null ? 'Login to like the recipe' : (userLikedRecipe != null && userLikedRecipe == true ? 'Unlike the Recipe' : 'Like the Recipe')}"
-                    name="recipeId" th:value="${recipe.id}">
-                <ion-icon th:if="${(userLikedRecipe != null && userLikedRecipe == true) || authenticated == null}"
-                          name="arrow-up-circle"></ion-icon>
-                <ion-icon th:if="${(userLikedRecipe != null && userLikedRecipe == false)}"
-                          name="arrow-up-circle-outline"></ion-icon>
-                [[${(userLikedRecipe != null && userLikedRecipe == true) ? 'Unlike the Recipe' : 'Like the Recipe'}]]
-            </button>
-
-            <button class="favorite-button"
-                    type="submit"
-                    th:formaction="@{/recipe/{id}/favorite(id=${recipe.id})}"
-                    th:attr="disabled=${authenticated == null}"
-                    th:title="${authenticated == null ? 'Login to favorite the Recipe': (userFavoritedRecipe != null && userFavoritedRecipe == true ? 'Unfavorite the Recipe' : 'Favorite the Recipe')}">
-                <ion-icon
-                        th:if="${(userFavoritedRecipe != null && userFavoritedRecipe == true) || authenticated == null}"
-                        name="star"></ion-icon>
-                <ion-icon th:if="${(userFavoritedRecipe != null && userFavoritedRecipe == false)}"
-                          name="star-outline"></ion-icon>
-                [[${(userFavoritedRecipe!= null && userFavoritedRecipe == true) ? 'Unfavorite the Recipe' : 'Favorite
-                the Recipe'}]]
-            </button>
-
-            <button class="add-to-list-button"
-                    type="submit"
-                    th:formaction="@{/recipe/{id}/toList(id=${recipe.id})}"
-                    th:attr="disabled=${authenticated == null}"
-                    th:title="${authenticated == null ? 'Login to add the Recipe to the List': (userBuyListedRecipe != null && userBuyListedRecipe == true ? 'Remove from Buylist' : 'Add to Buylist')}">
-                <ion-icon name="cart"
-                          th:if="${(userBuyListedRecipe != null && userBuyListedRecipe == true) || authenticated == null}"></ion-icon>
-                <ion-icon name="cart-outline"
-                          th:if="${(userBuyListedRecipe != null && userBuyListedRecipe == false)}"></ion-icon>
-                [[${(userBuyListedRecipe != null && userBuyListedRecipe == true) ? 'Remove from Buylist' : 'Add to
-                Buylist'}]]
-            </button>
-        </form>
-
-        <form th:action="@{/user/invite}" method="get"
-              class="invite-friends-form">
-            <input type="hidden" name="recipeId" th:value="${recipe.id}">
-            <button type="submit"
-                    th:disabled="${authenticated == null}"
-                    th:title="${authenticated == null ? 'Login to invite Friends' : 'Invite Friends'}">
-                <ion-icon name="mail"></ion-icon>
-                Invite Friends
-            </button>
-        </form>
-        -- TODO() -> have instructions seperated, maybe analyzed instructions?
-        -- TODO() -> images for ingredients?
-    </div>
-
-    <div>
-        comment section:
-        <div>
-            <div th:each="comment, iter : ${recipeComments}">
-                [[${comment.message}]] by user: [[${comment.user.name}]]
             </div>
         </div>
-        <form th:action="@{/recipe/{id}/comment(id=${recipe.id})}" method="post">
-            <label>
-                Comment:
-                <textarea rows="4" name="message" th:disabled="${authenticated == null}"
-                          th:placeholder="${(authenticated == null ? 'Login to comment on ' : 'Comment on ')  + recipe.title}"></textarea>
-            </label>
-            <button type="submit" th:title="${authenticated == null ? 'Login to Comment' : 'Submit Comment'}"
-                    th:disabled="${authenticated == null}">Comment
-            </button>
-        </form>
     </div>
 </div>
 
+<footer th:replace="fragments/footer :: footer()"></footer>
 <!-- Scripts -->
 <script type="text/javascript" th:src="@{/js/recipe.js}"></script>
 </body>

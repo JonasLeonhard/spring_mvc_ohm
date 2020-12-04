@@ -25,5 +25,7 @@ data class Ingredient(
 
         @OneToOne(targetEntity = File::class, cascade = [CascadeType.ALL])
         @field:Nullable
-        var picture: File? = null
+        var picture: File? = null,
+
+        var imageUrl: String? = null
 )

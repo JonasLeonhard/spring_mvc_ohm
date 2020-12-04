@@ -1,18 +1,16 @@
-.recipe-card, .sub-recipe-card {
-    margin: 0 5em 3em 5em;
-    border: 1px solid var(--primary);
+.recipe-card {
+    margin: 0.5rem 5rem;
     background: white;
     padding: 1em;
 }
 
-.recipe-card {
+.recipe-card-container {
     position: relative;
-    display: flex;
 }
 
-.recipe-card:hover, .sub-recipe-card:hover {
-    background: #f8f8f8;
-    border: 1px solid var(--primary);
+.recipe__teaser {
+    position: relative;
+    display: flex;
 }
 
 .recipe-card:hover > .recipe-card-image-container > .recipe-card-img {
@@ -75,6 +73,10 @@
     overflow: hidden;
 }
 
+.recipe__overview-container {
+    margin-bottom: 3rem;
+}
+
 .copy-to-clipboard-wrapper {
     border: 1px solid var(--secondary);
     border-radius: 3px;
@@ -82,7 +84,11 @@
     width: 1em;
     height: 1em;
     padding: 0.5em;
-    float: right;
+    position: sticky;
+    top: 4rem;
+    left: 100%;
+    right: 0;
+    background: white;
 }
 
 .copy-to-clipboard-wrapper:hover {
@@ -118,19 +124,96 @@
 #ingredients-container {
     display: flex;
     flex-direction: column;
-    margin-top: 3em;
+    margin-bottom: 3rem;
+    font-size: 0.85rem;
 }
 
 .ingredient {
     border-radius: 5px;
     padding: 0.5em 1.5em;
     margin: 0.25em;
+    display: flex;
 }
 
-.ingredient:nth-of-type(2n -1) {
-    background: var(--primary-light);
+.ingredient-img-wrapper {
+    width: 3rem;
+    height: 3rem;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 0.5rem;
 }
 
-.ingredient:nth-of-type(2n) {
-    background: var(--secondary-light);
+.ingredient-img {
+    width: initial;
+    height: 100%;
+}
+
+.recipe__instructions {
+    margin-bottom: 3rem;
+}
+
+.recipe__actions-wrapper {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 3rem;
+}
+
+/* COMMENT SECTION */
+#comments {
+    display: flex;
+    flex-direction: column;
+}
+
+#comments button {
+    max-height: 1.6rem;
+    max-width: max-content;
+    align-self: end;
+    margin: 0.5rem 0;
+}
+
+.comment__overview {
+    font-size: 0.65rem;
+}
+
+.comment__user-textarea {
+    width: 100%;
+    resize: vertical;
+    padding: 0.25rem;
+}
+
+.comment__user-textarea:disabled {
+    resize: none;
+    cursor: default;
+}
+
+.comment__container {
+    display: grid;
+    grid-template-columns: 4rem 1fr;
+}
+
+.comment__profile-image-container {
+    padding: 0.5rem;
+}
+
+.comment__profile-image-container img {
+    width: 100%;
+}
+
+.comment__header {
+    font-size: 0.8rem;
+    color: var(--grey);
+}
+
+.comment__content {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem;
+}
+
+.comment__message {
+    word-wrap: anywhere;
 }

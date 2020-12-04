@@ -7,18 +7,17 @@ import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import pojos.RecipeForm
-import services.JsoupService
 import services.RecipeService
 import services.UserService
 import validators.RecipeFormValidator
 import java.security.Principal
+import java.text.SimpleDateFormat
 import javax.validation.Valid
 
 @Controller
 @RequestMapping("/recipe")
 class RecipeController(val recipeService: RecipeService,
                        val recipeFormValidator: RecipeFormValidator,
-                       val jsoupService: JsoupService,
                        val userService: UserService) {
 
 
@@ -33,6 +32,7 @@ class RecipeController(val recipeService: RecipeService,
         model["pageTitle"] = recipe.title
         model["recipe"] = recipe
         model["recipeComments"] = recipeService.getComments(recipe)
+        model["dateFormatter"] = SimpleDateFormat("dd/MM/yyyy hh:mm")
 
         if (user != null) {
             model["userLikedRecipe"] = user.hasLikedRecipe(recipe)
@@ -143,6 +143,6 @@ class RecipeController(val recipeService: RecipeService,
     fun commentOn(principal: Principal, @PathVariable("id") recipeId: Long, @RequestParam(name = "message") message: String): String {
         println("commentON $recipeId $message")
         userService.commentRecipe(recipeId, principal, message)
-        return "redirect:/recipe/$recipeId"
+        return "redirect:/recipe/$recipeId#comments"
     }
 }

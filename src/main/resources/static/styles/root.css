@@ -213,28 +213,25 @@ select {
     align-items: center;
     font-size: 1.6rem;
     padding: 0.5rem 0;
-    border-bottom: 1px solid var(--grey);
-    margin-bottom: 1rem;
+    margin-bottom: 3rem;
 }
 
 .form-annotation div {
-    border-radius: 50%;
+    border-radius: 0 3px 3px 0;
     width: 1rem;
     height: 1rem;
     padding: 0.5rem;
-    background: var(--primary);
+    background: var(--linkColor);
+    color: white;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 1rem;
-}
-
-.form-annotation span {
-    margin-left: 1rem;
+    transform: translateX(-1rem);
 }
 
 .form-input-wrapper {
-    margin-bottom: 1rem;
+    margin-bottom: 3rem;
     position: relative;
 }
 
