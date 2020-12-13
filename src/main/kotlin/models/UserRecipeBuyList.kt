@@ -12,6 +12,9 @@ class UserRecipeBuyList(
         user: User,
         recipe: Recipe,
 
+        @OneToMany(targetEntity = RecipeIngredients::class, cascade = [CascadeType.ALL])
+        var boughtRecipeIngredients: List<RecipeIngredients>? = null,
+
         @CreationTimestamp
         @Temporal(TemporalType.TIMESTAMP)
         var createdAt: Date = Date.from(Instant.now()),

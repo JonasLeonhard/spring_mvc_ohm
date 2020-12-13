@@ -1,0 +1,73 @@
+.form-annotation-txt-controls form {
+    display: inline-flex;
+    margin-right: 1rem;
+}
+
+.invitation__message {
+    margin-bottom: 3rem;
+    display: block;
+    border-top: 1px solid var(--main-bg-color);
+    padding-top: 1rem;
+}
+
+.invitation__details div {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+}
+
+/* COMMENT SECTION */
+#comments {
+    display: flex;
+    flex-direction: column;
+}
+
+#comments button {
+    max-height: 1.6rem;
+    max-width: max-content;
+    align-self: end;
+    margin: 0.5rem 0;
+}
+
+.comment__overview {
+    font-size: 0.65rem;
+}
+
+.comment__user-textarea {
+    width: 100%;
+    resize: vertical;
+    padding: 0.25rem;
+}
+
+.comment__user-textarea:disabled {
+    resize: none;
+    cursor: default;
+}
+
+.comment__container {
+    display: grid;
+    grid-template-columns: 4rem 1fr;
+}
+
+.comment__profile-image-container {
+    padding: 0.5rem;
+}
+
+.comment__profile-image-container img {
+    width: 100%;
+}
+
+.comment__header {
+    font-size: 0.8rem;
+    color: var(--grey);
+}
+
+.comment__content {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem;
+}
+
+.comment__message {
+    word-wrap: anywhere;
+}

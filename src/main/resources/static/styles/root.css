@@ -4,7 +4,7 @@
     --main-bg-color: #e9e9e9;
     --main-bg-color-bright: #f8f8f8;
     --grey: #635f5f;
-    --primary: #efb450;
+    --primary: #0366d6;
     --primary-light: rgba(239, 180, 80, 0.1);
     --secondary: #264653;
     --secondary-light: rgba(55, 173, 72, 0.1);
@@ -19,7 +19,7 @@
     --tab-active: #fff;
     --tab-inactive: #939393;
 
-    --navbar-border: #efb450;
+    --navbar-border: #c1c6c8;
     --navbar-height: 2.5rem;
     --navbar-padding-top-bottom: 0.5rem;
 
@@ -145,7 +145,7 @@ select {
 
 /* INPUT */
 .input-wrapper {
-    border-bottom: 1px dashed var(--third);
+    border-bottom: 1px dashed var(--primary);
     padding-top: 1.5em;
     position: relative;
     overflow: hidden;
@@ -230,9 +230,24 @@ select {
     transform: translateX(-1rem);
 }
 
+.form-annotation-txt-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
 .form-input-wrapper {
     margin-bottom: 3rem;
     position: relative;
+}
+
+.read-more.dots {
+    display: none;
+}
+
+.read-more.more {
+    display: inline-block;
 }
 
 /* NAVIGATION */
@@ -278,8 +293,8 @@ nav .nav-items .nav-item:hover {
 nav .nav-search-container {
     display: flex;
     background-color: var(--main-bg-color);
-    padding: 0.5em 1em;
-    margin-left: 1em;
+    padding: 0.1rem 1rem;
+    margin-left: 1rem;
     box-shadow: 0px 0px 0px 1px var(--navbar-border) inset;
     border-radius: 9999px;
     transition: 0.25s background linear;

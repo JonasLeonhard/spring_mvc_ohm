@@ -6,7 +6,7 @@
 }
 
 .login-header {
-    background: #e78f00;
+    background: var(--primary);
     color: white;
     display: flex;
     justify-content: center;

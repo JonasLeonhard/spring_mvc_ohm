@@ -7,30 +7,48 @@ includeHeaderFragment = ${{'buyList-header'}})"></head>
 <nav th:replace="fragments/navigation :: navigation"></nav>
 
 <div class="page-content">
-    <div id="buyList-copy-wrapper">
-        You want to buy the following recipes:
+
+    <div th:if="${#lists.size(authenticated.buyList) == 0}" class="buyList-card">
+        Add recipes to your buylist, to view them here
     </div>
 
     <div th:each="listItem, listItemIter : ${authenticated.buyList}" class="buyList-card">
-        <span class="recipe-title">[[${listItem.recipe.title}]]</span>
-        <form th:action="${'/recipe/' + listItem.recipe.id + '/toList'}" method="post">
-            <Button type="submit" value="/user/buyList" name="redirectTo">remove recipe</Button>
+        <form th:action="${'/recipe/' + listItem.recipe.id + '/toList'}"
+              method="post"
+              class="recipe-form">
+            <div id="buyList-copy-wrapper">
+                <div class="form-annotation">
+                    <div>[[${listItemIter.index + 1}]]</div>
+                    <span class="form-annotation-txt-controls">
+                    <span class="recipe-title">[[${listItem.recipe.title}]]</span>
+                    <span class="recipe-form-controls">
+                        <Button type="submit" value="/user/buyList" name="redirectTo">Remove</Button>
+                        <Button type="submit"
+                                th:formaction="${'/recipe/' + listItem.recipe.id + '/saveBuyList'}">Save</Button>
+                    </span>
+                </span>
+                </div>
+            </div>
+
+            <div>
+                <ul>
+                    <li th:each="recipeIngredient, ingredientIter : ${listItem.recipe.recipeIngredients}"
+                        class="recipe-ingredient">
+                        <label th:for="${'recipe-' + listItem.recipe.id + '-ingredient-' + recipeIngredient.ingredient.id}">
+                            <span class="index">[[${listItemIter.index + 1}]].[[${ingredientIter.index}]]:</span>
+                            <span class="amount">[[${recipeIngredient.amount}]]</span>
+                            <span class="unit">[[${recipeIngredient.ingredient.unit}]]</span>
+                            <span class="name">[[${recipeIngredient.ingredient.name}]]:</span>
+                        </label>
+                        <input type="checkbox"
+                               th:id="${'recipe-' + listItem.recipe.id + '-ingredient-' + recipeIngredient.ingredient.id}"
+                               name="ingredientId"
+                               th:value="${recipeIngredient.ingredient.id}"
+                               th:checked="${#lists.size(listItem.boughtRecipeIngredients.?[ingredient.id == __${recipeIngredient.ingredient.id}__]) > 0}">
+                    </li>
+                </ul>
+            </div>
         </form>
-        <div>
-            <ul>
-                <li th:each="recipeIngredient, ingredientIter : ${listItem.recipe.recipeIngredients}"
-                    class="recipe-ingredient">
-                    <label th:for="${'recipe-' + listItem.recipe.id + '-ingredient-' + recipeIngredient.ingredient.id}">
-                        <span class="index">[[${listItemIter.index}]].[[${ingredientIter.index}]]:</span>
-                        <span class="amount">[[${recipeIngredient.amount}]]</span>
-                        <span class="unit">[[${recipeIngredient.ingredient.unit}]]</span>
-                        <span class="name">[[${recipeIngredient.ingredient.name}]]:</span>
-                    </label>
-                    <input type="checkbox"
-                           th:id="${'recipe-' + listItem.recipe.id + '-ingredient-' + recipeIngredient.ingredient.id}">
-                </li>
-            </ul>
-        </div>
     </div>
 </div>
 

@@ -6,37 +6,92 @@ includeHeaderFragment = ${{'invitation-header'}})"></head>
 <body>
 <nav th:replace="fragments/navigation :: navigation"></nav>
 <div class="page-content">
-    <h1>Invitation page for: [[${invitation.title}]]</h1>
+    <section class="card">
+        <div class="form-annotation">
+            <div>1</div>
+            <span class="form-annotation-txt-controls">
+                <form th:action="@{/user/invite}" th:if="${authenticated.id == invitation.user.id}">
+                    <button type="submit" name="invitationId" th:value="${invitation.id}">Edit</button>
+                </form>
+                <span>[[${invitation.title}]]</span>
+            </span>
+        </div>
 
-    [[${invitation.message}]]</br>
-
-    <form th:action="@{/user/invite}" th:if="${authenticated.id == invitation.user.id}">
-        <button type="submit" name="invitationId" th:value="${invitation.id}">Edit</button>
-    </form>
-
-
-    <div>
-        comment section:
-        <div>
-            <div th:each="comment, iter : ${invitationComments}">
-                [[${comment.message}]] by user: [[${comment.user.name}]]
+        <div class="invitation__details">
+            <div>
+                <span>Date</span>
+                <span>[[${dateFormatter.format(invitation.date)}]]</span>
+            </div>
+            <div>
+                <span>Start</span>
+                <span>[[${calendarService.getTimelineAnnotationFrom(invitation.gridRowStart)}]]</span>
+            </div>
+            <div>
+                <span>End</span>
+                <span>[[${calendarService.getTimelineAnnotationFrom(invitation.gridRowEnd)}]]</span>
             </div>
         </div>
-        <form th:action="@{/user/invitation/{id}/comment(id=${invitation.id})}" method="post">
-            <label>
-                Comment:
-                <textarea rows="4" name="message" th:disabled="${authenticated == null}"
-                          th:placeholder="${(authenticated == null ? 'Login to comment on ' : 'Comment on ')  + 'invitation'}"></textarea>
-            </label>
-            <button type="submit" th:title="${authenticated == null ? 'Login to Comment' : 'Submit Comment'}"
-                    th:disabled="${authenticated == null}">Comment
-            </button>
-        </form>
-    </div>
+
+        <span class="invitation__message">
+            [[${invitation.message}]]
+        </span>
+
+
+        <div class="form-annotation">
+            <div>2</div>
+            <span>
+                    Comments
+            </span>
+        </div>
+
+        <div>
+            <div class="comment__overview">
+                [[${#lists.size(invitationComments)}]] [[${#lists.size(invitationComments) > 1 ? 'Comments' :
+                'Comment'}]]
+            </div>
+            <form th:action="@{/user/invitation/{id}/comment(id=${invitation.id})}"
+                  method="post"
+                  id="comments">
+                <label>
+                <textarea class="comment__user-textarea"
+                          name="message"
+                          th:disabled="${authenticated == null}"
+                          th:placeholder="${(authenticated == null ? 'Login to comment on ' : 'Comment on ')  + invitation.title}"></textarea>
+                </label>
+                <button type="submit"
+                        class="comment__user-button"
+                        th:title="${authenticated == null ? 'Login to public comment' : 'Submit public comment'}"
+                        th:disabled="${authenticated == null}">Comment
+                </button>
+            </form>
+
+            <div>
+                <div th:each="comment, iter : ${invitationComments}" class="comment__container">
+                    <div class="comment__profile-image-container">
+                        <img class="profile-image"
+                             alt="profile picture"
+                             th:title="${comment.user.username} + '\'s Profilepicture'"
+                             th:src="${comment.user.picture != null ? '/resource/' + comment.user.picture.id : '/unsecured_files/placeholder_profile_image.png'}"/>
+                    </div>
+                    <div class="comment__content">
+                        <div class="comment__header">
+                            <a th:href="@{/user/profile/{username}(username=${comment.user.username})}">
+                                [[${comment.user.name}]]
+                            </a>
+                            <span>
+                            at [[${dateFormatter.format(comment.createdAt)}]]
+                        </span>
+                        </div>
+                        <div class="comment__message">
+                            [[${comment.message}]]
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </div>
 
 <footer th:replace="fragments/footer :: footer()"></footer>
-<!--&lt;!&ndash; Scripts &ndash;&gt;-->
-<!--<script type="text/javascript" th:src="@{/js/multiselect.js}"></script>-->
 </body>
 </html>

@@ -18,3 +18,24 @@
 .multiselect-selected div:hover {
     background: var(--primary-light);
 }
+
+.invite__dates {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin: 1rem 0;
+}
+
+.invite__message #message {
+    width: 100%;
+    min-height: 10rem;
+    resize: vertical;
+}
+
+.invite__title #title {
+    width: 100%;
+}
+
+.error {
+    display: block;
+}

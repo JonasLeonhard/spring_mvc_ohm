@@ -145,4 +145,10 @@ class RecipeController(val recipeService: RecipeService,
         userService.commentRecipe(recipeId, principal, message)
         return "redirect:/recipe/$recipeId#comments"
     }
+
+    @PostMapping("/{id}/saveBuyList")
+    fun saveBuyList(principal: Principal, @PathVariable("id") recipeId: Long, @RequestParam(name = "ingredientId") ingredientIds: List<Long>?): String {
+        userService.saveRecipeBuyList(principal, recipeId, ingredientIds ?: mutableListOf())
+        return "redirect:/user/buyList"
+    }
 }

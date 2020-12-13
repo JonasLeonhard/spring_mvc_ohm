@@ -16,6 +16,7 @@ import services.UserService
 import validators.AddIngredientFormValidator
 import validators.InvitationFormValidator
 import java.security.Principal
+import java.text.SimpleDateFormat
 import javax.validation.Valid
 
 @Controller
@@ -119,6 +120,8 @@ class UserController(val userService: UserService,
         }
 
         model["invitation"] = invitation
+        model["dateFormatter"] = SimpleDateFormat("dd/MM/yyyy hh:mm")
+        model["calendarService"] = calendarService
 
         model["invitationComments"] = invitationService.getInvitationComments(invitationId)
         return "invitation"

@@ -7,6 +7,12 @@ includeHeaderFragment = ${{'freezer-header'}})"></head>
 <nav th:replace="fragments/navigation :: navigation"></nav>
 <div class="page-content">
     <section class="card">
+        <div class="form-annotation">
+            <div>1</div>
+            <span>
+                Ingredients
+            </span>
+        </div>
         <div class="freezer__forms">
             <form th:action="@{/user/freezer}" method="get" class="multiselect-form">
                 <label for="freezerFriendList">Friends</label>
@@ -63,8 +69,34 @@ includeHeaderFragment = ${{'freezer-header'}})"></head>
             </form>
         </div>
 
-        <div th:each="freezerItem : ${freezer}" class="freezer-item">
-            <span>[[${freezerItem.user.username}]]: [[${freezerItem.ingredient.name}]] -> amount: [[${freezerItem.amount}]]</span>
+        <div th:each="freezerItem, iter : ${freezer}" class="freezer-item">
+            <div id="ingredients-container">
+                <div class="ingredient">
+                    <div class="ingredient-img-wrapper">
+                        <img class="ingredient-img"
+                             th:src="${freezerItem.ingredient.picture != null ? '/resource/' + freezerItem.ingredient.picture.id : (freezerItem.ingredient.imageUrl != null ? freezerItem.ingredient.imageUrl : '/unsecured_files/leaf.png')}">
+                    </div>
+                    <div>
+                        <div class="ingredient-stats">
+                            <div class="ingredient-user">
+                                <a th:if="${freezerItem.user != null}"
+                                   th:href="@{/user/profile/{name}(name=${freezerItem.user.username})}">
+                                    [[${freezerItem.user.username}]]
+                                </a>
+                            </div>
+                            <div>
+                                [[${freezerItem.amount}]]
+                                [[${freezerItem.ingredient.unit}]]
+                                [[${freezerItem.ingredient.name}]]
+                            </div>
+                        </div>
+
+                        <p class="ingredient-meta" th:if="${freezerItem.ingredient.meta != null}">
+                            [[${freezerItem.ingredient.meta}]]
+                        <p>
+                    </div>
+                </div>
+            </div>
             <form th:action="@{/user/freezer/update}" method="post" th:if="${authenticated.id == freezerItem.user.id}">
                 <input th:each="queryFriend : ${queryFriends}" type="hidden" name="friends" th:value="${queryFriend}">
                 <input type="hidden" name="freezerIngredientId" th:value="${freezerItem.ingredient.id}">
@@ -77,10 +109,13 @@ includeHeaderFragment = ${{'freezer-header'}})"></head>
     </section>
 
     <section class="card">
-        Freezer Suggestions:
+        <div class="form-annotation">
+            <div>2</div>
+            <span>
+                Suggestions
+            </span>
+        </div>
         <div class="freezer-suggestion" th:each="recipeSuggestion : ${freezerSuggestions}">
-            TODO: <br/>
-            -escpape summary th:utext:<br/>
             <div class="recipe-card recipe-id-[[${recipe.id}]]">
                 <div class="recipe-card-image-container">
                     <div class="rating">
@@ -102,11 +137,9 @@ includeHeaderFragment = ${{'freezer-header'}})"></head>
 
                     <div class="recipe-card-info-flex">
                         <span>Ready in [[${recipeSuggestion.recipe.readyInMinutes}]] Minutes</span>
-                        <span>Likes: 0</span>
-                        <span>isSpoonacularRecipe: [[${recipeSuggestion.recipe.spoonacularId}]]</span>
                     </div>
 
-                    <div>
+                    <div class="freezer__recipe-card-buttons">
                         <a th:href="'/recipe/'+ ${recipeSuggestion.recipe.id}">
                             <button>Go to recipe</button>
                         </a>
@@ -127,13 +160,51 @@ includeHeaderFragment = ${{'freezer-header'}})"></head>
                         th:each="recipeIngredient: ${recipeSuggestion.recipe.recipeIngredients}">
                     <div th:each="freezerItem : ${freezer.?[ingredient.id == __${recipeIngredient.ingredient.id}__]}"
                          th:class="${freezerItem.amount < recipeIngredient.amount ? 'not-enough' : 'enough'}">
-                        ([[${recipeIngredient.ingredient.name}]]) -> [[${freezerItem.amount}]] of
-                        [[${recipeIngredient.amount}]]
+                        <div class="ingredient">
+                            <div class="ingredient-img-wrapper">
+                                <img class="ingredient-img"
+                                     th:src="${recipeIngredient.ingredient.picture != null ? '/resource/' + recipeIngredient.ingredient.picture.id : (recipeIngredient.ingredient.imageUrl != null ? recipeIngredient.ingredient.imageUrl : '/unsecured_files/leaf.png')}">
+                            </div>
+                            <div>
+                                <div class="ingredient-stats">
+                                    <div class="ingredient-user">
+                                        <a th:if="${freezerItem.user != null}"
+                                           th:href="@{/user/profile/{name}(name=${freezerItem.user.username})}">
+                                            [[${freezerItem.user.username}]]
+                                        </a>
+                                    </div>
+                                    <div>
+                                        <span class="ingredient-amount">[[${freezerItem.amount}]]</span>
+                                        [[${freezerItem.ingredient.unit}]] of
+                                        [[${recipeIngredient.amount}]]
+                                        [[${freezerItem.ingredient.name}]]
+                                    </div>
+                                </div>
+
+                                <p class="ingredient-meta" th:if="${freezerItem.ingredient.meta != null}">
+                                    [[${freezerItem.ingredient.meta}]]
+                                <p>
+                            </div>
+                        </div>
                     </div>
 
                     <div th:if="${freezer.?[ingredient.id == __${recipeIngredient.ingredient.id}__].isEmpty()}"
                          class="missing">
-                        ([[${recipeIngredient.ingredient.name}]]) -> 0 of [[${recipeIngredient.amount}]]
+                        <div class="ingredient">
+                            <div class="ingredient-img-wrapper">
+                                <img class="ingredient-img"
+                                     th:src="${recipeIngredient.ingredient.picture != null ? '/resource/' + recipeIngredient.ingredient.picture.id : (recipeIngredient.ingredient.imageUrl != null ? recipeIngredient.ingredient.imageUrl : '/unsecured_files/leaf.png')}">
+                            </div>
+                            <div>
+                                <div class="ingredient-stats">
+                                    <div>
+                                        <span class="ingredient-amount">0</span> of
+                                        [[${recipeIngredient.amount}]]
+                                        [[${recipeIngredient.ingredient.name}]]
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </th:block>
             </div>

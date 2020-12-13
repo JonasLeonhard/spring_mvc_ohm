@@ -6,117 +6,125 @@ includeHeaderFragment = ${{'invite-header'}})"></head>
 <body>
 <nav th:replace="fragments/navigation :: navigation"></nav>
 <div class="page-content">
-    <h1>Invite page:</h1>
+    <section class="card">
 
-    <form class="multiselect-form" th:action="@{/user/invite}" method="post" th:object="${invitationForm}">
-        <section>
-            <label for="freezerFriendList">Friends</label>
-            <select id="freezerFriendList" class="multiselect" name="friends"
-                    th:disabled="${userFriendships.isEmpty()}">
-                <option value="" disabled selected>
-                    [[${userFriendships.isEmpty() ? 'You have no Friends yet' : 'Select Friends'}]]
-                </option>
+        <div class="form-annotation">
+            <div>1</div>
+            <span>
+                    Invite
+                </span>
+        </div>
 
-                <option class="friend-option"
-                        th:if="${!userFriendships.isEmpty()}"
-                        th:each="friendship : ${userFriendships}"
-                        th:value="${friendship.requested_by.username != authenticated.username ? friendship.requested_by.username : friendship.request_to.username}"
-                        th:disabled="${invitationForm.friends != null ? (#lists.contains(invitationForm.friends, friendship.requested_by.username) || #lists.contains(invitationForm.friends, friendship.request_to.username)) : false}">
-                    [[${friendship.requested_by.username != authenticated.username ? friendship.requested_by.username :
-                    friendship.request_to.username}]]
-                </option>
-            </select>
-            <button type="submit" th:disabled="${userFriendships.isEmpty()}" name="reloadWithFriend" value="true">Add
-            </button>
-            <span th:errors="*{friends}" class="error"></span>
-        </section>
-        // TODO: make selection work without js TEst
-        <div class="multiselect-selected">
-            <div th:each="friendUsername: ${invitationForm.friends}"
-                 th:attr="onclick=${'onSelectedCancel(''' + friendUsername + ''')'}">
-                <button type="submit"
-                        name="removeUsername"
-                        th:value="${friendUsername}">
-                    [[${friendUsername}]] x
+        <form class="multiselect-form invite__friends"
+              th:action="@{/user/invite}"
+              method="post"
+              th:object="${invitationForm}">
+            <section>
+                <label for="freezerFriendList">Friends</label>
+                <select id="freezerFriendList" class="multiselect" name="friends"
+                        th:disabled="${userFriendships.isEmpty()}">
+                    <option value="" disabled selected>
+                        [[${userFriendships.isEmpty() ? 'You have no Friends yet' : 'Select Friends'}]]
+                    </option>
+
+                    <option class="friend-option"
+                            th:if="${!userFriendships.isEmpty()}"
+                            th:each="friendship : ${userFriendships}"
+                            th:value="${friendship.requested_by.username != authenticated.username ? friendship.requested_by.username : friendship.request_to.username}"
+                            th:disabled="${invitationForm.friends != null ? (#lists.contains(invitationForm.friends, friendship.requested_by.username) || #lists.contains(invitationForm.friends, friendship.request_to.username)) : false}">
+                        [[${friendship.requested_by.username != authenticated.username ?
+                        friendship.requested_by.username :
+                        friendship.request_to.username}]]
+                    </option>
+                </select>
+                <button type="submit" th:disabled="${userFriendships.isEmpty()}" name="reloadWithFriend" value="true">
+                    Add
                 </button>
-                <input type="hidden" name="friends" th:value="${friendUsername}">
+                <span th:errors="*{friends}" class="error"></span>
+            </section>
+
+            <div class="multiselect-selected">
+                <div th:each="friendUsername: ${invitationForm.friends}"
+                     th:attr="onclick=${'onSelectedCancel(''' + friendUsername + ''')'}">
+                    <button type="submit"
+                            name="removeUsername"
+                            th:value="${friendUsername}">
+                        [[${friendUsername}]] x
+                    </button>
+                    <input type="hidden" name="friends" th:value="${friendUsername}">
+                </div>
             </div>
-        </div>
-        <input type="hidden" name="recipeId" th:value="*{recipeId}">
-        <span th:errors="*{recipeId}" class="error"></span>
+            <input type="hidden" name="recipeId" th:value="*{recipeId}">
+            <span th:errors="*{recipeId}" class="error"></span>
 
-        <div>
-            <label for="date">Date:</label>
-            <input type="date" id="date" name="date" placeholder="yyyy-MM-dd"
-                   th:value="${invitationForm.date != null ? invitationForm.date : ''}">
-            <span th:errors="*{date}" class="error"></span>
-        </div>
+            <div class="invite__title">
+                <label for="title">Title*</label>
+                <input id="title" type="text"
+                       name="title"
+                       placeholder="invitation title..."
+                       th:value="${invitationForm.title != null ? invitationForm.title : ''}">
+                <span th:errors="*{title}" class="error"></span>
+            </div>
 
-        <div>
-            <label for="title">Title:</label>
-            <input id="title" type="text"
-                   name="title"
-                   placeholder="invitation title..."
-                   th:value="${invitationForm.title != null ? invitationForm.title : ''}">
-            <span th:errors="*{title}" class="error"></span>
-        </div>
+            <div class="invite__message">
+                <label for="message">Message*</label>
+                <textarea id="message"
+                          name="message"
+                          rows="6"
+                          placeholder="invitation message...">[[${invitationForm.message != null ? invitationForm.message : ''}]]</textarea>
+                <span th:errors="*{message}" class="error"></span>
+            </div>
 
-        <div>
-            <label for="message">Message:</label>
-            <textarea id="message"
-                      name="message"
-                      rows="6"
-                      placeholder="invitation message...">[[${invitationForm.message != null ? invitationForm.message : ''}]]</textarea>
-            <span th:errors="*{message}" class="error"></span>
-        </div>
+            <div class="invite__dates">
+                <div class="invite__date">
+                    <label for="date">Date*</label>
+                    <input type="date" id="date" name="date" placeholder="yyyy-MM-dd"
+                           th:value="${invitationForm.date != null ? invitationForm.date : ''}">
+                    <span th:errors="*{date}" class="error"></span>
+                </div>
 
-        <div>
-            <label for="gridRowStart">Event Start</label>
-            <select id="gridRowStart" name="gridRowStart">
-                <option value=""
-                        disabled
-                        th:selected="${invitationForm.gridRowStart == null || invitationForm.gridRowStart == ''}">
-                    Select a Start Time...
-                </option>
-                <option th:each="timelineAnnotation : ${timelineAnnotations}"
-                        th:value="${timelineAnnotation.gridRowStart}"
-                        th:selected="${timelineAnnotation.gridRowStart == invitationForm.gridRowStart}">
-                    [[${timelineAnnotation.annotation}]]
-                </option>
-            </select>
-            <span th:errors="*{gridRowStart}" class="error"></span>
-        </div>
+                <div class="invite__date-start">
+                    <label for="gridRowStart">Event Start*</label>
+                    <select id="gridRowStart" name="gridRowStart">
+                        <option value=""
+                                disabled
+                                th:selected="${invitationForm.gridRowStart == null || invitationForm.gridRowStart == ''}">
+                            Select a Start Time...
+                        </option>
+                        <option th:each="timelineAnnotation : ${timelineAnnotations}"
+                                th:value="${timelineAnnotation.gridRowStart}"
+                                th:selected="${timelineAnnotation.gridRowStart == invitationForm.gridRowStart}">
+                            [[${timelineAnnotation.annotation}]]
+                        </option>
+                    </select>
+                    <span th:errors="*{gridRowStart}" class="error"></span>
+                </div>
 
-        <div>
-            <label for="gridRowEnd">Event End</label>
-            <select id="gridRowEnd" name="gridRowEnd">
-                <option value=""
-                        disabled
-                        th:selected="${invitationForm.gridRowEnd == null || invitationForm.gridRowEnd == ''}">
-                    Select a End Time...
-                </option>
-                <option th:each="timelineAnnotation : ${timelineAnnotations}"
-                        th:value="${timelineAnnotation.gridRowStart}"
-                        th:selected="${timelineAnnotation.gridRowStart == invitationForm.gridRowEnd}">
-                    [[${timelineAnnotation.annotation}]]
-                </option>
-            </select>
-            <span th:errors="*{gridRowEnd}" class="error"></span>
-        </div>
-
-        <button type="submit" th:if="${invitationId == null}">Submit</button>
-        <input type="hidden" th:if="${invitationId != null}" name="invitationId" th:value="${invitationId}">
-        <button type="submit" th:if="${invitationId != null}" name="save" value="true">Save</button>
-        <button type="submit" th:if="${invitationId != null}" name="delete" value="true">Delete</button>
-
-        // this page should also be the edit invitation page in the calendar<br/>
-        // TODO: add divide ingredients or change to friends select what to bring<br/>
-        // TODO: add multiple recipe's to invitation<br/>
-    </form>
+                <div class="invite__date-end">
+                    <label for="gridRowEnd">Event End*</label>
+                    <select id="gridRowEnd" name="gridRowEnd">
+                        <option value=""
+                                disabled
+                                th:selected="${invitationForm.gridRowEnd == null || invitationForm.gridRowEnd == ''}">
+                            Select a End Time...
+                        </option>
+                        <option th:each="timelineAnnotation : ${timelineAnnotations}"
+                                th:value="${timelineAnnotation.gridRowStart}"
+                                th:selected="${timelineAnnotation.gridRowStart == invitationForm.gridRowEnd}">
+                            [[${timelineAnnotation.annotation}]]
+                        </option>
+                    </select>
+                    <span th:errors="*{gridRowEnd}" class="error"></span>
+                </div>
+            </div>
+            <button type="submit" th:if="${invitationId == null}">Submit</button>
+            <input type="hidden" th:if="${invitationId != null}" name="invitationId" th:value="${invitationId}">
+            <button type="submit" th:if="${invitationId != null}" name="save" value="true">Save</button>
+            <button type="submit" th:if="${invitationId != null}" name="delete" value="true">Delete</button>
+        </form>
+    </section>
 </div>
 
 <footer th:replace="fragments/footer :: footer()"></footer>
-<!--&lt;!&ndash; Scripts &ndash;&gt;-->
-<!--<script type="text/javascript" th:src="@{/js/multiselect.js}"></script>-->
 </body>
 </html>

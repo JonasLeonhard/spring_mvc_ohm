@@ -16,6 +16,7 @@ class UserService(
         val userRepository: UserRepository,
         val roleRepository: RoleRepository,
         val recipeRepository: RecipeRepository,
+        val recipeIngredientsRepository: RecipeIngredientsRepository,
         val invitationRepository: InvitationRepository,
         val userInvitationCommentRepository: UserInvitationCommentRepository,
         val userLikedRecipeRepository: UserLikedRecipeRepository,
@@ -194,6 +195,14 @@ class UserService(
         }
 
         userRecipeBuyListRepository.save(newUserRecipeBuyList)
+    }
+
+    @Transactional
+    fun saveRecipeBuyList(principal: Principal, recipeId: Long, ingredientIds: List<Long>) {
+        val user = findByUsername(principal.name)
+        val userRecipeBuyListItem = userRecipeBuyListRepository.findByEmbedded(user.id, recipeId)
+        userRecipeBuyListItem.boughtRecipeIngredients = recipeIngredientsRepository.findAllByEmbedded(recipeId, ingredientIds)
+        userRecipeBuyListRepository.save(userRecipeBuyListItem)
     }
 
     @Transactional

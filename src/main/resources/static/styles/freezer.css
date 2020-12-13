@@ -3,16 +3,30 @@
     margin: 1rem;
 }
 
+.suggestions-ingredients {
+    display: grid;
+    gap: 0.5rem;
+    grid-template-columns: 1fr;
+}
+
 .suggestions-ingredients .enough {
-    background: green;
+    order: -2;
+}
+
+.suggestions-ingredients .enough .ingredient-amount {
+    color: green;
 }
 
 .suggestions-ingredients .not-enough {
-    background: var(--warning);
+    order: -1;
 }
 
-.suggestions-ingredients .missing {
-    background: var(--error);
+.suggestions-ingredients .not-enough .ingredient-amount {
+    color: var(--warning);
+}
+
+.suggestions-ingredients .missing .ingredient-amount {
+    color: var(--error);
 }
 
 .multiselect-selected {
@@ -45,6 +59,11 @@
     margin: 0 0.25rem;
 }
 
+.freezer__recipe-card-buttons {
+    display: flex;
+    flex-wrap: wrap;
+}
+
 .multiselect-selected div:hover {
     background: var(--primary-light);
 }
@@ -52,17 +71,13 @@
 .freezer-item {
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 /* RECIPE */
 .recipe-card {
     position: relative;
     display: flex;
-}
-
-.recipe-card:hover {
-    background: #f8f8f8;
-    border: 1px solid var(--primary);
 }
 
 .recipe-card:hover > .recipe-card-image-container > .recipe-card-img {
@@ -82,6 +97,8 @@
 
 .recipe-card-info-flex {
     display: flex;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
 }
 
 .recipe-card-image-container {
@@ -124,3 +141,46 @@
     right: 0.5em;
     overflow: hidden;
 }
+
+
+#ingredients-container {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.85rem;
+}
+
+.ingredient {
+    border-radius: 5px;
+    padding: 0.5em 1.5em;
+    margin: 0.25em;
+    display: flex;
+    align-items: center;
+}
+
+.ingredient-img-wrapper {
+    width: 3rem;
+    height: 3rem;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 0.5rem;
+}
+
+.ingredient-img {
+    width: initial;
+    height: 100%;
+}
+
+@media (min-width: 600px) {
+    .suggestions-ingredients {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (min-width: 850px) {
+    .suggestions-ingredients {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+}
+
