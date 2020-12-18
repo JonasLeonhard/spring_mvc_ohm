@@ -11,7 +11,7 @@ includeIonicons = ${true})"></head>
         <div class="recipe__teaser">
             <div class="recipe-card-image-container">
                 <div class="rating">
-                    <span th:text="${#lists.size(recipe.userLikes)}">likes</span>
+                    <span>[[${#lists.size(recipe.userLikes)}]] 👍</span>
                 </div>
                 <img class="recipe-card-img"
                      th:src="${recipe.picture != null ? '/resource/' + recipe.picture.id : (recipe.recipeImageUrl != null ? recipe.recipeImageUrl : '/unsecured_files/logo_placeholder.png')}">
@@ -25,8 +25,7 @@ includeIonicons = ${true})"></head>
                 </div>
 
                 <div class="recipe-card-info-flex">
-                    <span>Ready in [[${recipe.readyInMinutes}]] Minutes</span>
-                    <span>Likes: [[${#lists.size(recipe.userLikes)}]]</span>
+                    <span class="recipe__bubble-wrapper">Ready in [[${recipe.readyInMinutes}]] Minutes ⏱️</span>
                 </div>
             </div>
         </div>
@@ -39,13 +38,11 @@ includeIonicons = ${true})"></head>
         </div>
 
         <div class="recipe__overview-container">
-            servings: <span th:text="${recipe.servings}">servings</span> <br>
-            pricePerServing: <span th:text="${recipe.pricePerServing}">pricePerServing</span> <br>
-            glutenFree: <span th:text="${recipe.glutenFree}">glutenFree</span> <br>
-            vegan: <span th:text="${recipe.vegan}">vegan</span> <br>
-            vegetarian: <span th:text="${recipe.vegetarian}">vegetarian</span> <br>
-
-            recipeImageUrl:: [[${recipe.recipeImageUrl != null ? recipe.recipeImageUrl : "notset!"}]]
+            <span class="recipe__bubble-wrapper">[[${recipe.servings}]] [[${recipe.servings > 1 ? 'servings' : 'serving'}]] 🍜</span>
+            <span class="recipe__bubble-wrapper">[[${recipe.pricePerServing}]]💲 per serving</span>
+            <span class="recipe__bubble-wrapper" th:if="${recipe.glutenFree == true}">glutenFree ✅</span>
+            <span class="recipe__bubble-wrapper" th:if="${recipe.vegan == true}">vegan ✅</span>
+            <span class="recipe__bubble-wrapper" th:if="${recipe.vegetarian == true}">vegetarian ✅</span>
         </div>
 
         <div class="form-annotation">
@@ -177,7 +174,7 @@ includeIonicons = ${true})"></head>
                 <button type="submit"
                         class="comment__user-button"
                         th:title="${authenticated == null ? 'Login to public comment' : 'Submit public comment'}"
-                        th:disabled="${authenticated == null}">Comment
+                        th:disabled="${authenticated == null}">Comment 💬
                 </button>
             </form>
 

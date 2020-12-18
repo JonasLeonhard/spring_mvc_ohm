@@ -23,8 +23,8 @@ includeHeaderFragment = ${{'search-header'}})"></head>
                           th:object="${recipe}">
                     <div class="recipe-card recipe-id-[[*{id}]]">
                         <div class="recipe-card-image-container">
-                            <div class="rating">1
-                                <span th:text="${#lists.size(recipe.userLikes)}">likes</span>
+                            <div class="rating">
+                                <span>[[${#lists.size(recipe.userLikes)}]] 👍</span>
                             </div>
                             <a th:href="'/recipe/'+ ${recipe.id}">
                                 <img class="recipe-card-img"
@@ -46,8 +46,7 @@ includeHeaderFragment = ${{'search-header'}})"></head>
                             </div>
 
                             <div class="recipe-card-info-flex">
-                                <span>Ready in [[*{readyInMinutes}]] Minutes</span>
-                                <span>Likes: 0</span>
+                                <span class="search__bubble-wrapper">Ready in [[*{readyInMinutes}]] Minutes</span>
                             </div>
 
                             <form th:action="@{/recipe/{id}(id=${recipe.id})}">
@@ -59,9 +58,12 @@ includeHeaderFragment = ${{'search-header'}})"></head>
                     </div>
                 </th:block>
 
-                <div>
-                    [[${recipes != null ? #sets.size(recipes) : '-'}]] of [[${recipes != null ? #sets.size(recipes) :
-                    '-'}]] Recipes"
+                <div class="search__results-information">
+                    Page
+                    <span>[[${recipes != null ? #sets.size(recipes) : '-'}]]</span>
+                    of
+                    <span>[[${recipes != null ? #sets.size(recipes) :
+                        '-'}]]</span>
                 </div>
             </div>
         </th:block>
@@ -78,14 +80,15 @@ includeHeaderFragment = ${{'search-header'}})"></head>
             <div class="tab">
                 <th:block th:if="${searchUsers != null && #sets.size(searchUsers) > 0}"
                           th:each="searchUser : ${searchUsers}">
-                    <div>
+                    <div class="search__bubble-wrapper">
                         <a th:href="'/user/profile/' + ${searchUser.username}">
                             [[${searchUser.username}]]
                         </a>
                     </div>
                 </th:block>
 
-                <span th:if="${searchUsers == null || (searchUsers != null && (#sets.size(searchUsers) == 0))}">
+                <span class="search__bubble-wrapper"
+                      th:if="${searchUsers == null || (searchUsers != null && (#sets.size(searchUsers) == 0))}">
                     No Profile with the Username ([[${q}]]) found
                 </span>
             </div>

@@ -29,7 +29,6 @@ class UserValidator(val userService: UserService) : Validator {
     }
 
     fun passwordNotMatching(errors: Errors, user: User) {
-        println("validate password: ${user.passwordConfirm} -> ${user.password} ----------")
         if (user.passwordConfirm != user.password) {
             errors.rejectValue("password", "PasswordNotMatching", "password is not matching the confirm password")
         }

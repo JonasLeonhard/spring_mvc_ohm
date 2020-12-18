@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header(title = ${pageTitle},
+includeHeaderFragment = ${{'terms-header'}})"></head>
+
+<body>
+<nav th:replace="fragments/navigation :: navigation"></nav>
+
+<div class="page-content">
+    terms
+</div>
+
+<footer th:replace="fragments/footer :: footer()"></footer>
+</body>
+</html>

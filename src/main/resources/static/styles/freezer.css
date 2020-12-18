@@ -62,6 +62,10 @@
 .freezer__recipe-card-buttons {
     display: flex;
     flex-wrap: wrap;
+    gap: 1rem;
+    margin: 0.5rem 0;
+    border-top: 1px solid var(--primary-light);
+    padding-top: 1rem;
 }
 
 .multiselect-selected div:hover {
@@ -170,6 +174,16 @@
 .ingredient-img {
     width: initial;
     height: 100%;
+}
+
+
+.freezer__ready-in-wrapper {
+    padding: 0.5rem 1rem;
+    background: var(--primary);
+    margin: 0 0.25rem;
+    border-radius: 50px;
+    color: white;
+    border: 1px solid var(--main-bg-color-bright);
 }
 
 @media (min-width: 600px) {

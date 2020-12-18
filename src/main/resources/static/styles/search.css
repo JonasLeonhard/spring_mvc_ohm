@@ -1,10 +1,10 @@
 .recipe-card {
     position: relative;
     display: flex;
-    margin-bottom: 3em;
     border: 1px solid var(--primary);
     background: white;
     padding: 1em;
+    margin: 1rem 0 3rem 0;
 }
 
 .recipe-card:hover {
@@ -68,14 +68,32 @@
     position: absolute;
     background: var(--primary);
     border: 1px solid white;
-    border-radius: 50%;
-    width: 2em;
+    color: white;
+    border-radius: 50px;
+    width: max-content;
     height: 2em;
     display: flex;
     justify-content: center;
     align-items: center;
     top: 0.5em;
     right: 0.5em;
+    overflow: hidden;
+    padding: 0 0.5rem;
+}
+
+.search__bubble-wrapper {
+    padding: 0.5rem 1rem;
+    background: var(--primary);
+    margin: 1rem 0.25rem;
+    border-radius: 50px;
+    color: white;
+    border: 1px solid var(--main-bg-color-bright);
+    width: max-content;
+    display: inline-block;
+}
+
+.search__bubble-wrapper a {
+    color: white;
 }
 
 .page-content {
@@ -96,4 +114,17 @@
 
 .tabs .tab-control button {
     margin: 10px;
+}
+
+.tabs .tab {
+    background: transparent;
+}
+
+.search__results-information {
+    text-align: center;
+    margin: 1rem;
+}
+
+.search__results-information span {
+    color: var(--primary);
 }

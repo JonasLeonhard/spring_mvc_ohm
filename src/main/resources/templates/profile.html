@@ -35,32 +35,6 @@ includeIonicons = ${true})"></head>
                 </div>
             </div>
             <div class="sidebar-content-right">
-                <form class="update-profile-form profile-card" th:action="@{/login}" th:object="${userForm}"
-                      method="post"
-                      th:if="${authenticated != null && authenticated.username == profile.username}">
-                    <div class="input-wrapper">
-                        <input th:field="*{username}"
-                               placeholder=" "/>
-                        <label th:for="*{username}" class="control-label">New Username</label>
-                    </div>
-
-                    <div class="input-wrapper">
-                        <input th:field="*{password}"
-                               placeholder=" "
-                               type="password"/>
-                        <label th:for="*{username}" class="control-label">New Password</label>
-                    </div>
-
-                    <div class="input-wrapper">
-                        <input th:field="*{passwordConfirm}"
-                               placeholder=" "
-                               type="password"/>
-                        <label th:for="*{passwordConfirm}" class="control-label">Commit Password</label>
-                    </div>
-
-                    <button type="submit" class="btn btn-success">Update Profile</button>
-                </form>
-
                 <div th:if="${authenticated != null && authenticated.username != profile.username}">
                     <div th:if="${friendship != null}" class="profile-card">
                         <th:block th:if="${friendship.accepted == true}">
@@ -141,16 +115,15 @@ includeIonicons = ${true})"></head>
                                             </a>
 
                                             <div>
-                                        <span>
-                                            Servings: [[${favoriteRecipe.servings}]]
-                                        </span>
+                                                <span>
+                                                    [[${favoriteRecipe.summary}]]
+                                                </span>
                                                 <a th:href="'/recipe/'+ ${favoriteRecipe.id}">
                                                     Read more ...</a>
                                             </div>
 
                                             <div class="recipe-card-info-flex">
-                                                <span>Ready in [[${favoriteRecipe.readyInMinutes}]] Minutes</span>
-                                                <span>Likes: 0</span>
+                                                <span class="profile__bubble-wrapper">Ready in [[${favoriteRecipe.readyInMinutes}]] Minutes</span>
                                             </div>
 
                                             <form th:action="@{/recipe/{id}(id=${favoriteRecipe.id})}">

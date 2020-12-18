@@ -30,15 +30,12 @@ class AuthenticationController(val userService: UserService, val userValidator: 
     fun registration(model: Model): String {
         model["user"] = User()
         model["pageTitle"] = "Registration"
-
-        println("--- called /registration: send registration page ---")
         return "registration"
     }
 
     @PostMapping("/registration", consumes = ["multipart/form-data"])
     fun registration(@Valid userForm: User, bindingResult: BindingResult, model: Model): String {
         userValidator.validate(userForm, bindingResult)
-        println("hasValidated...")
         if (bindingResult.hasErrors()) {
             model["errors"] = bindingResult
             return "registration"

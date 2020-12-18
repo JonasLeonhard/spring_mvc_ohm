@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.ui.Model
 import org.springframework.ui.set
+import org.springframework.validation.BindingResult
 import repositories.*
 import java.security.Principal
 import javax.management.relation.RoleNotFoundException
@@ -240,6 +241,32 @@ class UserService(
             queryParams += "friends=$friend"
         }
         return queryParams
+    }
+
+    @Transactional
+    fun updateUser(principal: Principal, userForm: User, bindingResult: BindingResult, model: Model): Boolean {
+        val user = findByUsername(principal.name)
+        var newUserNameExists = true
+        var passwordsNotMatching = true
+
+        if (bindingResult.getFieldError("username") == null || user.username == userForm.username) {
+            newUserNameExists = false
+            user.username = userForm.username
+        }
+
+        if (bindingResult.getFieldError("password") == null) {
+            val passwordEncoder = BCryptPasswordEncoder()
+            user.password = passwordEncoder.encode(userForm.password)
+            passwordsNotMatching = false
+        }
+
+
+        if (!newUserNameExists && !passwordsNotMatching) {
+            userRepository.save(user)
+            return true
+        }
+        println("bindingresult $bindingResult")
+        return false
     }
 }
 

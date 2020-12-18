@@ -31,6 +31,10 @@ class WebSecurityConfiguration(val userDetailsService: UserDetailsService) : Web
                         "/error/**",
                         "/login**",
                         "/logout",
+                        "/about",
+                        "/terms",
+                        "/privacy",
+                        "/contact",
                         "/resource/**",
                         "/search/**").permitAll()
                 .anyRequest().authenticated().and()

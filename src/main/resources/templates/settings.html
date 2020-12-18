@@ -7,7 +7,33 @@ includeHeaderFragment = ${{'settings-header'}})"></head>
 <nav th:replace="fragments/navigation :: navigation"></nav>
 
 <div class="page-content">
-    THIS IS THE SETTINGS OF [[${authenticated.username}]]
+    <form class="update-profile-form profile-card" th:action="@{/user/settings/update}" th:object="${user}"
+          method="post">
+        <div class="input-wrapper">
+            <input th:field="*{username}"
+                   placeholder=" "/>
+            <label th:for="*{username}" class="control-label">New Username</label>
+        </div>
+        <span th:errors="*{username}" class="error"></span>
+
+        <div class="input-wrapper">
+            <input th:field="*{password}"
+                   placeholder=" "
+                   type="password"/>
+            <label th:for="*{password}" class="control-label">New Password</label>
+        </div>
+        <span th:errors="*{password}" class="error"></span>
+
+        <div class="input-wrapper">
+            <input th:field="*{passwordConfirm}"
+                   placeholder=" "
+                   type="password"/>
+            <label th:for="*{passwordConfirm}" class="control-label">Commit Password</label>
+        </div>
+        <span th:errors="*{passwordConfirm}" class="error"></span>
+
+        <button type="submit" class="btn btn-success">Update Profile</button>
+    </form>
 </div>
 
 <footer th:replace="fragments/footer :: footer()"></footer>

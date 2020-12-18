@@ -58,10 +58,6 @@ img.profile-image {
     border-radius: 3px;
 }
 
-.update-profile-form {
-    display: block;
-}
-
 .recipe-card-wrapper {
     display: flex;
     scroll-snap-align: start;
@@ -108,14 +104,17 @@ img.profile-image {
     position: absolute;
     background: var(--primary);
     border: 1px solid white;
-    border-radius: 50%;
-    width: 2em;
+    color: white;
+    border-radius: 50px;
+    width: max-content;
     height: 2em;
     display: flex;
     justify-content: center;
     align-items: center;
     top: 0.5em;
     right: 0.5em;
+    overflow: hidden;
+    padding: 0 0.5rem;
 }
 
 .recipe-card-info {
@@ -137,4 +136,13 @@ img.profile-image {
     overflow-y: scroll;
     scroll-snap-type: y mandatory;
     height: calc(var(--recipe-card-height) * 2);
+}
+
+.profile__bubble-wrapper {
+    padding: 0.5rem 1rem;
+    background: var(--primary);
+    margin: 1rem 0.25rem;
+    border-radius: 50px;
+    color: white;
+    border: 1px solid var(--main-bg-color-bright);
 }

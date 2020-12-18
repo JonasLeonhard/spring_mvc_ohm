@@ -15,6 +15,7 @@ import services.InvitationService
 import services.UserService
 import validators.AddIngredientFormValidator
 import validators.InvitationFormValidator
+import validators.UserValidator
 import java.security.Principal
 import java.text.SimpleDateFormat
 import javax.validation.Valid
@@ -26,11 +27,11 @@ class UserController(val userService: UserService,
                      val invitationService: InvitationService,
                      val calendarService: CalendarService,
                      val addIngredientFormValidator: AddIngredientFormValidator,
-                     val invitationFormValidator: InvitationFormValidator) {
+                     val invitationFormValidator: InvitationFormValidator,
+                     val userValidator: UserValidator) {
 
     @GetMapping("/profile/{username}")
     fun userProfile(principal: Principal?, model: Model, @PathVariable username: String): String {
-        model["userForm"] = User()
         try {
             val profile = userService.findByUsername(username)
             model["profile"] = profile
@@ -56,8 +57,9 @@ class UserController(val userService: UserService,
 
     @GetMapping("/settings")
     fun userSettings(principal: Principal, model: Model): String {
-        userService.addAuthenticatedUserToModel(principal, model)
         model["pageTitle"] = "${principal.name}' Settings"
+        model["userForm"] = User()
+        userService.addAuthenticatedUserToModel(principal, model)
         return "settings"
     }
 
@@ -243,6 +245,19 @@ class UserController(val userService: UserService,
     fun commentOn(principal: Principal, @PathVariable("id") invitationId: Long, @RequestParam(name = "message") message: String): String {
         userService.commentInvitation(invitationId, principal, message)
         return "redirect:/user/invitation/$invitationId"
+    }
+
+    @PostMapping("/settings/update")
+    fun updateUser(principal: Principal, @Valid userForm: User, bindingResult: BindingResult, model: Model): String {
+        userValidator.validate(userForm, bindingResult)
+        val updated = userService.updateUser(principal, userForm, bindingResult, model)
+        return if (updated) "redirect:/login" else {
+            model["user"] = userForm
+            model["errors"] = bindingResult
+            userService.addAuthenticatedUserToModel(principal, model)
+            println("before render: ${bindingResult.hasErrors()}")
+            return "settings"
+        }
     }
 
 
