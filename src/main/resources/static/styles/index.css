@@ -1,6 +1,6 @@
 .recipe-of-the-day {
     padding: 1rem;
-    background: #eee;
+    background: white;
     margin: 1rem;
     border-radius: 5px;
 }
@@ -45,7 +45,7 @@
 }
 
 .masonry .item {
-    background-color: #eee;
+    background-color: white;
     display: inline-block;
     margin: 0 0 1em;
     width: 100%;

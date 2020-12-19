@@ -7,7 +7,47 @@ includeHeaderFragment = ${{'contact-header'}})"></head>
 <nav th:replace="fragments/navigation :: navigation"></nav>
 
 <div class="page-content">
-    contact
+    <h1>Contact Us</h1>
+
+    <form th:action="@{/contact}" th:object="${contactUs}" method="post">
+
+        <p th:if="${success != null && success == true}" class="success">
+            Thank you for contacting us [[${contactUs.firstName}]] [[${contactUs.lastName}]]! We will contact
+            [[${contactUs.email}]] withing the next days.
+        </p>
+
+        <th:block th:if="${success == null || sucess == false}">
+            <div class="input-wrapper">
+                <input th:field="*{firstName}"
+                       placeholder=" "/>
+                <label th:for="*{firstName}" class="control-label">Firstname</label>
+            </div>
+            <span th:errors="*{firstName}" class="error"></span>
+
+            <div class="input-wrapper">
+                <input th:field="*{lastName}"
+                       placeholder=" "/>
+                <label th:for="*{lastName}" class="control-label">Lastname</label>
+            </div>
+            <span th:errors="*{lastName}" class="error"></span>
+
+
+            <div class="input-wrapper">
+                <input th:field="*{email}"
+                       placeholder=" "/>
+                <label th:for="*{email}" class="control-label">Email</label>
+            </div>
+            <span th:errors="*{email}" class="error"></span>
+
+            <div>
+                <textarea th:field="*{message}">message...</textarea>
+                <label th:for="*{message}" class="control-label">Message</label>
+            </div>
+            <span th:errors="*{message}" class="error"></span>
+
+            <button type="submit">Submit</button>
+        </th:block>
+    </form>
 </div>
 
 <footer th:replace="fragments/footer :: footer()"></footer>
