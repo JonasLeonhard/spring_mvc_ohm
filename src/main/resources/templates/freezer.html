@@ -115,11 +115,16 @@ includeHeaderFragment = ${{'freezer-header'}})"></head>
                 Suggestions
             </span>
         </div>
-        <div class="freezer-suggestion" th:each="recipeSuggestion : ${freezerSuggestions}">
+
+        <div th:if="${#lists.size(freezerSuggestions) == 0}" class="freezer-suggestion">
+            We found no recipes that match your ingredients. Add more ingredients to get suggestions
+        </div>
+        <div th:if="${#lists.size(freezerSuggestions) > 0}" class="freezer-suggestion"
+             th:each="recipeSuggestion : ${freezerSuggestions}">
             <div class="recipe-card recipe-id-[[${recipe.id}]]">
                 <div class="recipe-card-image-container">
                     <div class="rating">
-                        <span th:text="${recipeSuggestion.recipe.likes}">likes</span>
+                        <span>[[${#lists.size(recipeSuggestion.recipe.userLikes)}]] 👍</span>
                     </div>
                     <img class="recipe-card-img"
                          alt="recipe image"

@@ -58,7 +58,7 @@ class UserController(val userService: UserService,
     @GetMapping("/settings")
     fun userSettings(principal: Principal, model: Model): String {
         model["pageTitle"] = "${principal.name}' Settings"
-        model["userForm"] = User()
+        model["user"] = User()
         userService.addAuthenticatedUserToModel(principal, model)
         return "settings"
     }

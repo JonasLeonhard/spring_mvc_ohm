@@ -25,7 +25,6 @@ data class InvitationForm(
         @field:Max(96, message = "Invitation end time has to be below 96 (24h * 1/4)")
         val gridRowEnd: Int?,
 
-        @field:NotNull(message = "Friends to be invited have to be specified")
         val friends: MutableList<String>?,
 
         @field:NotNull(message = "Invitation Date has to be specified")
