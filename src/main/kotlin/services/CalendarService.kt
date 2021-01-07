@@ -48,7 +48,7 @@ class CalendarService(val invitationRepository: InvitationRepository) {
                 selectionDate.plusDays(7 - selectionDate.dayOfWeek.value.toLong()))
 
         val invitationsBetween = invitationRepository.findInvitationsBetween(
-                user.id,
+                user,
                 getDateFromLocalDate(timeLineWeekDays[0]),
                 getDateFromLocalDate(timeLineWeekDays[timeLineWeekDays.size - 1]))
 
