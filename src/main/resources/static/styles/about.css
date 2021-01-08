@@ -1,0 +1,12 @@
+.page-content h1 {
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+}
+
+.page-content p {
+    margin-bottom: 1rem;
+}
+
+.page-content {
+    padding-bottom: 2rem;
+}

@@ -39,7 +39,7 @@ includeIonicons = ${true})"></head>
 
         <div class="recipe__overview-container">
             <span class="recipe__bubble-wrapper">[[${recipe.servings}]] [[${recipe.servings > 1 ? 'servings' : 'serving'}]] 🍜</span>
-            <span class="recipe__bubble-wrapper">[[${recipe.pricePerServing}]]💲 per serving</span>
+            <span class="recipe__bubble-wrapper">[[${#numbers.formatDecimal((recipe.pricePerServing / 100), 0, 'COMMA', 2,'POINT')}]]💲 per serving</span>
             <span class="recipe__bubble-wrapper" th:if="${recipe.glutenFree == true}">glutenFree ✅</span>
             <span class="recipe__bubble-wrapper" th:if="${recipe.vegan == true}">vegan ✅</span>
             <span class="recipe__bubble-wrapper" th:if="${recipe.vegetarian == true}">vegetarian ✅</span>

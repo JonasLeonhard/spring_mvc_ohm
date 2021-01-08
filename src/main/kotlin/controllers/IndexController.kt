@@ -5,6 +5,7 @@ import org.springframework.ui.Model
 import org.springframework.ui.set
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import services.ChallengeService
 import services.SearchService
 import services.SuggestionService
 import services.UserService
@@ -15,7 +16,8 @@ import java.security.Principal
 @RequestMapping("/")
 class IndexController(val userService: UserService,
                       val suggestionService: SuggestionService,
-                      val searchService: SearchService) {
+                      val searchService: SearchService,
+                      val challengeService: ChallengeService) {
     @GetMapping
     fun index(model: Model, principal: Principal?): String {
         model["pageTitle"] = "INDEXPAGETITLE"
@@ -23,6 +25,7 @@ class IndexController(val userService: UserService,
         model["recipeOfTheDay"] = suggestionService.getRecipeOfTheDaySuggestion()
         model["mostPopularSearch"] = searchService.getMostPopularSearchTerms(10)
         model["mostRecentSearch"] = searchService.getRecentSearchTerms(10)
+        model["challengeOfTheDay"] = challengeService.getChallengeOfTheDay()
 
         userService.addAuthenticatedUserToModel(principal, model)
 

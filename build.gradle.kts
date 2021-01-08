@@ -76,12 +76,18 @@ tasks.register("start") {
     // Get Project (-Pvars) & ENV variables:
     val build: String by project // get -Pbuild Variable (default in gradle.properties)
     val ENV_SPOONACULAR_API_KEY = System.getenv("ENV_SPOONACULAR_API_KEY")
+    val ENV_POSTGRES_DB_NAME = System.getenv("ENV_POSTGRES_DB_NAME")
+    val ENV_POSTGRES_DB_USERNAME = System.getenv("ENV_POSTGRES_DB_USERNAME")
+    val ENV_POSTGRES_DB_PASSWORD = System.getenv("ENV_POSTGRES_DB_PASSWORD")
 
     println("""
         [ gradle start :: Run task('start') with properties: ]
         { 
             -Pbuild: $build 
             ENV_SPOONACULAR_API_KEY: $ENV_SPOONACULAR_API_KEY
+            ENV_POSTGRES_DB_NAME: $ENV_POSTGRES_DB_NAME
+            ENV_POSTGRES_DB_USERNAME: $ENV_POSTGRES_DB_USERNAME
+            ENV_POSTGRES_DB_PASSWORD: $ENV_POSTGRES_DB_PASSWORD
         }
         """)
     if (project.hasProperty("build") && build == "true") {

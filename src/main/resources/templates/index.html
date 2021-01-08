@@ -7,6 +7,17 @@ includeHeaderFragment = ${{'index-header'}})"></head>
 <nav th:replace="fragments/navigation :: navigation"></nav>
 <div class="page-content">
 
+    <div class="challenge-of-the-day">
+        <h1>Challenge: [[${challengeOfTheDay.recipe.title}]]</h1>
+        <p>Time left: [[${challengeOfTheDay.createdAt}]]</p>
+        <p>Current entries: [[${#lists.size(challengeOfTheDay.userChallenges)}]]</p>
+
+        <a th:href="${'/challenge/'+ challengeOfTheDay.id}">
+            <img class="recipe-card-img"
+                 th:src="${challengeOfTheDay.recipe.picture != null ? '/resource/' + challengeOfTheDay.recipe.picture.id : (challengeOfTheDay.recipe.recipeImageUrl != null ? challengeOfTheDay.recipe.recipeImageUrl : '/unsecured_files/logo_placeholder.png')}">
+        </a>
+    </div>
+
     <div class="recipe-of-the-day">
         <h1>[[${recipeOfTheDay.title}]]</h1>
         <div class="recipe-of-the-day__divider">
