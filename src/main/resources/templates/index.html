@@ -9,13 +9,37 @@ includeHeaderFragment = ${{'index-header'}})"></head>
 
     <div class="challenge-of-the-day">
         <h1>Challenge: [[${challengeOfTheDay.recipe.title}]]</h1>
-        <p>Time left: [[${challengeOfTheDay.createdAt}]]</p>
-        <p>Current entries: [[${#lists.size(challengeOfTheDay.userChallenges)}]]</p>
 
-        <a th:href="${'/challenge/'+ challengeOfTheDay.id}">
-            <img class="recipe-card-img"
-                 th:src="${challengeOfTheDay.recipe.picture != null ? '/resource/' + challengeOfTheDay.recipe.picture.id : (challengeOfTheDay.recipe.recipeImageUrl != null ? challengeOfTheDay.recipe.recipeImageUrl : '/unsecured_files/logo_placeholder.png')}">
-        </a>
+        <div class="challenge-of-the-day__divider">
+            <div class="challenge-of-the-day__content">
+                <p>
+                    Todays Community challenge is [[${challengeOfTheDay.recipe.title}]].
+                    Come and join us and cook this special recipe with us.
+                    It only takes [[${challengeOfTheDay.recipe.preparationMinutes}]] minutes. ⌛
+                </p>
+                <p class="challenge-users">
+                    Currently [[${#lists.size(challengeOfTheDay.userChallenges)}]] users have finished this challenge.
+                    You could be one of them!
+                </p>
+                <p class="challenge-running-for">
+                    Running for:
+                    <span id="challenge-time">[[${timeLeft}]]</span>s
+                </p>
+            </div>
+
+            <a th:href="${'/challenge/'+ challengeOfTheDay.id}">
+                <div class="challenge-join-competition">
+                    Join the competition 💪
+                </div>
+                <img class="recipe-card-img"
+                     th:src="${challengeOfTheDay.recipe.picture != null ? '/resource/' + challengeOfTheDay.recipe.picture.id : (challengeOfTheDay.recipe.recipeImageUrl != null ? challengeOfTheDay.recipe.recipeImageUrl : '/unsecured_files/logo_placeholder.png')}">
+                <div class="ribbon">
+                    <div class="ribbon-content">
+                        Challenge
+                    </div>
+                </div>
+            </a>
+        </div>
     </div>
 
     <div class="recipe-of-the-day">
@@ -24,6 +48,11 @@ includeHeaderFragment = ${{'index-header'}})"></head>
             <a th:href="${'/recipe/'+ recipeOfTheDay.id}">
                 <img class="recipe-card-img"
                      th:src="${recipeOfTheDay.picture != null ? '/resource/' + recipeOfTheDay.picture.id : (recipeOfTheDay.recipeImageUrl != null ? recipeOfTheDay.recipeImageUrl : '/unsecured_files/logo_placeholder.png')}">
+                <div class="ribbon ribbon-of-the-day">
+                    <div class="ribbon-content">
+                        Recipe of the Day
+                    </div>
+                </div>
             </a>
             <div class="recipe-of-the-day__content">
 

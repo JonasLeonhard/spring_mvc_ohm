@@ -1,8 +1,9 @@
-.recipe-of-the-day {
+.recipe-of-the-day, .challenge-of-the-day {
     padding: 1rem;
     background: white;
     margin: 1rem;
     border-radius: 5px;
+    position: relative;
 }
 
 .recipe-of-the-day__divider {
@@ -10,9 +11,22 @@
     grid-template-columns: 1fr 0.5fr;
 }
 
-.recipe-of-the-day__divider img {
+.challenge-of-the-day__divider {
+    display: grid;
+    grid-template-columns: 0.5fr 1fr;
+}
+
+.recipe-of-the-day__divider a, .challenge-of-the-day__divider a {
+    position: relative;
+}
+
+.recipe-of-the-day__divider img, .challenge-of-the-day__divider img {
     width: 100%;
     border-radius: 5px;
+}
+
+.challenge-of-the-day__content {
+    padding: 0 1rem 0 0;
 }
 
 .recipe-of-the-day__content {
@@ -171,15 +185,115 @@
     color: black;
 }
 
+.ribbon {
+    position: absolute;
+    top: 0;
+    right: 2rem;
+    color: white;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 0 0 3px 3px;
+}
+
+.ribbon:after {
+    content: "★ ★ ★";
+    display: block;
+    font-size: .4em;
+    position: relative;
+    margin: 15px 0 0;
+    color: var(--warning);
+    z-index: 2;
+    transform: translateY(-13px);
+}
+
+.ribbon-content {
+    z-index: 1;
+    font-size: 0.75rem;
+    font-style: oblique;
+}
+
+.ribbon-content:before {
+    background: var(--primary-light);
+    z-index: -1;
+    position: absolute;
+    content: "";
+    display: block;
+    top: -12px;
+    left: -10px;
+    width: 100%;
+    height: 100%;
+    transform: rotate(28deg);
+    border-radius: 50%;
+    box-shadow: -4px 4px;
+}
+
+.ribbon-content:after {
+    background: var(--primary);
+    z-index: -1;
+    position: absolute;
+    content: "";
+    display: block;
+    top: -14px;
+    left: 10%;
+    width: 100%;
+    height: 100%;
+    transform: 0;
+    border-radius: 50%;
+    transform: rotate(-26deg);
+}
+
+.ribbon-of-the-day .ribbon-content:before {
+    top: -24px;
+    left: -41px;
+    transform: rotate(55deg);
+}
+
+.ribbon-of-the-day .ribbon-content:after {
+    left: 5%;
+}
+
+.challenge-join-competition {
+    position: absolute;
+    top: 75%;
+    left: -11%;
+    z-index: 1;
+    background: var(--primary);
+    padding: 1rem 2rem;
+    border-radius: 3px;
+    color: white;
+}
+
+.challenge-users, .challenge-running-for {
+    margin-top: 1rem;
+}
+
+#challenge-time {
+    font-size: 3rem;
+    font-weight: bold;
+}
+
 @media only screen and (max-width: 780px) {
     .masonry {
         column-count: 3;
+    }
+
+    .challenge-join-competition {
+        left: 0;
+        top: 50%;
     }
 }
 
 @media only screen and (max-width: 520px) {
     .masonry {
         column-count: 2;
+    }
+
+    .challenge-of-the-day__divider, .recipe-of-the-day__divider {
+        grid-template-columns: 1fr;
     }
 }
 

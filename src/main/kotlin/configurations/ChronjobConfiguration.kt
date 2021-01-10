@@ -11,7 +11,7 @@ import services.ChallengeService
 @EnableAsync
 @EnableScheduling
 class ChronjobConfiguration(val challengeService: ChallengeService) {
-    @Scheduled(cron = "0 0 4 * * *") // 4AM every Day
+    @Scheduled(cron = "0 0 0 * * *") // 0AM every Day
     fun dailyChronjob() {
         challengeService.changeChallenge()
     }

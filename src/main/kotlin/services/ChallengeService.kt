@@ -3,6 +3,10 @@ package services
 import models.Challenge
 import org.springframework.stereotype.Service
 import repositories.ChallengeRepository
+import java.time.Duration
+import java.time.LocalDateTime
+import java.time.ZoneId
+
 
 @Service
 class ChallengeService(val challengeRepository: ChallengeRepository,
@@ -36,6 +40,14 @@ class ChallengeService(val challengeRepository: ChallengeRepository,
         } else {
             challenges[0]
         }
+    }
+
+    /**
+     * Returns the Duration between now and the challenge creation date in seconds
+     * */
+    fun timeLeft(challenge: Challenge): Long {
+        val created = LocalDateTime.from(challenge.createdAt.toInstant().atZone(ZoneId.systemDefault()))
+        return Duration.between(created, LocalDateTime.now()).seconds
     }
 
 }

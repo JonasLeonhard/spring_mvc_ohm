@@ -25,7 +25,10 @@ class IndexController(val userService: UserService,
         model["recipeOfTheDay"] = suggestionService.getRecipeOfTheDaySuggestion()
         model["mostPopularSearch"] = searchService.getMostPopularSearchTerms(10)
         model["mostRecentSearch"] = searchService.getRecentSearchTerms(10)
-        model["challengeOfTheDay"] = challengeService.getChallengeOfTheDay()
+
+        val challenge = challengeService.getChallengeOfTheDay()
+        model["challengeOfTheDay"] = challenge
+        model["timeLeft"] = challengeService.timeLeft(challenge)
 
         userService.addAuthenticatedUserToModel(principal, model)
 
