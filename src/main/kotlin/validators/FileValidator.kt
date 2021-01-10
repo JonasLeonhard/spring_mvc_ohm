@@ -16,6 +16,14 @@ class FileValidator {
                             || file.contentType?.toLowerCase().equals("image/jpeg")
                             || file.contentType?.toLowerCase().equals("image/png"))) {
                 errors.rejectValue(field, "InvalidMimeTypeException", "jpg, jpeg & png file types are only supported")
+            } else {
+                if (file == null) {
+                    errors.rejectValue(field, "FileError", "Field file is missing")
+                }
+
+                if (file != null && file.isEmpty) {
+                    errors.rejectValue(field, "FileError", "Field file is empty")
+                }
             }
         }
     }

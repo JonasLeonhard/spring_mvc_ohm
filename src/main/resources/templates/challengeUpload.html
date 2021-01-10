@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header(title = ${pageTitle},
+includeHeaderFragment = ${{'challenge-upload-header'}})"></head>
+
+<body>
+<nav th:replace="fragments/navigation :: navigation"></nav>
+
+<div class="page-content">
+    challenge upload form:
+    <form th:action="@{/challenge/{id}(id=${challengeId})}" th:object="${challengeUploadForm}" method="post"
+          enctype="multipart/form-data">
+        <div class="form-input-wrapper">
+            <label th:for="*{file}">Image</label>
+            <span th:if="${fileUploadException}" class="error">[[${fileUploadException}]]</span>
+            <span th:if="${fileLimitExceedException}" class="error">[[${fileLimitExceedException}]]</span>
+            <span th:errors="*{file}" class="error"></span>
+            <div class="preview-img-container">
+                <img id="preview-img"
+                     th:src="@{/unsecured_files/camera-outline.svg}"
+                     alt="Recipe Preview Image"/>
+            </div>
+            <label th:for="*{file}" class="control-label file-wrapper">
+                Upload
+                <input id="preview-img-input" name="formFile" th:value="*{file}" type="file"
+                       accept="image/jpeg, image/jpg, image/png">
+            </label>
+        </div>
+
+        <div class="form-input-wrapper grid-fill">
+            <label th:for="*{experience}">Experience*</label>
+            <span th:errors="*{experience}" class="error"></span>
+            <textarea th:field="*{experience}" placeholder="Experience cooking the recipe..."></textarea>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+</div>
+
+<footer th:replace="fragments/footer :: footer()"></footer>
+<!-- Scripts -->
+<script type="text/javascript" th:src="@{/js/previewImage.js}"></script>
+</body>
+</html>

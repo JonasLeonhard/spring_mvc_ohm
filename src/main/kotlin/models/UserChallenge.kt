@@ -1,12 +1,19 @@
 package models
 
+import com.sun.istack.Nullable
 import java.io.Serializable
 import javax.persistence.*
 
 @Entity
 class UserChallenge(
         user: User,
-        challenge: Challenge
+        challenge: Challenge,
+
+        val experience: String,
+
+        @OneToOne(targetEntity = File::class, cascade = [CascadeType.ALL])
+        @field:Nullable
+        val image: File
 ) {
     var user: User
         get() = this.embeddedKey.user

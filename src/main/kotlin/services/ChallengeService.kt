@@ -1,16 +1,26 @@
 package services
 
 import models.Challenge
+import models.UserChallenge
 import org.springframework.stereotype.Service
+import pojos.ChallengeUploadForm
 import repositories.ChallengeRepository
+import repositories.RecipeRepository
+import repositories.UserChallengeRepository
+import java.security.Principal
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.ZoneId
+import javax.transaction.Transactional
 
 
 @Service
 class ChallengeService(val challengeRepository: ChallengeRepository,
-                       val suggestionService: SuggestionService) {
+                       val userChallengeRepository: UserChallengeRepository,
+                       val suggestionService: SuggestionService,
+                       val fileService: FileService,
+                       val userService: UserService,
+                       val recipeRepository: RecipeRepository) {
     /***
      * This is called once per day and changes the current cooking challenge
      * sets all current dayChallegnes to false
@@ -48,6 +58,26 @@ class ChallengeService(val challengeRepository: ChallengeRepository,
     fun timeLeft(challenge: Challenge): Long {
         val created = LocalDateTime.from(challenge.createdAt.toInstant().atZone(ZoneId.systemDefault()))
         return Duration.between(created, LocalDateTime.now()).seconds
+    }
+
+    /**
+     * saves a userChallenge by using @validated challengeUploadForm pojo
+     * */
+    @Transactional
+    fun challengeUpload(principal: Principal, challengeUploadForm: ChallengeUploadForm, challengeId: Long): Challenge {
+        val challenge = challengeRepository.findById(challengeId).get()
+        val user = userService.findByUsername(principal.name)
+        val file = fileService.trySaveMultipartFile(challengeUploadForm.file)
+
+        if (challengeUploadForm.experience != null && file != null) {
+            val userChallenge = UserChallenge(user, challenge, challengeUploadForm.experience, file)
+            challenge.userChallenges.add(userChallenge)
+            userChallengeRepository.save(userChallenge)
+        } else {
+            throw Error("Error saving UserChallenge to challenge with id $challengeId: file or experience is null!")
+        }
+
+        return challengeRepository.save(challenge)
     }
 
 }
