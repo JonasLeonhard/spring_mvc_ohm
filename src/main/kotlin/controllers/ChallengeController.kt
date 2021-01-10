@@ -21,8 +21,16 @@ class ChallengeController(val userService: UserService, val challengeService: Ch
         model["pageTitle"] = "Your Challenge Contribution"
         model["authenticated"] = userService.findByUsername(principal.name)
 
-        model["challengeUploadForm"] = ChallengeUploadForm()
+        val existingUserChallenge = challengeService.userChallenge(principal, challengeId)
+
+        if (existingUserChallenge != null) {
+            model["challengeUploadForm"] = ChallengeUploadForm(experience = existingUserChallenge.experience)
+            model["existingUploadedFile"] = existingUserChallenge.image
+        } else {
+            model["challengeUploadForm"] = ChallengeUploadForm()
+        }
         model["challengeId"] = challengeId
+
         return "challengeUpload"
     }
 
@@ -42,8 +50,8 @@ class ChallengeController(val userService: UserService, val challengeService: Ch
             return "challengeUpload"
         }
 
-        challengeService.challengeUpload(principal, challengeUploadForm, challengeId)
-        return "redirect:/recipe/$challengeId"
+        val challenge = challengeService.challengeUpload(principal, challengeUploadForm, challengeId)
+        return "redirect:/recipe/${challenge.recipe.id}"
     }
 
 //    fun createChallenge(principal: Principal, model: Model): String {

@@ -154,6 +154,35 @@ includeIonicons = ${true})"></head>
         <div class="form-annotation">
             <div>4</div>
             <span>
+                User Challenges
+            </span>
+        </div>
+
+        <div class="challenges">
+            <div class="challenge" th:each="userChallenge : ${userChallenges}">
+                <div>
+                    <div class="challenge__content">
+                        <div class="challenge__profile-image-container">
+                            <img class="profile-image"
+                                 alt="profile picture"
+                                 th:title="${userChallenge.user.username} + '\'s Profilepicture'"
+                                 th:src="${userChallenge.user.picture != null ? '/resource/' + userChallenge.user.picture.id : '/unsecured_files/placeholder_profile_image.png'}"/>
+                        </div>
+                        <span class="challenge__username">[[${userChallenge.user.username}]]</span>
+                    </div>
+
+                    <span class="challenge__experience">[[${userChallenge.experience}]]</span>
+                </div>
+
+                <img class="challenge__image"
+                     th:src="${userChallenge.image != null ? '/resource/' + userChallenge.image.id : '/unsecured_files/camera-outline.svg'}"
+                     alt="User Challenge Preview Image"/>
+            </div>
+        </div>
+
+        <div class="form-annotation">
+            <div>5</div>
+            <span>
                     Comment Section
             </span>
         </div>

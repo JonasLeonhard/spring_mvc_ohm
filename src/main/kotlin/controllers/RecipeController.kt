@@ -7,6 +7,7 @@ import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import pojos.RecipeForm
+import services.ChallengeService
 import services.RecipeService
 import services.UserService
 import validators.RecipeFormValidator
@@ -18,6 +19,7 @@ import javax.validation.Valid
 @RequestMapping("/recipe")
 class RecipeController(val recipeService: RecipeService,
                        val recipeFormValidator: RecipeFormValidator,
+                       val challengeService: ChallengeService,
                        val userService: UserService) {
 
 
@@ -33,7 +35,8 @@ class RecipeController(val recipeService: RecipeService,
         model["recipe"] = recipe
         model["recipeComments"] = recipeService.getComments(recipe)
         model["dateFormatter"] = SimpleDateFormat("dd/MM/yyyy hh:mm")
-
+        model["userChallenges"] = challengeService.getRecipeUserChallenges(recipeId)
+        println("userChallenges ${challengeService.getRecipeUserChallenges(recipeId)}")
         if (user != null) {
             model["userLikedRecipe"] = user.hasLikedRecipe(recipe)
             model["userFavoritedRecipe"] = user.hasFavoritedRecipe(recipe)

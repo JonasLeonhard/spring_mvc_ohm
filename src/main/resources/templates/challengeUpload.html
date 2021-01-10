@@ -17,7 +17,7 @@ includeHeaderFragment = ${{'challenge-upload-header'}})"></head>
             <span th:errors="*{file}" class="error"></span>
             <div class="preview-img-container">
                 <img id="preview-img"
-                     th:src="@{/unsecured_files/camera-outline.svg}"
+                     th:src="${existingUploadedFile != null ? '/resource/' + existingUploadedFile.id : '/unsecured_files/camera-outline.svg'}"
                      alt="Recipe Preview Image"/>
             </div>
             <label th:for="*{file}" class="control-label file-wrapper">

@@ -5,7 +5,6 @@ import models.UserChallenge
 import org.springframework.stereotype.Service
 import pojos.ChallengeUploadForm
 import repositories.ChallengeRepository
-import repositories.RecipeRepository
 import repositories.UserChallengeRepository
 import java.security.Principal
 import java.time.Duration
@@ -19,8 +18,7 @@ class ChallengeService(val challengeRepository: ChallengeRepository,
                        val userChallengeRepository: UserChallengeRepository,
                        val suggestionService: SuggestionService,
                        val fileService: FileService,
-                       val userService: UserService,
-                       val recipeRepository: RecipeRepository) {
+                       val userService: UserService) {
     /***
      * This is called once per day and changes the current cooking challenge
      * sets all current dayChallegnes to false
@@ -80,4 +78,19 @@ class ChallengeService(val challengeRepository: ChallengeRepository,
         return challengeRepository.save(challenge)
     }
 
+    fun getRecipeUserChallenges(recipeId: Long): List<UserChallenge> {
+        return userChallengeRepository.findByRecipeId(recipeId)
+    }
+
+    fun userChallenge(principal: Principal, challengeId: Long): UserChallenge? {
+        val user = userService.findByUsername(principal.name)
+        val challenge = challengeRepository.findById(challengeId).get()
+
+        val userChallenge = challenge.userChallenges.filter { it.user.id == user.id }
+
+        if (userChallenge.isNotEmpty()) {
+            return userChallenge[0]
+        }
+        return null
+    }
 }
