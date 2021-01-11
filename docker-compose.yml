@@ -1,0 +1,30 @@
+version: '3'
+services:
+  kotlinboot:
+    build: .
+    container_name: kotlinSpringBoot
+    ports:
+      - 8080:8080
+    environment:
+      ENV_POSTGRES_DB_NAME: ${POSTGRES_USER:-postgres}
+      ENV_POSTGRES_DB_USERNAME: ${POSTGRES_PASSWORD:-postgres}
+      ENV_POSTGRES_DB_PASSWORD: ${POSTGRES_DB:-postgres}
+      ENV_SPOONACULAR_API_KEY: ${SPOONACULAR_API_KEY}
+      ENV_POSTGRES_DB_HOSTNAME: postgres
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:12
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-postgres}
+    volumes:
+      - foods-and-friends-db:/var/lib/postgresql/data
+    ports:
+      - 127.0.0.1:${POSTGRES_PORT:-5432}:5432
+
+volumes:
+  foods-and-friends-db:
+    driver: local
