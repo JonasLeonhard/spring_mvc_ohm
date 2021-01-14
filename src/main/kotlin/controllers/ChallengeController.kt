@@ -18,7 +18,7 @@ import javax.validation.Valid
 class ChallengeController(val userService: UserService, val challengeService: ChallengeService) {
     @GetMapping("/{id}")
     fun challengeContribution(principal: Principal, @PathVariable("id") challengeId: Long, model: Model): String {
-        model["pageTitle"] = "Your Challenge Contribution"
+        model["pageTitle"] = "Your Challenge Contribution | F&F"
         model["authenticated"] = userService.findByUsername(principal.name)
 
         val existingUserChallenge = challengeService.userChallenge(principal, challengeId)
@@ -53,9 +53,4 @@ class ChallengeController(val userService: UserService, val challengeService: Ch
         val challenge = challengeService.challengeUpload(principal, challengeUploadForm, challengeId)
         return "redirect:/recipe/${challenge.recipe.id}"
     }
-
-//    fun createChallenge(principal: Principal, model: Model): String {
-//        // return create a challenge page for any given recipe
-//        return "createChallenge"
-//    }
 }

@@ -19,7 +19,7 @@ class ErrorController(val userService: UserService) : DefaultErrorController {
     fun handleError(principal: Principal?, request: HttpServletRequest, model: Model): String {
         userService.addAuthenticatedUserToModel(principal, model)
         val statusCode = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE)
-        model["pageTitle"] = "Error, ${statusCode}"
+        model["pageTitle"] = "Error, ${statusCode} | F&F"
 
         when (statusCode) {
             404 -> {

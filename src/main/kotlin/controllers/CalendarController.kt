@@ -20,6 +20,7 @@ class CalendarController(val userService: UserService,
     fun calendar(principal: Principal, model: Model, @RequestParam(name = "selectedDate") selectedDateStr: String?): String {
         val user = userService.findByUsername(principal.name)
         model["authenticated"] = user
+        model["pageTitle"] = "Calendar | F&F"
 
         var selectionDate = LocalDate.now()
         if (selectedDateStr != null) {

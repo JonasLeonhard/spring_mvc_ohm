@@ -17,7 +17,7 @@ class AuthenticationController(val userService: UserService, val userValidator: 
     @GetMapping("/login")
     fun login(model: Model): String {
         model["user"] = User()
-        model["pageTitle"] = "Login"
+        model["pageTitle"] = "Login | F&F"
         return "login"
     }
 
@@ -29,7 +29,7 @@ class AuthenticationController(val userService: UserService, val userValidator: 
     @GetMapping("/registration")
     fun registration(model: Model): String {
         model["user"] = User()
-        model["pageTitle"] = "Registration"
+        model["pageTitle"] = "Registration | F&F"
         return "registration"
     }
 

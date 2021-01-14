@@ -16,28 +16,28 @@ import javax.validation.Valid
 class StaticPageController(val userService: UserService, val contactUsRepository: ContactUsRepository) {
     @GetMapping("/about")
     fun about(principal: Principal?, model: Model): String {
-        model["pageTitle"] = "About"
+        model["pageTitle"] = "About | F&F"
         userService.addAuthenticatedUserToModel(principal, model)
         return "about"
     }
 
     @GetMapping("/terms")
     fun terms(principal: Principal?, model: Model): String {
-        model["pageTitle"] = "Terms"
+        model["pageTitle"] = "Terms | F&F"
         userService.addAuthenticatedUserToModel(principal, model)
         return "terms"
     }
 
     @GetMapping("/privacy")
     fun privacy(principal: Principal?, model: Model): String {
-        model["pageTitle"] = "Privacy"
+        model["pageTitle"] = "Privacy | F&F"
         userService.addAuthenticatedUserToModel(principal, model)
         return "privacy"
     }
 
     @GetMapping("/contact")
     fun contact(principal: Principal?, model: Model): String {
-        model["pageTitle"] = "Contact"
+        model["pageTitle"] = "Contact | F&F"
         model["contactUs"] = ContactUs()
         userService.addAuthenticatedUserToModel(principal, model)
         return "contact"
@@ -45,7 +45,7 @@ class StaticPageController(val userService: UserService, val contactUsRepository
 
     @PostMapping("/contact")
     fun createContactUs(principal: Principal?, @Valid contactUs: ContactUs, bindingResult: BindingResult, model: Model): String {
-        model["pageTitle"] = "Contact"
+        model["pageTitle"] = "Contact | F&F"
         userService.addAuthenticatedUserToModel(principal, model)
         model["contactUs"] = contactUs
 

@@ -31,7 +31,7 @@ class RecipeController(val recipeService: RecipeService,
         val recipe = recipeService.getIndexedRecipeById(recipeId)
         val user = userService.addAuthenticatedUserToModel(principal, model)
 
-        model["pageTitle"] = recipe.title
+        model["pageTitle"] = "${recipe.title} | F&F"
         model["recipe"] = recipe
         model["recipeComments"] = recipeService.getComments(recipe)
         model["dateFormatter"] = SimpleDateFormat("dd/MM/yyyy hh:mm")
@@ -47,6 +47,7 @@ class RecipeController(val recipeService: RecipeService,
 
     @GetMapping("/create")
     fun createRecipePage(principal: Principal, recipeForm: RecipeForm?, @RequestParam subtractIngredient: Boolean?, model: Model): String {
+        model["pageTitle"] = "Create a Recipe | F&F"
         userService.addAuthenticatedUserToModel(principal, model)
 
         if (recipeForm != null) {
@@ -106,7 +107,6 @@ class RecipeController(val recipeService: RecipeService,
 
     @PostMapping("/create")
     fun createRecipe(principal: Principal, @Valid recipeForm: RecipeForm, bindingResult: BindingResult, @RequestParam formFile: MultipartFile?, model: Model): String {
-        println("create a recipe from: $recipeForm $formFile")
         recipeForm.file = formFile
         recipeFormValidator.validate(recipeForm, bindingResult)
         if (bindingResult.hasErrors()) {

@@ -20,7 +20,7 @@ class IndexController(val userService: UserService,
                       val challengeService: ChallengeService) {
     @GetMapping
     fun index(model: Model, principal: Principal?): String {
-        model["pageTitle"] = "INDEXPAGETITLE"
+        model["pageTitle"] = "Welcome | F&F"
         model["suggestions"] = suggestionService.getIndexSuggestions()
         model["recipeOfTheDay"] = suggestionService.getRecipeOfTheDaySuggestion()
         model["mostPopularSearch"] = searchService.getMostPopularSearchTerms(10)

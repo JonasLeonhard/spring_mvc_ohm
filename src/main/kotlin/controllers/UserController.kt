@@ -34,7 +34,7 @@ class UserController(val userService: UserService,
     fun userProfile(principal: Principal?, model: Model, @PathVariable username: String): String {
         try {
             val profile = userService.findByUsername(username)
-            model["profile"] = profile
+            model["profile"] = "${profile}'s Profile | F&F"
 
             if (principal != null) {
                 val authenticated = userService.findByUsername(principal.name)
@@ -57,7 +57,7 @@ class UserController(val userService: UserService,
 
     @GetMapping("/settings")
     fun userSettings(principal: Principal, model: Model): String {
-        model["pageTitle"] = "${principal.name}' Settings"
+        model["pageTitle"] = "${principal.name}'s Settings | F&F"
         model["user"] = User()
         userService.addAuthenticatedUserToModel(principal, model)
         return "settings"
@@ -65,6 +65,7 @@ class UserController(val userService: UserService,
 
     @GetMapping("/buyList")
     fun userBuyList(principal: Principal, model: Model): String {
+        model["pageTitle"] = "Buylist | F&F"
         userService.addAuthenticatedUserToModel(principal, model)
         return "buyList"
     }
@@ -72,6 +73,7 @@ class UserController(val userService: UserService,
     @GetMapping("/freezer")
     fun freezer(principal: Principal, model: Model, @RequestParam(value = "friends") friends: MutableList<String>?): String {
         val user = userService.findByUsername(principal.name)
+        model["pageTitle"] = "Freezer | F&F"
         model["authenticated"] = user
         model["freezer"] = freezerService.getFreezer(user, friends)
         model["ingredients"] = freezerService.getIngredients()
@@ -87,6 +89,7 @@ class UserController(val userService: UserService,
     @GetMapping("/freezer/add/ingredient")
     fun addIngredient(principal: Principal, @RequestParam ingredientName: String, @RequestParam amount: Int, @RequestParam friends: MutableList<String>?, model: Model): String {
         userService.addAuthenticatedUserToModel(principal, model)
+        model["pageTitle"] = "Add Ingredient | F&F"
         model["addIngredientForm"] = AddIngredientForm(name = ingredientName)
         model["amount"] = amount
         if (friends != null) {
@@ -98,6 +101,7 @@ class UserController(val userService: UserService,
     @GetMapping("/invite")
     fun inviteFriends(principal: Principal, invitationForm: InvitationForm, @RequestParam invitationId: Long?, model: Model): String {
         val user = userService.findByUsername(principal.name)
+        model["pageTitle"] = "Invite | F&F"
         model["authenticated"] = user
         model["userFriendships"] = userService.getFriendships(user)
         model["timelineAnnotations"] = calendarService.getTimelineAnnotations()
@@ -114,6 +118,7 @@ class UserController(val userService: UserService,
     @GetMapping("/invitation/{id}")
     fun invitation(principal: Principal, @PathVariable(value = "id") invitationId: Long, model: Model): String {
         val user = userService.findByUsername(principal.name)
+        model["pageTitle"] = "Invitation | F&F"
         model["authenticated"] = user
         val invitation = invitationService.getInvitationById(invitationId).get()
 

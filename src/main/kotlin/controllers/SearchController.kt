@@ -21,7 +21,7 @@ class SearchController(val userService: UserService,
     fun searchResults(principal: Principal?, model: Model, @RequestParam(value = "q") q: String, @RequestParam(value = "type") type: String): String {
         model["q"] = q
         model["type"] = type
-        model["pageTitle"] = "Search '$q'"
+        model["pageTitle"] = "Search '$q' | F&F"
 
         userService.addAuthenticatedUserToModel(principal, model)
         setSearchUsers(model, type, q)
