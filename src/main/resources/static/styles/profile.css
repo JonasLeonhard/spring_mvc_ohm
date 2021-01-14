@@ -118,7 +118,6 @@ img.profile-image {
 }
 
 .recipe-card-info {
-    width: 100%;
     padding: 2em;
 }
 
@@ -145,4 +144,51 @@ img.profile-image {
     border-radius: 50px;
     color: white;
     border: 1px solid var(--main-bg-color-bright);
+}
+
+@media only screen and (max-width: 780px) {
+    .page-divided {
+        grid-template-columns: 1fr;
+        padding-top: 0;
+    }
+
+    .page-divided .left-side, .page-divided .right-side {
+        height: min-content;
+        width: 100vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .calendar {
+        margin-top: 3.5rem;
+    }
+
+    .timeline-title span {
+        text-overflow: ellipsis;
+        width: 2rem;
+        display: block;
+        overflow: hidden;
+    }
+}
+
+@media only screen and (max-width: 780px) {
+    .profile-info-wrapper {
+        flex-direction: column;
+        height: min-content;
+    }
+
+    .profile-card {
+        margin: 0.5rem 0;
+    }
+}
+
+@media only screen and (max-width: 520px) {
+    .recipe-card-wrapper {
+        flex-direction: column;
+    }
+}
+
+@media only screen and (max-width: 320px) {
+
 }

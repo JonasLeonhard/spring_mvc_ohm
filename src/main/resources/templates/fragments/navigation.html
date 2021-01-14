@@ -6,7 +6,9 @@
         <div class="nav-container">
             <div class="nav-items">
                 <a href="/" title="Home"><img class="nav-logo" th:src="@{/unsecured_files/logo_placeholder.png}"
-                                              alt="Logo"/> Foods & Friends</a>
+                                              alt="Logo"/>
+                    <span class="nav-items-title">Foods & Friends</span>
+                </a>
                 <div class="nav-search-container">
                     <svg class="search-icon" viewBox="0 0 512 512">
                         <path d="M225.474 0C101.151 0 0 101.151 0 225.474c0 124.33 101.151 225.474 225.474 225.474 124.33 0 225.474-101.144 225.474-225.474C450.948 101.151 349.804 0 225.474 0zm0 409.323c-101.373 0-183.848-82.475-183.848-183.848S124.101 41.626 225.474 41.626s183.848 82.475 183.848 183.848-82.475 183.849-183.848 183.849z"/>
@@ -26,51 +28,54 @@
                 </div>
             </div>
             <div class="nav-items">
-                <a th:if="${authenticated}" th:href="@{/calendar}">
-                    <img class="nav-item" th:src="@{/unsecured_files/calendar.svg}"
-                         alt="Calender"
-                         title="Calender">
-                </a>
+                <div class="nav-items nav-items-subpages">
+                    <a th:if="${authenticated}" th:href="@{/calendar}">
+                        <img class="nav-item" th:src="@{/unsecured_files/calendar.svg}"
+                             alt="Calender"
+                             title="Calender">
+                    </a>
 
-                <a th:if="${authenticated}" th:href="@{/user/freezer}">
-                    <img class="nav-item" th:src="@{/unsecured_files/fast-food-outline.svg}"
-                         alt="Freezer"
-                         title="Freezer">
-                </a>
+                    <a th:if="${authenticated}" th:href="@{/user/freezer}">
+                        <img class="nav-item" th:src="@{/unsecured_files/fast-food-outline.svg}"
+                             alt="Freezer"
+                             title="Freezer">
+                    </a>
 
-                <a th:if="${authenticated}" th:href="@{/recipe/create}">
-                    <img class="nav-item" th:src="@{/unsecured_files/create-outline.svg}"
-                         alt="Create Recipe"
-                         title="Create Recipe">
-                </a>
+                    <a th:if="${authenticated}" th:href="@{/recipe/create}">
+                        <img class="nav-item" th:src="@{/unsecured_files/create-outline.svg}"
+                             alt="Create Recipe"
+                             title="Create Recipe">
+                    </a>
 
-                <a th:if="${authenticated}" th:href="@{/user/buyList}">
-                    <img class="nav-item" th:src="@{/unsecured_files/cart.svg}"
-                         alt="BuyList"
-                         title="BuyList"/>
-                </a>
+                    <a th:if="${authenticated}" th:href="@{/user/buyList}">
+                        <img class="nav-item" th:src="@{/unsecured_files/cart.svg}"
+                             alt="BuyList"
+                             title="BuyList"/>
+                    </a>
 
-                <div th:if="${authenticated}"
-                     class="notifications-container">
-                    <img class="nav-item"
-                         alt="Notifications"
-                         title="Notifications"
-                         th:src="${(#sets.size(authenticated.friendshipsToThisUser) > 0) ? '/unsecured_files/notifications.svg' : '/unsecured_files/notifications-off.svg'}"/>
-                    <ul class="open-notifications-dropdown">
-                        <li class="notification-status">
-                            You have currently [[${ #sets.size(authenticated.friendshipsToThisUser) }]] Notifications
-                        </li>
-                        <th:block th:each="friendrequest : ${authenticated.friendshipsToThisUser}">
-                            <li th:if="${friendrequest.accepted != true}">
-                                <a th:href="'/user/profile/' + ${friendrequest.requested_by.username}">
-                                    New Friendrequest to you: [[${friendrequest.requested_by.username}]]
-                                </a>
+                    <div th:if="${authenticated}"
+                         class="notifications-container">
+                        <img class="nav-item"
+                             alt="Notifications"
+                             title="Notifications"
+                             th:src="${(#sets.size(authenticated.friendshipsToThisUser) > 0) ? '/unsecured_files/notifications.svg' : '/unsecured_files/notifications-off.svg'}"/>
+                        <ul class="open-notifications-dropdown">
+                            <li class="notification-status">
+                                You have currently [[${ #sets.size(authenticated.friendshipsToThisUser) }]]
+                                Notifications
                             </li>
-                        </th:block>
+                            <th:block th:each="friendrequest : ${authenticated.friendshipsToThisUser}">
+                                <li th:if="${friendrequest.accepted != true}">
+                                    <a th:href="'/user/profile/' + ${friendrequest.requested_by.username}">
+                                        New Friendrequest to you: [[${friendrequest.requested_by.username}]]
+                                    </a>
+                                </li>
+                            </th:block>
 
-                    </ul>
+                        </ul>
+                    </div>
                 </div>
-                <div class="profile-container">
+                <div th:class="${authenticated  != null ? 'profile-container authenticated' : 'profile-container'}">
                     <th:block th:if="${authenticated}">
                         <a th:href="'/user/profile/' + ${authenticated.username}">
                             <img class="nav-profile-image"

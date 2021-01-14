@@ -217,3 +217,30 @@
 .SUNDAY {
     grid-column: 8;
 }
+
+
+@media only screen and (max-width: 780px) {
+    .page-divided {
+        grid-template-columns: 1fr;
+        padding-top: 0;
+    }
+
+    .page-divided .left-side, .page-divided .right-side {
+        height: min-content;
+        width: 100vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .calendar {
+        margin-top: 3.5rem;
+    }
+
+    .timeline-title span {
+        text-overflow: ellipsis;
+        width: 2rem;
+        display: block;
+        overflow: hidden;
+    }
+}

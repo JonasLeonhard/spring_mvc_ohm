@@ -216,6 +216,11 @@ select {
     margin-bottom: 3rem;
 }
 
+.form-annotation span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .form-annotation div {
     border-radius: 0 3px 3px 0;
     width: 1rem;
@@ -268,7 +273,8 @@ nav .nav-container {
 }
 
 nav .nav-logo {
-    height: 2em;
+    height: 8vw;
+    max-height: 2rem;
 }
 
 nav .nav-items, nav .nav-items a {
@@ -340,6 +346,12 @@ nav .profile-container .nav-profile-image {
 
 nav .profile-container .user-name {
     margin: 0 0.5em;
+    max-width: 6rem;
+    word-break: break-all;
+    overflow: scroll;
+    height: 2rem;
+    display: flex;
+    align-items: center;
 }
 
 nav .profile-container .open-profile {
@@ -359,7 +371,11 @@ nav .profile-container ul.open-profile-dropdown, .notifications-container ul.ope
 
 .open-profile-dropdown {
     top: 2em;
-    width: 100%;
+    width: min-content;
+}
+
+.open-profile-dropdown li {
+    padding: 0 1rem;
 }
 
 .notifications-container {
@@ -440,6 +456,7 @@ div.page-content.full {
     display: flex;
     align-items: center;
     height: 1em;
+    margin-bottom: 0.5rem;
 }
 
 .tabs label:hover::after {
@@ -530,4 +547,93 @@ select#type option {
 .footer div, .footer a {
     margin: 0.5rem;
     font-size: 0.7rem;
+}
+
+@media only screen and (max-width: 1150px) {
+    .nav-items.nav-items-subpages {
+        position: absolute;
+        right: 0;
+        display: flex;
+        flex-direction: column;
+        top: 4rem;
+        padding: 0.5rem;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    nav .nav-items .nav-item {
+        margin-left: 0;
+    }
+
+    nav .profile-container ul.open-profile-dropdown, .notifications-container ul.open-notifications-dropdown {
+        right: 0;
+    }
+
+    nav .nav-item {
+        background: rgba(255, 255, 255, 0.25);
+    }
+}
+
+@media only screen and (max-width: 780px) {
+    .nav-container {
+        background: red;
+    }
+
+    .nav-items-title {
+        display: none;
+    }
+
+    nav .profile-container .user-name {
+        display: none;
+    }
+}
+
+
+@media only screen and (max-width: 520px) {
+    .nav-container {
+        background: blue;
+    }
+
+
+    .page-content {
+        font-size: 0.9rem;
+    }
+
+    h1 {
+        font-size: 1.2rem;
+    }
+
+    nav .profile-container {
+        flex-direction: column;
+        align-items: flex-start;
+        font-size: 0.8rem;
+    }
+
+    nav .profile-container.authenticated {
+        align-items: center;
+    }
+
+    nav .nav-search-container #search {
+        width: calc(100% - 3rem);
+    }
+
+    .tabs label {
+        height: 1em;
+        padding: 0.5rem;
+    }
+}
+
+@media only screen and (max-width: 320px) {
+    .nav-container {
+        background: green;
+    }
+
+    .nav-search-container select#type {
+        display: none
+    }
+
+    nav .nav-search-container #search {
+        width: 100%;
+    }
 }

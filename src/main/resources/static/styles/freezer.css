@@ -89,7 +89,6 @@
 }
 
 .recipe-card-info {
-    width: 100%;
     padding: 2em;
 }
 
@@ -200,3 +199,19 @@
     }
 }
 
+@media only screen and (max-width: 520px) {
+    .recipe-card {
+        flex-direction: column;
+    }
+}
+
+@media only screen and (max-width: 320px) {
+    .ingredient {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .recipe-card-info {
+        padding: 2rem 0;
+    }
+}

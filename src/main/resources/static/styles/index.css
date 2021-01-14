@@ -169,6 +169,9 @@
 .recipe-search .recipe-search__wrapper {
     display: flex;
     margin-bottom: 1.5rem;
+    width: 100vw;
+    flex-wrap: wrap;
+    gap: 0.5rem
 }
 
 .recipe-search .recipe-search__item {
@@ -300,5 +303,10 @@
 @media only screen and (max-width: 320px) {
     .masonry {
         column-count: 1;
+        padding: 0 1rem;
+    }
+
+    .challenge-of-the-day {
+        margin: 0;
     }
 }

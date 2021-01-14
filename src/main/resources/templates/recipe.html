@@ -159,6 +159,9 @@ includeIonicons = ${true})"></head>
         </div>
 
         <div class="challenges">
+            <div th:if="${userChallenges == null || #lists.size(userChallenges) == 0}">
+                There are no challenges for this recipe yet.
+            </div>
             <div class="challenge" th:each="userChallenge : ${userChallenges}">
                 <div>
                     <div class="challenge__content">
