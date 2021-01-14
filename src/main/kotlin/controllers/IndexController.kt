@@ -22,14 +22,18 @@ class IndexController(val userService: UserService,
     fun index(model: Model, principal: Principal?): String {
         model["pageTitle"] = "Welcome | F&F"
         model["suggestions"] = suggestionService.getIndexSuggestions()
-        model["recipeOfTheDay"] = suggestionService.getRecipeOfTheDaySuggestion()
+        val recipeOfTheDay = suggestionService.getRecipeOfTheDaySuggestion()
+        if (recipeOfTheDay != null) {
+            model["recipeOfTheDay"] = recipeOfTheDay
+        }
         model["mostPopularSearch"] = searchService.getMostPopularSearchTerms(10)
         model["mostRecentSearch"] = searchService.getRecentSearchTerms(10)
 
         val challenge = challengeService.getChallengeOfTheDay()
-        model["challengeOfTheDay"] = challenge
-        model["timeLeft"] = challengeService.timeLeft(challenge)
-
+        if (challenge != null) {
+            model["challengeOfTheDay"] = challenge
+            model["timeLeft"] = challengeService.timeLeft(challenge)
+        }
         userService.addAuthenticatedUserToModel(principal, model)
 
         return "index"

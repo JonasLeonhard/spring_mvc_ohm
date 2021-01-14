@@ -576,10 +576,6 @@ select#type option {
 }
 
 @media only screen and (max-width: 780px) {
-    .nav-container {
-        background: red;
-    }
-
     .nav-items-title {
         display: none;
     }
@@ -591,11 +587,6 @@ select#type option {
 
 
 @media only screen and (max-width: 520px) {
-    .nav-container {
-        background: blue;
-    }
-
-
     .page-content {
         font-size: 0.9rem;
     }
@@ -625,10 +616,6 @@ select#type option {
 }
 
 @media only screen and (max-width: 320px) {
-    .nav-container {
-        background: green;
-    }
-
     .nav-search-container select#type {
         display: none
     }

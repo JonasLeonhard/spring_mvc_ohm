@@ -10,15 +10,15 @@ import kotlin.random.Random
 class SuggestionService(val recipeRepository: RecipeRepository) {
     fun getIndexSuggestions(): MutableList<Recipe> {
         val suggestions = mutableListOf<Recipe>()
-
         suggestions.addAll(recipeRepository.getNewestRecipes(PageRequest.of(0, 10)))
         suggestions.addAll(recipeRepository.getMostLikedRecipes(PageRequest.of(0, 25)).map { it.recipe })
         val recipeIds = recipeRepository.getRecipeIds()
-        val randomRecipeIds = (0..25).map {
-            recipeIds[Random.nextInt(recipeIds.size)]
+        if (recipeIds.size >= 25) {
+            val randomRecipeIds = (0..25).map {
+                recipeIds[Random.nextInt(recipeIds.size)]
+            }
+            suggestions.addAll(recipeRepository.findAllById(randomRecipeIds))
         }
-        suggestions.addAll(recipeRepository.findAllById(randomRecipeIds))
-
         val randomizedUniqueSuggestions = suggestions.distinctBy { recipe ->
             recipe.id
         }.toMutableList()
@@ -26,9 +26,12 @@ class SuggestionService(val recipeRepository: RecipeRepository) {
         return randomizedUniqueSuggestions
     }
 
-    fun getRecipeOfTheDaySuggestion(): Recipe {
+    fun getRecipeOfTheDaySuggestion(): Recipe? {
         val recipeIds = recipeRepository.getRecipeIds()
-        val randomId = recipeIds[Random.nextInt(recipeIds.size)]
-        return recipeRepository.findById(randomId).get()
+        if (recipeIds.size >= 1) {
+            val randomId = recipeIds[Random.nextInt(recipeIds.size)]
+            return recipeRepository.findById(randomId).get()
+        }
+        return null
     }
 }

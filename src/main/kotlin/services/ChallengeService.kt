@@ -25,22 +25,26 @@ class ChallengeService(val challengeRepository: ChallengeRepository,
      * creates a new random getRecipeOfTheDaySuggestion() challenge
      * this is called once per day in ChronjobConfiguration
      * */
-    fun changeChallenge(): Challenge {
-        val updatedChallenges: List<Challenge> = challengeRepository.getDayChallenges().map { challenge ->
-            challenge.dayChallenge = false
-            return challenge
+    fun changeChallenge(): Challenge? {
+        val recipeOfTheDaySuggestion = suggestionService.getRecipeOfTheDaySuggestion()
+
+        if (recipeOfTheDaySuggestion != null) {
+            val updatedChallenges: List<Challenge> = challengeRepository.getDayChallenges().map { challenge ->
+                challenge.dayChallenge = false
+                return challenge
+            }
+            challengeRepository.saveAll(updatedChallenges)
+
+            val dayChallenge = Challenge(recipe = recipeOfTheDaySuggestion, dayChallenge = true)
+            return challengeRepository.save(dayChallenge)
         }
-        challengeRepository.saveAll(updatedChallenges)
-
-        val dayChallenge = Challenge(recipe = suggestionService.getRecipeOfTheDaySuggestion(), dayChallenge = true)
-
-        return challengeRepository.save(dayChallenge)
+        return null
     }
 
     /**
      * Gets the curretn Challenge of the day or creates a new one if it doesnt exist
      */
-    fun getChallengeOfTheDay(): Challenge {
+    fun getChallengeOfTheDay(): Challenge? {
         val challenges = challengeRepository.getDayChallenges()
 
         return if (challenges.isEmpty()) {

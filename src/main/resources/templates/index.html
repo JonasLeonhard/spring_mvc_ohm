@@ -7,7 +7,7 @@ includeHeaderFragment = ${{'index-header'}})"></head>
 <nav th:replace="fragments/navigation :: navigation"></nav>
 <div class="page-content">
 
-    <div class="challenge-of-the-day">
+    <div class="challenge-of-the-day" th:if="${challengeOfTheDay}">
         <h1>Challenge: [[${challengeOfTheDay.recipe.title}]]</h1>
 
         <div class="challenge-of-the-day__divider">
@@ -42,7 +42,7 @@ includeHeaderFragment = ${{'index-header'}})"></head>
         </div>
     </div>
 
-    <div class="recipe-of-the-day">
+    <div class="recipe-of-the-day" th:if="${recipeOfTheDay}">
         <h1>[[${recipeOfTheDay.title}]]</h1>
         <div class="recipe-of-the-day__divider">
             <a th:href="${'/recipe/'+ recipeOfTheDay.id}">
@@ -91,7 +91,11 @@ includeHeaderFragment = ${{'index-header'}})"></head>
         </div>
     </div>
 
-    <div class="masonry">
+    <div th:if="${recipeOfTheDay == null}">
+        There are no suggestions yet, please search for recipes or create a new one.
+    </div>
+
+    <div class="masonry" th:if="${suggestions != null && #lists.size(suggestions) > 0}">
         <div class="item" th:each="recipe : ${suggestions}">
             <div class="item-inner">
                 <a th:href="${'/recipe/'+ recipe.id}">
@@ -142,7 +146,7 @@ includeHeaderFragment = ${{'index-header'}})"></head>
 
     <div>
 
-        <div class="recipe-search">
+        <div class="recipe-search" th:if="${mostPopularSearch != null && #lists.size(mostPopularSearch) > 0}">
             <h3>
                 Most Popular Search Terms
             </h3>
@@ -170,7 +174,6 @@ includeHeaderFragment = ${{'index-header'}})"></head>
 
 <footer th:replace="fragments/footer :: footer()"></footer>
 <!-- Scripts -->
-<script type="text/javascript" th:src="@{/js/masonry.js}"></script>
 <script type="text/javascript" th:src="@{/js/challengeTimer.js}"></script>
 </body>
 </html>
