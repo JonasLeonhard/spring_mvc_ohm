@@ -34,7 +34,7 @@ class UserController(val userService: UserService,
     fun userProfile(principal: Principal?, model: Model, @PathVariable username: String): String {
         try {
             val profile = userService.findByUsername(username)
-            model["profile"] = "${profile}'s Profile | F&F"
+            model["profile"] = profile
 
             if (principal != null) {
                 val authenticated = userService.findByUsername(principal.name)
@@ -51,7 +51,7 @@ class UserController(val userService: UserService,
             model["userNotFound"] = username
         }
 
-        model["pageTitle"] = "${username}'s Profile"
+        model["pageTitle"] = "${username}'s Profile | F&F"
         return "profile"
     }
 
