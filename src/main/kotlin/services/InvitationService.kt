@@ -1,20 +1,23 @@
 package services
 
-import models.Invitation
-import models.Recipe
-import models.User
-import models.UserInvitationComment
+import models.*
 import org.springframework.stereotype.Service
 import pojos.InvitationForm
 import repositories.InvitationRepository
+import repositories.RecipeIngredientsRepository
 import repositories.UserInvitationCommentRepository
+import repositories.UserInvitationItemRepository
+import java.security.Principal
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.transaction.Transactional
 
 @Service
 class InvitationService(val recipeService: RecipeService,
                         val userService: UserService,
                         val invitationRepository: InvitationRepository,
+                        val recipeIngredientsRepository: RecipeIngredientsRepository,
+                        val userInvitationItemRepository: UserInvitationItemRepository,
                         val invitationCommentRepository: UserInvitationCommentRepository) {
 
     fun deleteInvitation(user: User, invitationForm: InvitationForm, invitationId: Long) {
@@ -114,5 +117,36 @@ class InvitationService(val recipeService: RecipeService,
                 invitation.gridRowEnd,
                 invitationFriends,
                 invitation.date.toString())
+    }
+
+    fun getUserInvitationItemsForInvitation(invitation: Invitation): MutableList<UserInvitationItem> {
+        return userInvitationItemRepository.findInvitationItemByInvitationId(invitation.id)
+    }
+
+    @Transactional
+    fun saveInvitationItem(invitationId: Long, principal: Principal, recipeId: Long?, ingredientId: Long?, otherItem: String?): UserInvitationItem {
+        val user = userService.findByUsername(principal.name)
+        val invitation = getInvitationById(invitationId).get()
+        println("recipeId: $recipeId, ingredientId: $ingredientId, otherItem: $otherItem")
+        if (ingredientId != null && recipeId != null) {
+            val recipeIngredient = recipeIngredientsRepository.findByEmbedded(recipeId, ingredientId).get()
+            val userInvitationItem = UserInvitationItem(invitation = invitation, user = user, recipeIngredient = recipeIngredient)
+            userInvitationItemRepository.deleteOtherUserInvitationItems(user.id, recipeId, ingredientId)
+            return userInvitationItemRepository.save(userInvitationItem)
+        } else if (otherItem != null) {
+            val userInvitationItem = UserInvitationItem(invitation = invitation, user = user, item = otherItem)
+            return userInvitationItemRepository.save(userInvitationItem)
+        }
+
+        throw Exception("Error: neither recipeIngredient nor otherItem given.")
+    }
+
+    fun getUserByRecipeIngredient(recipeIngredient: RecipeIngredients, invitationItems: MutableList<UserInvitationItem>): User? {
+        val isRecipeItem = invitationItems.filter { it.recipeIngredient?.recipe?.id == recipeIngredient.recipe.id && it.recipeIngredient.ingredient.id == recipeIngredient.ingredient.id }
+
+        if (isRecipeItem.size == 1) {
+            return isRecipeItem[0].user
+        }
+        return null
     }
 }

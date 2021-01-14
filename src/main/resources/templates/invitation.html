@@ -20,15 +20,15 @@ includeHeaderFragment = ${{'invitation-header'}})"></head>
         <div class="invitation__details">
             <div>
                 <span>Date</span>
-                <span>[[${dateFormatter.format(invitation.date)}]]</span>
+                <span>[[${dateFormatter.format(invitation.date)}]] 📅</span>
             </div>
             <div>
                 <span>Start</span>
-                <span>[[${calendarService.getTimelineAnnotationFrom(invitation.gridRowStart)}]]</span>
+                <span>[[${calendarService.getTimelineAnnotationFrom(invitation.gridRowStart)}]] ⏱️</span>
             </div>
             <div>
                 <span>End</span>
-                <span>[[${calendarService.getTimelineAnnotationFrom(invitation.gridRowEnd)}]]</span>
+                <span>[[${calendarService.getTimelineAnnotationFrom(invitation.gridRowEnd)}]] ⏱️</span>
             </div>
         </div>
 
@@ -36,9 +36,62 @@ includeHeaderFragment = ${{'invitation-header'}})"></head>
             [[${invitation.message}]]
         </span>
 
-
         <div class="form-annotation">
             <div>2</div>
+            <span>
+                    Bring List ✔️
+            </span>
+        </div>
+
+        <form th:action="@{/user/invitation/{id}/item(id=${invitation.id})}"
+              method="post" class="invitation-items__wrapper">
+            Select an ingredient to bring to the invitation, or bring some other item
+            <input type="hidden" name="recipeId" th:value="${invitation.recipe.id}"/>
+
+            <div class="invitation-items__flex">
+                <th:block th:each="recipeIngredient : ${invitation.recipe.recipeIngredients}">
+                    <div class="invitation-items">
+                        <button type="submit"
+                                id="ingredientId"
+                                name="ingredientId"
+                                th:value="${recipeIngredient.ingredient.id}">
+                            Bring [[${recipeIngredient.amount}]] x [[${recipeIngredient.ingredient.name}]]
+                        </button>
+                        <div th:with="recipeIngredientUser=${invitationService.getUserByRecipeIngredient(recipeIngredient, userInvitationItems)}">
+                            <div th:if="${recipeIngredientUser != null}"
+                                 class="invitation-items__profile-image-container">
+                                <img class="invitation-items__profile-image"
+                                     alt="profile picture"
+                                     th:title="${recipeIngredientUser.username} + '\'s Profilepicture'"
+                                     th:src="${recipeIngredientUser.picture != null ? '/resource/' + recipeIngredientUser.picture.id : '/unsecured_files/placeholder_profile_image.png'}"/>
+                            </div>
+                            [[${recipeIngredientUser != null ? recipeIngredientUser.username + ' brings this' : ''}]]
+                        </div>
+                    </div>
+                </th:block>
+
+                <div class="invitation-items" th:each="invitationItem : ${userInvitationItems}"
+                     th:if="${invitationItem.item != null}">
+                    <div class="invitation-items__profile-image-container">
+                        <img class="invitation-items__profile-image"
+                             alt="profile picture"
+                             th:title="${invitationItem.user.username} + '\'s Profilepicture'"
+                             th:src="${invitationItem.user.picture != null ? '/resource/' + invitationItem.user.picture.id : '/unsecured_files/placeholder_profile_image.png'}"/>
+                    </div>
+                    [[${invitationItem.user.username}]] brings [[${invitationItem.item}]]
+                </div>
+            </div>
+
+
+            <div class="input-wrapper">
+                <label for="otherItem" class="control-label">Other Item</label>
+                <input name="otherItem" id="otherItem" placeholder="other..."/>
+            </div>
+            <button type="Submit" class="submit-btn">Bring Other Item</button>
+        </form>
+
+        <div class="form-annotation">
+            <div>3</div>
             <span>
                     Comments
             </span>

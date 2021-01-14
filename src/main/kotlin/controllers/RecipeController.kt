@@ -23,9 +23,6 @@ class RecipeController(val recipeService: RecipeService,
                        val userService: UserService) {
 
 
-    /**
-     * @param recipeId is the api id primary key, not the own db primary key
-     */
     @GetMapping("/{id}")
     fun getRecipe(principal: Principal?, @PathVariable("id") recipeId: Long, model: Model): String {
         val recipe = recipeService.getIndexedRecipeById(recipeId)

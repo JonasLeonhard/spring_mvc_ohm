@@ -71,3 +71,48 @@
 .comment__message {
     word-wrap: anywhere;
 }
+
+.invitation-items__profile-image-container {
+    width: 2rem;
+}
+
+.invitation-items__profile-image {
+    width: 100%;
+}
+
+.invitation-items {
+    display: flex;
+    gap: 1rem;
+    background: var(--primary);
+    width: max-content;
+    padding: 0.5rem 1rem;
+    border-radius: 30px;
+    margin: 1rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.invitation-items div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.invitation-items__flex {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.invitation-items__wrapper .submit-btn {
+    margin-top: 1rem;
+    margin-bottom: 4rem;
+}
+
+.invitation-items__wrapper .input-wrapper {
+    width: 11rem;
+}
+
+#otherItem {
+    background: var(--color-input-background);
+}

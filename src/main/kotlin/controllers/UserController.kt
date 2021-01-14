@@ -131,6 +131,8 @@ class UserController(val userService: UserService,
         model["calendarService"] = calendarService
 
         model["invitationComments"] = invitationService.getInvitationComments(invitationId)
+        model["userInvitationItems"] = invitationService.getUserInvitationItemsForInvitation(invitation)
+        model["invitationService"] = invitationService
         return "invitation"
     }
 
@@ -249,6 +251,12 @@ class UserController(val userService: UserService,
     @PostMapping("/invitation/{id}/comment")
     fun commentOn(principal: Principal, @PathVariable("id") invitationId: Long, @RequestParam(name = "message") message: String): String {
         userService.commentInvitation(invitationId, principal, message)
+        return "redirect:/user/invitation/$invitationId"
+    }
+
+    @PostMapping("/invitation/{id}/item")
+    fun saveInvitationItem(principal: Principal, @PathVariable("id") invitationId: Long, @RequestParam(name = "recipeId") recipeId: Long?, @RequestParam("ingredientId") ingredientId: Long?, @RequestParam("otherItem") otherItem: String?): String {
+        invitationService.saveInvitationItem(invitationId, principal, recipeId, ingredientId, otherItem)
         return "redirect:/user/invitation/$invitationId"
     }
 
