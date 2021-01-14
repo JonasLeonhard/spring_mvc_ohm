@@ -12,7 +12,7 @@ data class UserInvitationItem(
         val invitation: Invitation,
 
         @OneToOne
-        val user: User,
+        var user: User,
 
         val item: String? = null,
 

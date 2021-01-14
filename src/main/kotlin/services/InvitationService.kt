@@ -124,14 +124,31 @@ class InvitationService(val recipeService: RecipeService,
     }
 
     @Transactional
-    fun saveInvitationItem(invitationId: Long, principal: Principal, recipeId: Long?, ingredientId: Long?, otherItem: String?): UserInvitationItem {
+    fun saveInvitationItem(invitationId: Long, principal: Principal, recipeId: Long?, ingredientId: Long?, otherItem: String?): UserInvitationItem? {
         val user = userService.findByUsername(principal.name)
         val invitation = getInvitationById(invitationId).get()
-        println("recipeId: $recipeId, ingredientId: $ingredientId, otherItem: $otherItem")
         if (ingredientId != null && recipeId != null) {
             val recipeIngredient = recipeIngredientsRepository.findByEmbedded(recipeId, ingredientId).get()
+
+            var existingInvitationItem = userInvitationItemRepository.findInvitationItem(invitation.user.id, recipeId, ingredientId)
+            if (existingInvitationItem == null) {
+                invitation.friends.forEach {
+                    if (existingInvitationItem == null) {
+                        existingInvitationItem = userInvitationItemRepository.findInvitationItem(it.id, recipeId, ingredientId)
+                    }
+                }
+            }
+
+            if (existingInvitationItem != null) {
+                if (existingInvitationItem?.user?.id == user.id) {
+                    userInvitationItemRepository.delete(existingInvitationItem!!)
+                    return null
+                }
+                existingInvitationItem?.user = user
+                return userInvitationItemRepository.save(existingInvitationItem!!)
+            }
+
             val userInvitationItem = UserInvitationItem(invitation = invitation, user = user, recipeIngredient = recipeIngredient)
-            userInvitationItemRepository.deleteOtherUserInvitationItems(user.id, recipeId, ingredientId)
             return userInvitationItemRepository.save(userInvitationItem)
         } else if (otherItem != null) {
             val userInvitationItem = UserInvitationItem(invitation = invitation, user = user, item = otherItem)
