@@ -169,7 +169,7 @@
 .recipe-search .recipe-search__wrapper {
     display: flex;
     margin-bottom: 1.5rem;
-    width: 100vw;
+    width: 100%;
     flex-wrap: wrap;
     gap: 0.5rem
 }
