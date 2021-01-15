@@ -12,7 +12,7 @@ plugins {
 
 application {
     //'[namespace].[arctifact]Kt'!
-    mainClassName = "com.github.jonasleonhard.spring_mvc_ohm.SpringMvcOhmApplicationKt"
+    mainClassName = "main.kotlin.com.github.jonasleonhard.spring_mvc_ohm.SpringMvcOhmApplicationKt"
 }
 group = "com.github.JonasLeonhard"
 version = "0.0.1-SNAPSHOT"
