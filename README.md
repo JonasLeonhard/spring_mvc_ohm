@@ -5,6 +5,7 @@
 ```
 
 ## Start with: Manuel Setup:
+Have a JDK 8/15 installed (https://www.oracle.com/java/technologies/javase-jdk15-downloads.html)
 
 #### 1. Database Setup
 ###### Create a Postgresql Database for the Application to use:
@@ -22,7 +23,8 @@ CREATE DATABASE postgres;
 - ENV_POSTGRES_DB_PASSWORD (default: postgres)
 - ENV_SPOONACULAR_API_KEY
 
-##### 3. Run 'gradle start' when you have gradle installed, then follow the instructions to set environment variables.
+##### 3. Run 'gradle build && gradle start' when you have gradle installed, then follow the instructions to set environment variables.
 ```bash
+./gradlew build
 ./gradlew start
 ```
